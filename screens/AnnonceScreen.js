@@ -53,7 +53,7 @@ export default function AnnonceScreen({ route, navigation }) {
 
 
   const handleColab = () => {
-    fetch('http://10.215.12.147:3000/propositionCollabs/propositions', {
+    fetch('http://192.168.1.33:3000/propositionCollabs/propositions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: annonce.token, cible: annonce.username, initiateur: utilisateur.username }),
@@ -173,7 +173,7 @@ export default function AnnonceScreen({ route, navigation }) {
 
         {/*  SIGNALEZ ANNONCE  */}
         <TouchableOpacity style={styles.signalez}>
-          <Text >S i g n a l e z    l ' a n n o n c e</Text>
+          <Text style={styles.textSignalez}>S i g n a l e z    l ' a n n o n c e</Text>
         </TouchableOpacity>
 
       </ScrollView>
@@ -199,7 +199,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
-  // ------------------- NAVBAR : VIEW ---------------------
+  // ------------------- NAVBAR ---------------------
+  
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -210,6 +211,7 @@ const styles = StyleSheet.create({
   },
 
   // ------------------- ANNONCE ENTIERE : SCROLLVIEW ---------------------
+
   annonceComplete: {
     flex: 1,
     paddingTop: 30,
@@ -237,6 +239,7 @@ const styles = StyleSheet.create({
   },
 
   // ------------------- DESCRIPTION ---------------------
+
   annonceDescription: {
     marginTop: 30,
     padding: 10,
@@ -292,9 +295,8 @@ const styles = StyleSheet.create({
     padding: 7
   },
 
-
-
   // ------------------- MAP ---------------------
+
   mapContainer: {
     height: 200,
   },
@@ -304,6 +306,7 @@ const styles = StyleSheet.create({
   },
 
   // ------------------- UTILISATEUR BOUTON ---------------------
+
   utilisateur: {
     borderWidth: 1,
     borderRadius: 12,
@@ -323,8 +326,10 @@ const styles = StyleSheet.create({
   },
 
   // ------------------- SIGNALEZ ANNONCE BOUTON ---------------------
+
   signalez: {
     borderWidth: 1,
+    borderColor:'#FF1F1F',
     borderRadius: 12,
     height: 30,
     flexDirection: 'row',
@@ -333,9 +338,15 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 10,
     marginBottom: 37,
+    backgroundColor: '#fff',
+    fontWeight:'bold'
+  },
+  textSignalez: {
+    color:'#FF1F1F'
   },
 
   // ------------------- COLAB BAR ---------------------
+
   colabBar: {
     alignItems: 'center',
     justifyContent: 'space-around',
@@ -353,14 +364,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#3A3960'
   },
-  nbColabIcone: {
-    marginLeft: 50,
-    marginTop: 10
-  },
-
   colabText: {
     fontSize: 30,
     color: 'white'
+  },
+  nbColabIcone: {
+    marginLeft: 50,
+    marginTop: 10
   },
 });
 

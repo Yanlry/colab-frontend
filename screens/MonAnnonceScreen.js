@@ -29,7 +29,7 @@ export default function MonAnnonceScreen({ route, navigation }) {
   const supprimerAnnonce = () => {
 
 
-    fetch(`http://10.215.12.147:3000/annonces/supprime/${utilisateur.token}`, {
+    fetch(`http://192.168.1.33:3000/annonces/supprime/${utilisateur.token}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -186,7 +186,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 
-  // ------------------- NAVBAR : VIEW ---------------------
+  // ------------------- NAVBAR ---------------------
+
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',

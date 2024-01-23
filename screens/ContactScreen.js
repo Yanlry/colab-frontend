@@ -12,7 +12,7 @@ export default function ContactScreen({ navigation }) {
     const requestBody = {
       token: user.token,
     };
-    fetch('http://10.215.12.147:3000/propositionCollabs/collaboration/contact', {
+    fetch('http://192.168.1.33:3000/propositionCollabs/collaboration/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -105,12 +105,18 @@ const styles = StyleSheet.create({
   content: {
     padding: 20,
   },
+
+//-----------------------  TITRE  ---------------------------------
+
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
   },
+
+//----------------------- FICHE CONTACT  ---------------------------------
+
   contactContainer: {
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',

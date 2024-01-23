@@ -11,8 +11,8 @@ const NotificationScreen = ({ navigation }) => {
 
   const fetchNotifications = () => {
     const url = activeTab === 'demandes'
-      ? 'http://10.215.12.147:3000/propositionCollabs/propositions/initiateur'
-      : 'http://10.215.12.147:3000/propositionCollabs/propositions/cible';
+      ? 'http://192.168.1.33:3000/propositionCollabs/propositions/initiateur'
+      : 'http://192.168.1.33:3000/propositionCollabs/propositions/cible';
 
     const requestBody = {
       token: user.token,
@@ -41,7 +41,7 @@ const NotificationScreen = ({ navigation }) => {
   };
 
   const handleAccept = (message) => {
-    const acceptUrl = 'http://10.215.12.147:3000/propositionCollabs/propositions/accept';
+    const acceptUrl = 'http://192.168.1.33:3000/propositionCollabs/propositions/accept';
     const requestBody = {
       token: user.token,
       message: message,
@@ -66,7 +66,7 @@ const NotificationScreen = ({ navigation }) => {
   };
 
   const handleReject = (message) => {
-    const rejectUrl = 'http://10.215.12.147:3000/propositionCollabs/propositions/refuse';
+    const rejectUrl = 'http://192.168.1.33:3000/propositionCollabs/propositions/refuse';
     const requestBody = {
       token: user.token,
       message: message,
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
 
-  //-----------------------  HEADERS  ---------------------------------
+  //-----------------------  NAVBAR  ---------------------------------
 
   header: {
     flexDirection: 'row',
@@ -181,8 +181,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   icon: {
-    marginLeft: 20,
-    marginRight:80
+    marginLeft: 25,
+    marginRight:82
   },
   title: {
     fontSize: 24,
@@ -193,16 +193,16 @@ const styles = StyleSheet.create({
 
   tabContainer: {
     flexDirection: 'row',
-    marginBottom: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
     backgroundColor: '#E9E9E9',
   },
   tabButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth:1,
+    margin:5,
     borderRadius: 12,
+    backgroundColor:'#fff'
   },
   activeTabButton: {   
     height:50,

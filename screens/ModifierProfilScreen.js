@@ -16,7 +16,7 @@ export default function ModifierProfilScreen({ navigation }) {
 
   useEffect(() => {
     // Récupérer les activités disponibles depuis le backend
-    fetch('http://10.215.12.147:3000/profiles/activites')
+    fetch('http://192.168.1.33:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -28,13 +28,13 @@ export default function ModifierProfilScreen({ navigation }) {
 
   const handleEnregistrer = () => {
     // Envoyer les activités sélectionnées au backend
-    fetch(`http://10.215.12.147:3000/profiles/jePeux/${user.token}`, {
+    fetch(`http://192.168.1.33:3000/profiles/jePeux/${user.token}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ activites: offre }),
     });
 
-    fetch(`http://10.215.12.147:3000/profiles/jeVeux/${user.token}`, {
+    fetch(`http://192.168.1.33:3000/profiles/jeVeux/${user.token}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ activites: demande }),
@@ -159,6 +159,9 @@ const localStyles = StyleSheet.create({
     paddingVertical: 20,
     paddingHorizontal: 20,
   },
+
+// ------------------- TITRE ---------------------
+
   titleContainer: {
     alignItems: 'center',
     marginTop: 50,
@@ -168,6 +171,9 @@ const localStyles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
+
+// ------------------- PHOTO DE PROFIL ---------------------
+  
   profileImageContainer: {
     marginBottom: 20,
     alignItems: 'center',
@@ -183,6 +189,9 @@ const localStyles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
   },
+
+// ------------------- NOM D'UTILISATEUR ---------------------
+
   infoContainer: {
     width: '100%',
     marginBottom: 20,
@@ -202,6 +211,32 @@ const localStyles = StyleSheet.create({
     padding: 12,
     width: '100%',
   },
+
+// ------------------- MESSAGE DE CHARGEMENT DES LISTES ---------------------
+
+  conditionMsg: {
+    justifyContent: 'center',
+    textAlign: 'center',
+    fontSize: 22,
+    padding: 10,
+  },
+
+// ------------------- MES LISTES ---------------------
+
+  listeOffre: {
+    alignItems: 'center',
+    marginTop: 30,
+    width: '100%',
+    zIndex: 999,
+  },
+  listeDemande: {
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 40,
+  },
+
+// ------------------- BOUTTONS PRECEDENT ET TERMINER ---------------------
+
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -218,22 +253,5 @@ const localStyles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-  },
-  conditionMsg: {
-    justifyContent: 'center',
-    textAlign: 'center',
-    fontSize: 22,
-    padding: 10,
-  },
-  listeOffre: {
-    alignItems: 'center',
-    marginTop: 30,
-    width: '100%',
-    zIndex: 999,
-  },
-  listeDemande: {
-    alignItems: 'center',
-    width: '100%',
-    marginTop: 40,
   },
 });

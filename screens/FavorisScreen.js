@@ -221,6 +221,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     width: 350,
   },
+
+//----------------------- BOUTON FAVORIS  ---------------------------------
+
   favorisBtn: {
     height: 50,
     width: 50,

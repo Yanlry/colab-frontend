@@ -13,14 +13,14 @@ export default function AccueilScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = () => {
-    fetch(`http://10.215.12.147:3000/annonces/offres/${utilisateur.token}`)
+    fetch(`http://192.168.1.33:3000/annonces/offres/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
         setOffreDate(trierDateAnnonce);
       });
 
-    fetch(`http://10.215.12.147:3000/annonces/demandes/${utilisateur.token}`)
+    fetch(`http://192.168.1.33:3000/annonces/demandes/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -110,6 +110,10 @@ export default function AccueilScreen({ navigation }) {
           Nombre d'heures par semaine : {annonce.tempsMax}
         </Text>
         {"\n"}
+        <Text style={styles.apercuAnnonceTempsMax}>
+          Mes disponibilités : {annonce.disponibilite}
+        </Text>
+        {"\n"}
         {"\n"}
         <Text style={styles.apercuAnnonceDate}>
           Mise en ligne le : {formatDate(annonce.date)}
@@ -131,6 +135,7 @@ export default function AccueilScreen({ navigation }) {
     <SafeAreaView style={styles.safeAreaView}>
       <KeyboardAvoidingView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          
             <View style={styles.container}>
               <View style={styles.offreEtDemande}>
                 <TouchableOpacity style={[styles.categorieBtn, afficherOffre && styles.categorieActive]} onPress={() => afficheOffre()}>
@@ -148,12 +153,17 @@ export default function AccueilScreen({ navigation }) {
                   placeholder="Rechercher..."
                 />
                 <TouchableOpacity style={styles.filtreAnnonce}>
-                  <FontAwesome name="bars" size={40} style={styles.filtreIcone} />
+                  <FontAwesome name="filter" size={30} style={styles.filtreIcone} />
                 </TouchableOpacity>
               </View>
-              <ScrollView contentContainerStyle={styles.contentContainer} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}>
+              <View>
+              <ScrollView
+                contentContainerStyle={styles.contentContainer}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+              >
                 {afficherOffre ? lesOffres : lesDemandes}
               </ScrollView>
+              </View>
             </View>
         </ TouchableWithoutFeedback>
       </ KeyboardAvoidingView>
@@ -169,7 +179,9 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
   },
-
+contentContainer:{
+  backgroundColor:'green'
+},
   //-----------------------  BOUTTON OFFRE ET DEMANDE  ---------------------------------
 
   offreEtDemande: {
@@ -179,7 +191,7 @@ const styles = StyleSheet.create({
   categorieBtn: {
     height: 50,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor:'#8F8F8F',
     width: 180,
     alignItems: 'center',
     justifyContent: 'center',
@@ -208,7 +220,7 @@ const styles = StyleSheet.create({
   },
   rechercheText: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor:'#8F8F8F',
     height: 50,
     width: 310,
     fontSize: 20,
@@ -218,27 +230,36 @@ const styles = StyleSheet.create({
     marginHorizontal:5,
   },
 
+  //-----------------------  ICONE FILTRE  ---------------------------------
+
+  filtreIcone: {
+    marginLeft:8
+  },
+
   //-----------------------  VIGNETTE D'ANNONCE  ---------------------------------
   
   annonce: {
     height: 190,
-    width: 410,
+    width: '94%',
     flexDirection: 'row',
     borderRadius: 12,
     margin: 10,
-    borderTopWidth: 1,
-    borderBottomColor: 'gray',
     padding: 10,
     justifyContent: 'space-between',
     textAlign: 'center',
-    borderColor: 'gray',
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    shadowOffset: { width: 0, height: 5 }, // Ajustez la hauteur ici pour déplacer l'ombre vers le bas
   },
   imageAnnonce: {
     justifyContent: 'center',
   },
   apercuImage: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor:'#8F8F8F',
     height: 150,
     paddingTop: 63,
     marginTop: 18,

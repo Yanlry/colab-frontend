@@ -73,7 +73,7 @@ const TabNavigator = ({ navigation }) => {
           }
           return <FontAwesome name={`${iconName}`} size={28} color={color} />;
         },
-        tabBarActiveTintColor: '"#182A49"',
+        tabBarActiveTintColor: '#182A49',
         tabBarInactiveTintColor: '#7E7E7E',
         header: props => <CustomHeader {...props} navigation={navigation} />,
       })}
@@ -111,6 +111,9 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+
+// ------------------------  NAVBAR ---------------------------------
+  
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',

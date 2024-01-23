@@ -10,7 +10,7 @@ export default function MesAnnoncesScreen({ navigation }) {
   const [mesAnnonces, setMesAnnonces] = useState([]);
 
   useEffect(() => {
-    fetch(`http://10.215.12.147:3000/annonces/mesAnnonces/${utilisateur.token}`)
+    fetch(`http://192.168.1.33:3000/annonces/mesAnnonces/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -85,8 +85,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  menu: {
+    flex: 1,
+    paddingTop: 20,
+    alignItems: 'center',
+  },
 
-  // ------------------- BARRE DE NAVIGATION : VUE ---------------------
+// ------------------- TITRE ---------------------
+
+  titre: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginBottom: 20
+  },
+
+// ------------------- ICONE RETOUR ARRIERE ---------------------
 
   navBar: {
     justifyContent: 'center',
@@ -95,19 +108,16 @@ const styles = StyleSheet.create({
     height: 85,
     borderBottomWidth: 1,
   },
-  menu: {
-    flex: 1,
-    paddingTop: 20,
-    alignItems: 'center',
-  },
-  boxTitre: {
+  
+// ------------------- AUCUNE ANNONCE PUBLIEE ---------------------
 
+  pasDannonces: {
+    marginTop: 300,
+    fontSize: 30
   },
-  titre: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    marginBottom: 20
-  },
+
+// ------------------- MON ANNONCES ---------------------
+
   annonce: {
     height: 190,
     width: 410,
@@ -120,10 +130,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     textAlign: 'center',
     borderColor: 'gray',
-  },
-  pasDannonces: {
-    marginTop: 300,
-    fontSize: 30
   },
   imageAnnonce: {
     justifyContent: 'center',
