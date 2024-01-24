@@ -156,9 +156,9 @@ export default function AccueilScreen({ navigation }) {
                   <FontAwesome name="filter" size={30} style={styles.filtreIcone} />
                 </TouchableOpacity>
               </View>
-              <View>
+              <View style={styles.scroll}>
               <ScrollView
-                contentContainerStyle={styles.contentContainer}
+                style={styles.contentContainer}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
               >
                 {afficherOffre ? lesOffres : lesDemandes}
@@ -179,9 +179,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
   },
-contentContainer:{
-  backgroundColor:'green'
-},
   //-----------------------  BOUTTON OFFRE ET DEMANDE  ---------------------------------
 
   offreEtDemande: {
@@ -252,7 +249,7 @@ contentContainer:{
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
-    shadowOffset: { width: 0, height: 5 }, // Ajustez la hauteur ici pour déplacer l'ombre vers le bas
+    shadowOffset: { width: 0, height: 5 },
   },
   imageAnnonce: {
     justifyContent: 'center',
@@ -270,29 +267,24 @@ contentContainer:{
   },
   apercuAnnonce: {
     width: 270,
-    height: 180,
     marginTop: 15,
+    paddingRight:50
   },
   apercuAnnonceTitre: {
     fontSize: 18,
-    height: 34,
   },
   apercuAnnonceDescription: {
     fontSize: 13,
-    height: 34,
   },
   apercuAnnonceExperience: {
     fontSize: 12,
-    height: 34,
   },
   apercuAnnonceTempsMax: {
     fontSize: 12,
     fontWeight: 'bold',
-    height: 34,
   },
   apercuAnnonceDate: {
     fontSize: 12,
-    height: 34,
   },
  
   //-----------------------  AUTRE  ---------------------------------
@@ -300,4 +292,6 @@ contentContainer:{
   contentContainer: {
     paddingBottom: 20,
   },
+
 });
+

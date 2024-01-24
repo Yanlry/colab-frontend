@@ -14,16 +14,12 @@ export default function InscriptionScreen({ navigation }) {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Sert a stocker l'information "mot de passe de cacher ou non ?"
   const [voirPassword, setVoirPassword] = useState(false);
 
-
-  // Rend le mot de passe visible ou non au click
   const passwordVisible = () => {
     setVoirPassword(!voirPassword);
   };
 
-  // Permet d'envoyer les données en base de données et naviguer a la page suivante
   const handleEnregistrer = () => {
     fetch('http://192.168.1.33:3000/users/signup', {
       method: 'POST',

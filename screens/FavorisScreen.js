@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { suprimeFavoris } from '../reducers/utilisateur';
 
@@ -63,9 +63,6 @@ export default function FavorisScreen({ navigation }) {
   return (
 
     <SafeAreaView style={styles.safeAreaView}>
-      <KeyboardAvoidingView>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      
             <View style={styles.container}>
 
               {/* BOUTON POUR FILTRER PAR TYPE */}
@@ -84,30 +81,31 @@ export default function FavorisScreen({ navigation }) {
               {/* AFFICHER LES ANNONCE FAVORIS DE TYPE: */}
               {afficherOffre ? (
                 /* OFFRE */
-                <ScrollView>
-                  <Text style={styles.mesFavoris}>Mes offres favorites</Text>
-                  {favorisOffre.length === 0 ? (
-                    <Text style={styles.aucunFavoris}>Aucune offre en favoris</Text>
-                  ) : (
-                    mesFavoris(favorisOffre)
-                  )}
-                </ScrollView>
+                <View>
+                  <ScrollView>
+                    <Text style={styles.mesFavoris}>Mes offres favorites</Text>
+                    {favorisOffre.length === 0 ? (
+                      <Text style={styles.aucunFavoris}>Aucune offre en favoris</Text>
+                      ) : (
+                        mesFavoris(favorisOffre)
+                        )}
+                  </ScrollView>
+                </View>
               ) : (
                 /* DEMANDE */
-                <ScrollView>
-                  <Text style={styles.mesFavoris}>Mes demandes favorites</Text>
-                  {favorisDemande.length === 0 ? (
-                    <Text style={styles.aucunFavoris}>Aucune demande en favoris</Text>
-                  ) : (
-                    mesFavoris(favorisDemande)
-                  )}
-                </ScrollView>
+                <View>
+                  <ScrollView>
+                    <Text style={styles.mesFavoris}>Mes demandes favorites</Text>
+                    {favorisDemande.length === 0 ? (
+                      <Text style={styles.aucunFavoris}>Aucune demande en favoris</Text>
+                    ) : (
+                      mesFavoris(favorisDemande)
+                    )}
+                  </ScrollView>
+                </View>
+
               )}
-
             </View>
-
-          </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
   </SafeAreaView>
   );
 }
@@ -169,16 +167,19 @@ const styles = StyleSheet.create({
 
   annonce: {
     height: 190,
-    width: 410,
+    width: '94%',
     flexDirection: 'row',
     borderRadius: 12,
     margin: 10,
-    borderTopWidth: 1,
-    borderBottomColor: 'gray',
     padding: 10,
     justifyContent: 'space-between',
     textAlign: 'center',
-    borderColor: 'gray',
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+    shadowOffset: { width: 0, height: 5 },
   },
   imageAnnonce: {
     justifyContent: 'center',

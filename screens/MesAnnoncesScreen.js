@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector } from 'react-redux';
 
@@ -60,54 +60,59 @@ export default function MesAnnoncesScreen({ navigation }) {
   ))
 
   return (
+    <SafeAreaView style={styles.safeAreaView}>
+
     <View style={styles.container}>
-      <View style={styles.navBar}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+      
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
           <FontAwesome name='chevron-left' size={28} color={'#3A3960'} />
         </TouchableOpacity>
+        <Text style={styles.title}>Mes annonces</Text>
       </View>
 
       <View style={styles.menu}>
-        <View style={styles.boxTitre}>
-          <Text style={styles.titre}>Mes annonces</Text>
-        </View>
-        {mesAnnonces.length === 0 ? (
-          <Text style={styles.pasDannonces}>Aucune annonce publiée</Text>
-        ) :
+
+        <View>
+          {mesAnnonces.length === 0 ? (
+            <Text style={styles.pasDannonces}>Aucune annonce publiée</Text>
+            ) :
           <ScrollView>{lesOffres}</ScrollView>}
+        </View>
       </View>
     </View>
+    </SafeAreaView>
+
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeAreaView: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor:'#fff'
+  },
+  container: {
+    flex:1
   },
   menu: {
-    flex: 1,
-    paddingTop: 20,
     alignItems: 'center',
   },
 
-// ------------------- TITRE ---------------------
-
-  titre: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    marginBottom: 20
-  },
-
 // ------------------- ICONE RETOUR ARRIERE ---------------------
-
-  navBar: {
-    justifyContent: 'center',
-    paddingHorizontal: 30,
-    paddingTop: 45,
-    height: 85,
-    borderBottomWidth: 1,
-  },
+header: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginTop:20,
+  marginBottom: 10,
+},
+icon: {
+  marginLeft: 25,
+  marginRight:82
+},
+title: {
+  fontSize: 24,
+  fontWeight: 'bold',
+},
   
 // ------------------- AUCUNE ANNONCE PUBLIEE ---------------------
 
@@ -118,57 +123,55 @@ const styles = StyleSheet.create({
 
 // ------------------- MON ANNONCES ---------------------
 
-  annonce: {
-    height: 190,
-    width: 410,
-    flexDirection: 'row',
-    borderRadius: 12,
-    margin: 10,
-    borderTopWidth: 1,
-    borderBottomColor: 'gray',
-    padding: 10,
-    justifyContent: 'space-between',
-    textAlign: 'center',
-    borderColor: 'gray',
-  },
-  imageAnnonce: {
-    justifyContent: 'center',
-  },
-  apercuImage: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    height: 150,
-    paddingTop: 63,
-    marginTop: 18,
-    borderRadius: 12,
-    width: 99,
-    textAlign: 'center',
-    marginRight: 20
-  },
-  apercuAnnonce: {
-    width: 270,
-    height: 180,
-    marginTop: 15,
-  },
-  apercuAnnonceTitre: {
-    fontSize: 18,
-    height: 34,
-  },
-  apercuAnnonceDescription: {
-    fontSize: 13,
-    height: 34,
-  },
-  apercuAnnonceTempsMax: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    height: 34,
-  },
-  apercuAnnonceExperience: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  apercuAnnonceDate: {
-    fontSize: 12,
-    width: 350,
-  },
+annonce: {
+  height: 190,
+  width: '94%',
+  flexDirection: 'row',
+  borderRadius: 12,
+  margin: 10,
+  padding: 10,
+  justifyContent: 'space-between',
+  textAlign: 'center',
+  backgroundColor: '#fff',
+  shadowColor: '#000',
+  shadowOpacity: 0.1,
+  shadowRadius: 3.84,
+  elevation: 5,
+  shadowOffset: { width: 0, height: 5 },
+},
+imageAnnonce: {
+  justifyContent: 'center',
+},
+apercuImage: {
+  borderWidth: 1,
+  borderColor:'#8F8F8F',
+  height: 150,
+  paddingTop: 63,
+  marginTop: 18,
+  borderRadius: 12,
+  width: 99,
+  textAlign: 'center',
+  marginRight: 20,
+},
+apercuAnnonce: {
+  width: 270,
+  marginTop: 15,
+  paddingRight:50
+},
+apercuAnnonceTitre: {
+  fontSize: 18,
+},
+apercuAnnonceDescription: {
+  fontSize: 13,
+},
+apercuAnnonceExperience: {
+  fontSize: 12,
+},
+apercuAnnonceTempsMax: {
+  fontSize: 12,
+  fontWeight: 'bold',
+},
+apercuAnnonceDate: {
+  fontSize: 12,
+},
 });

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, ScrollView, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ScrollView, View, Image, SafeAreaView } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MapView, { Marker } from 'react-native-maps';
 import { useSelector } from 'react-redux';
@@ -8,17 +8,13 @@ export default function MonAnnonceScreen({ route, navigation }) {
 
   const { annonce } = route.params;
 
-  // Utilise le reducers "utilisateur" pour acceder au username
   const utilisateur = useSelector((state) => state.utilisateur.value);
 
-
-  // A remplacer par les coordonnées de la ville selectionner dans l'annonce
   const coordinates = {
     latitude: 48.8566,
     longitude: 2.3522,
   };
 
-  // Permet de formatter la date de l'annonce
   const formatDate = (dateString) => {
     const options = { day: '2-digit', month: 'long', year: 'numeric' };
     const dateObject = new Date(dateString);
@@ -62,17 +58,21 @@ export default function MonAnnonceScreen({ route, navigation }) {
   };
 
   return (
+    <SafeAreaView style={styles.safeAreaView}>
+
     <View style={styles.container}>
 
       <View style={styles.navBar}>
         {/* BOUTON RETOUR ARRIERE */}
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome name='chevron-left' size={28} style={styles.goBack} color={'#3A3960'} />
+          <FontAwesome name='chevron-left' size={28} style={styles.goBack} color={'#182A49'} />
         </TouchableOpacity>
+
+        <Image resizeMode="contain" source={require('../assets/logo.png')} style={styles.logo} />
 
         {/* BOUTON PROFIL */}
         <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
-          <FontAwesome name='user' size={30} color="#3A3960" />
+          <FontAwesome name='user' size={30} color="#182A49" />
         </TouchableOpacity>
       </View>
 
@@ -84,13 +84,9 @@ export default function MonAnnonceScreen({ route, navigation }) {
           </Text>
         </View>
 
-        {/* TYPE */}
-        <View style={styles.annonceType}>
+        {/* TYPE ET DATE DE PUBLICATION */}
+        <View style={styles.annonceTypeEtDate}>
           <Text>Type : {annonce.type}</Text>
-        </View>
-
-        {/* DATE DE PUBLICATION */}
-        <View style={styles.annonceDate}>
           <Text>Publier le : {formatDate(annonce.date)}</Text>
         </View>
 
@@ -108,14 +104,14 @@ export default function MonAnnonceScreen({ route, navigation }) {
 
             {/* SECTEUR D'ACTIVITE */}
             <View style={styles.titreEtLogo}>
-              <FontAwesome name='user' size={15} color="#3A3960" />
+              <FontAwesome name='list' size={15} color="#182A49" />
               <Text style={styles.titre}>Secteur d'activité</Text>
             </View>
             <Text style={styles.critereReponse}> {annonce.secteurActivite} </Text>
 
             {/*  DISPONIBILITÉ */}
             <View style={styles.titreEtLogo}>
-              <FontAwesome name='user' size={15} color="#3A3960" />
+              <FontAwesome name='hourglass' size={15} color="#182A49" />
               <Text style={styles.titre}>Disponibilité</Text>
             </View>
             <Text style={styles.critereReponse}>{annonce.experience}</Text>
@@ -126,14 +122,14 @@ export default function MonAnnonceScreen({ route, navigation }) {
 
             {/* EXPÉRIENCE */}
             <View style={styles.titreEtLogo}>
-              <FontAwesome name='user' size={15} color="#3A3960" />
+              <FontAwesome name='briefcase' size={15} color="#182A49" />
               <Text style={styles.titre} >Mon expérience</Text>
             </View>
             <Text style={styles.critereReponse}>{annonce.experience} ans</Text>
 
             {/* TEMPS MAX */}
             <View style={styles.titreEtLogo}>
-              <FontAwesome name='user' size={15} color="#3A3960" />
+              <FontAwesome name='users' size={15} color="#182A49" />
               <Text style={styles.titre}>Temps max</Text>
             </View>
             <Text style={styles.critereReponse}>{annonce.tempsMax} heure / semaine </Text>
@@ -152,18 +148,18 @@ export default function MonAnnonceScreen({ route, navigation }) {
           {/* ICONE PROFIL */}
           <View style={styles.utilisateurGauche}>
             <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
-              <FontAwesome name="user" size={50} color="#3A3960" />
+              <FontAwesome name="user" size={50} color="#182A49" />
             </TouchableOpacity>
           </View>
 
           {/* NOM D'UTILISATEUR */}
           <Text style={styles.textUtilisateur}>Nom d'utilisateur : {utilisateur.username} </Text>
-          <FontAwesome name='chevron-right' size={30} color={'#3A3960'} />
+          <FontAwesome name='chevron-right' size={30} color={'#182A49'} />
         </TouchableOpacity>
 
         {/*  SIGNALEZ ANNONCE  */}
         <TouchableOpacity style={styles.signalez}>
-          <Text >S i g n a l e z    l ' a n n o n c e</Text>
+          <Text  style={styles.textSignalez}>S i g n a l e z    l ' a n n o n c e</Text>
         </TouchableOpacity>
 
       </ScrollView>
@@ -177,13 +173,18 @@ export default function MonAnnonceScreen({ route, navigation }) {
       </View>
 
     </View>
+    </SafeAreaView>
+
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeAreaView: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor:'#fff'
+  },
+  container: {
+    flex:1
   },
 
   // ------------------- NAVBAR ---------------------
@@ -191,12 +192,15 @@ const styles = StyleSheet.create({
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems:'center',
     paddingHorizontal: 30,
-    paddingTop: 45,
-    height: 85,
-    borderBottomWidth: 1
+    marginTop:15
   },
-
+  logo: {
+    height: 38,
+    width: 130,
+    marginRight: 5
+  },
   // ------------------- ANNONCE ENTIERE : SCROLLVIEW ---------------------
   annonceComplete: {
     flex: 1,
@@ -219,16 +223,19 @@ const styles = StyleSheet.create({
   annonceFavoris: {
     paddingRight: 5
   },
-  annonceType: {
-    paddingLeft: 20,
-    paddingTop: 10
+  annonceTypeEtDate: {
+    flexDirection:'row',
+    justifyContent:'space-between',
+    paddingHorizontal: 20,
+    marginTop:18
   },
 
   // ------------------- DESCRIPTION ---------------------
   annonceDescription: {
-    marginTop: 30,
+    marginTop: 10,
     padding: 10,
     borderWidth: 1,
+    borderColor:'grey',
     borderRadius: 12,
     marginVertical: 5,
     marginHorizontal: 10
@@ -241,6 +248,7 @@ const styles = StyleSheet.create({
 
   annonceCritere: {
     borderWidth: 1,
+    borderColor:'grey',
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 15,
@@ -282,6 +290,7 @@ const styles = StyleSheet.create({
   // ------------------- UTILISATEUR BOUTON ---------------------
   utilisateur: {
     borderWidth: 1,
+    borderColor:'grey',
     borderRadius: 12,
     height: 90,
     flexDirection: 'row',
@@ -299,8 +308,10 @@ const styles = StyleSheet.create({
   },
 
   // ------------------- SIGNALEZ ANNONCE BOUTON ---------------------
+
   signalez: {
     borderWidth: 1,
+    borderColor:'#FF1F1F',
     borderRadius: 12,
     height: 30,
     flexDirection: 'row',
@@ -309,6 +320,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 10,
     marginBottom: 37,
+    backgroundColor: '#fff',
+    fontWeight:'bold'
+  },
+  textSignalez: {
+    color:'#FF1F1F'
   },
 
   // ------------------- BARRE DE MODIFICATION ---------------------
@@ -317,12 +333,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 85,
-    borderWidth: 1,
     flexDirection: 'row',
     paddingBottom: 15
   },
   modifierBoutton: {
-    width: 150,
+    width: 250,
     height: 50,
     borderRadius: 12,
     alignItems: 'center',

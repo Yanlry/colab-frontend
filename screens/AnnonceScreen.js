@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TouchableOpacity, ScrollView, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ScrollView, View,SafeAreaView, Image  } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,29 +10,23 @@ export default function AnnonceScreen({ route, navigation }) {
 
   const { annonce } = route.params;
 
-  // Servira a envoyer les donner souhaitez dans mon reducers
   const dispatch = useDispatch();
 
-  // Utilise le reducers "utilisateur" pour acceder au tableau des favoris
   const favoris = useSelector(state => state.utilisateur.favoris);
   const utilisateur = useSelector(state => state.utilisateur.value);
 
-  // État pour savoir si l'annonce est en favori ( Pour la mettre en couleur ou non )
   const [enFavori, setEnFavori] = useState(false);
 
-  // Sert vérifier si l'annonce est déja dans la liste des favoris et met à jour l'état par rapport au données récus
   useEffect(() => {
     const estDejaFavori = favoris.some(fav => fav.token === annonce.token);
     setEnFavori(estDejaFavori);
   }, [favoris, annonce.token]);
 
-  // A remplacer par les données de la ville selectionner dans l'annonce
   const coordonnee = {
     latitude: 48.8566,
     longitude: 2.3522,
   };
 
-  // Permet d'ajouter ou de supprimer une annonces de mes favoris
   const gererFavoris = (annonce) => {
 
     const estDejaFavori = favoris.some(fav => fav.token === annonce.token);
@@ -44,7 +38,6 @@ export default function AnnonceScreen({ route, navigation }) {
     }
   };
 
-  // Permet de formatter la date de l'annonce
   const formatDate = (dateString) => {
     const options = { day: '2-digit', month: 'long', year: 'numeric' };
     const dateObject = new Date(dateString);
@@ -66,137 +59,140 @@ export default function AnnonceScreen({ route, navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeAreaView}>
+          <View style={styles.container}>
 
-      <View style={styles.navBar}>
-        {/* BOUTON RETOUR ARRIERE */}
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome name='chevron-left' size={28} style={styles.goBack} color={'#3A3960'} />
-        </TouchableOpacity>
+            <View style={styles.navBar}>
+              {/* BOUTON RETOUR ARRIERE */}
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <FontAwesome name='chevron-left' size={28} style={styles.goBack} color={'#182A49'} />
+              </TouchableOpacity>
 
-        {/* BOUTON PROFIL */}
-        <TouchableOpacity onPress={() => navigation.navigate('Utilisateur')}>
-          <FontAwesome name='user' size={30} color="#3A3960" />
-        </TouchableOpacity>
-      </View>
+              <Image resizeMode="contain" source={require('../assets/logo.png')} style={styles.logo} />
 
-      <ScrollView style={styles.annonceComplete}>
-        <View style={styles.annonceEnTete}>
-          {/* TITRE */}
-          <Text style={styles.annonceTitre}>
-            {annonce.title}
-          </Text>
-
-          {/* ICONE FAVORIS */}
-          <TouchableOpacity onPress={() => { gererFavoris(annonce); setEnFavori(!enFavori); }}>
-            <FontAwesome name={enFavori ? "heart" : 'heart-o'} size={30} color={enFavori ? '#C70039' : '#3A3960'} style={styles.annonceFavoris} />
-          </TouchableOpacity>
-
-        </View>
-
-        {/* TYPE */}
-        <View style={styles.annonceType}>
-          <Text>Type : {annonce.type}</Text>
-        </View>
-
-        {/* DATE DE PUBLICATION */}
-        <View style={styles.annonceDate}>
-          <Text>Publier le : {formatDate(annonce.date)}</Text>
-        </View>
-
-        {/* DESCRIPTION */}
-        <View style={styles.annonceDescription}>
-          <Text style={styles.annonceDescriptionText}>Description :{"\n"}</Text>
-          <Text>{annonce.description}</Text>
-        </View>
-
-        {/* CRITÉRE */}
-        <View style={styles.annonceCritere}>
-
-          {/* CRITERE COLONNE 1 */}
-          <View style={styles.critereColonne1}>
-
-            {/* SECTEUR D'ACTIVITE */}
-            <View style={styles.titreEtLogo}>
-              <FontAwesome name='user' size={15} color="#3A3960" />
-              <Text style={styles.titre}>Secteur d'activité</Text>
+              {/* BOUTON PROFIL */}
+              <TouchableOpacity onPress={() => navigation.navigate('Utilisateur')}>
+                <FontAwesome name='user' size={30} color="#182A49" />
+              </TouchableOpacity>
             </View>
-            <Text style={styles.critereReponse}> {annonce.secteurActivite} </Text>
 
-            {/*  DISPONIBILITÉ */}
-            <View style={styles.titreEtLogo}>
-              <FontAwesome name='user' size={15} color="#3A3960" />
-              <Text style={styles.titre}>Disponibilité</Text>
+            <ScrollView style={styles.annonceComplete}>
+              <View style={styles.annonceEnTete}>
+                {/* TITRE */}
+                <Text style={styles.annonceTitre}>
+                  {annonce.title}
+                </Text>
+
+                {/* ICONE FAVORIS */}
+                <View style={styles.annonceFavoris}>
+                <TouchableOpacity onPress={() => { gererFavoris(annonce); setEnFavori(!enFavori); }} >
+                  <FontAwesome name={enFavori ? "heart" : 'heart-o'} size={30} color={enFavori ? '#C70039' : '#182A49'}  />
+                </TouchableOpacity>
+
+                </View>
+
+              </View>
+
+              {/* TYPE ET DATE DE PUBLICATION */}
+              <View style={styles.annonceTypeEtDate}>
+                <Text>Type : {annonce.type}</Text>
+                <Text>Publier le : {formatDate(annonce.date)}</Text>
+              </View>
+
+              {/* DESCRIPTION */}
+              <View style={styles.annonceDescription}>
+                <Text style={styles.annonceDescriptionText}>Description :{"\n"}</Text>
+                <Text>{annonce.description}</Text>
+              </View>
+
+              {/* CRITÉRE */}
+              <View style={styles.annonceCritere}>
+
+                {/* CRITERE COLONNE 1 */}
+                <View style={styles.critereColonne1}>
+
+                  {/* SECTEUR D'ACTIVITE */}
+                  <View style={styles.titreEtLogo}>
+                    <FontAwesome name='list' size={15} color="#182A49" />
+                    <Text style={styles.titre}>Secteur d'activité</Text>
+                  </View>
+                  <Text style={styles.critereReponse}> {annonce.secteurActivite} </Text>
+
+                  {/*  DISPONIBILITÉ */}
+                  <View style={styles.titreEtLogo}>
+                    <FontAwesome name='hourglass' size={15} color="#182A49" />
+                    <Text style={styles.titre}>Disponibilité</Text>
+                  </View>
+                  <Text style={styles.critereReponse}>{annonce.disponibilite}</Text>
+                </View>
+
+                {/* CRITÉRE COLONNE 2 */}
+                <View style={styles.critereColonne2}>
+
+                  {/* EXPÉRIENCE */}
+                  <View style={styles.titreEtLogo}>
+                    <FontAwesome name='briefcase' size={15} color="#182A49" />
+                    <Text style={styles.titre} >Mon expérience</Text>
+                  </View>
+                  <Text style={styles.critereReponse}>{annonce.experience} ans</Text>
+
+                  {/* TEMPS MAX */}
+                  <View style={styles.titreEtLogo}>
+                    <FontAwesome name='users' size={15} color="#182A49" />
+                    <Text style={styles.titre}>Temps max</Text>
+                  </View>
+                  <Text style={styles.critereReponse}>{annonce.tempsMax} heure / semaine </Text>
+                </View>
+              </View>
+
+              {/* MAP LOCALISATION */}
+              <View style={styles.mapContainer}>
+                <MapView style={styles.map} region={{ ...coordonnee, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}>
+                  <Marker coordinate={coordonnee} />
+                </MapView>
+              </View>
+
+              {/* INFORMATIONS UTILISATEUR DE L'ANNONCE */}
+              <TouchableOpacity style={styles.utilisateur} onPress={() => navigation.navigate('Profil')}>
+                {/* ICONE PROFIL */}
+                <View style={styles.utilisateurGauche}>
+                  <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
+                    <FontAwesome name="user" size={50} color="#182A49" />
+                  </TouchableOpacity>
+                </View>
+
+                {/* NOM D'UTILISATEUR */}
+                <Text style={styles.textUtilisateur}>Nom d'utilisateur : {annonce.username} </Text>
+                <FontAwesome name='chevron-right' size={30} color={'#182A49'} />
+              </TouchableOpacity>
+
+              {/*  SIGNALEZ ANNONCE  */}
+              <TouchableOpacity style={styles.signalez}>
+                <Text style={styles.textSignalez}>S i g n a l e z    l ' a n n o n c e</Text>
+              </TouchableOpacity>
+
+            </ScrollView>
+
+
+            {/* BARRE DE COLAB */}
+            <View style={styles.colabBar}>
+              <TouchableOpacity onPress={() => handleColab()} style={styles.colabBtn}>
+                <Text style={styles.colabText}>COLAB</Text>
+              </TouchableOpacity>
             </View>
-            <Text style={styles.critereReponse}>{annonce.disponibilite}</Text>
+
           </View>
-
-          {/* CRITÉRE COLONNE 2 */}
-          <View style={styles.critereColonne2}>
-
-            {/* EXPÉRIENCE */}
-            <View style={styles.titreEtLogo}>
-              <FontAwesome name='user' size={15} color="#3A3960" />
-              <Text style={styles.titre} >Mon expérience</Text>
-            </View>
-            <Text style={styles.critereReponse}>{annonce.experience} ans</Text>
-
-            {/* TEMPS MAX */}
-            <View style={styles.titreEtLogo}>
-              <FontAwesome name='user' size={15} color="#3A3960" />
-              <Text style={styles.titre}>Temps max</Text>
-            </View>
-            <Text style={styles.critereReponse}>{annonce.tempsMax} heure / semaine </Text>
-          </View>
-        </View>
-
-        {/* MAP LOCALISATION */}
-        <View style={styles.mapContainer}>
-          <MapView style={styles.map} region={{ ...coordonnee, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}>
-            <Marker coordinate={coordonnee} />
-          </MapView>
-        </View>
-
-        {/* INFORMATIONS UTILISATEUR DE L'ANNONCE */}
-        <TouchableOpacity style={styles.utilisateur} onPress={() => navigation.navigate('Profil')}>
-          {/* ICONE PROFIL */}
-          <View style={styles.utilisateurGauche}>
-            <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
-              <FontAwesome name="user" size={50} color="#3A3960" />
-            </TouchableOpacity>
-          </View>
-
-          {/* NOM D'UTILISATEUR */}
-          <Text style={styles.textUtilisateur}>Nom d'utilisateur : {annonce.username} </Text>
-          <FontAwesome name='chevron-right' size={30} color={'#3A3960'} />
-        </TouchableOpacity>
-
-        {/*  SIGNALEZ ANNONCE  */}
-        <TouchableOpacity style={styles.signalez}>
-          <Text style={styles.textSignalez}>S i g n a l e z    l ' a n n o n c e</Text>
-        </TouchableOpacity>
-
-      </ScrollView>
-
-
-      {/* BARRE DE COLAB */}
-      <View style={styles.colabBar}>
-        <View >
-          <FontAwesome name="users" size={30} color="#3A3960" style={styles.nbColabIcone} />
-        </View>
-        <TouchableOpacity onPress={() => handleColab()} style={styles.colabBtn}>
-          <Text style={styles.colabText}>COLAB</Text>
-        </TouchableOpacity>
-      </View>
-
-    </View>
+  </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeAreaView: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor:'#fff'
+  },
+  container: {
+    flex:1
   },
 
   // ------------------- NAVBAR ---------------------
@@ -204,17 +200,20 @@ const styles = StyleSheet.create({
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems:'center',
     paddingHorizontal: 30,
-    paddingTop: 45,
-    height: 85,
-    borderBottomWidth: 1
+    marginTop:15
   },
-
+  logo: {
+    height: 38,
+    width: 130,
+    marginRight: 5
+  },
   // ------------------- ANNONCE ENTIERE : SCROLLVIEW ---------------------
 
   annonceComplete: {
     flex: 1,
-    paddingTop: 30,
+    marginTop:15,
     backgroundColor: '#fff6',
   },
   annonceEnTete: {
@@ -231,19 +230,23 @@ const styles = StyleSheet.create({
     width: 335,
   },
   annonceFavoris: {
-    paddingRight: 5
+    position:'absolute',
+    marginLeft:320
   },
-  annonceType: {
-    paddingLeft: 20,
-    paddingTop: 10
+  annonceTypeEtDate: {
+    flexDirection:'row',
+    justifyContent:'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 15
   },
 
   // ------------------- DESCRIPTION ---------------------
 
   annonceDescription: {
-    marginTop: 30,
+    marginTop: 10,
     padding: 10,
     borderWidth: 1,
+    borderColor:'grey',
     borderRadius: 12,
     marginVertical: 5,
     marginHorizontal: 10
@@ -256,6 +259,7 @@ const styles = StyleSheet.create({
 
   annonceCritere: {
     borderWidth: 1,
+    borderColor:'grey',
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 15,
@@ -309,6 +313,7 @@ const styles = StyleSheet.create({
 
   utilisateur: {
     borderWidth: 1,
+    borderColor:'grey',
     borderRadius: 12,
     height: 90,
     flexDirection: 'row',
@@ -351,18 +356,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     height: 85,
-    borderWidth: 1,
+    borderTopWidth: 1,
+    borderColor: 'grey',
     flexDirection: 'row',
-    paddingBottom: 15
   },
   colabBtn: {
-    width: 200,
+    width: 280,
     height: 50,
     borderWidth: 1,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#3A3960'
+    backgroundColor: '#182A49'
   },
   colabText: {
     fontSize: 30,

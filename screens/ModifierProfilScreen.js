@@ -15,19 +15,19 @@ export default function ModifierProfilScreen({ navigation }) {
   const [profileImage, setProfileImage] = useState(null);
 
   useEffect(() => {
-    // Récupérer les activités disponibles depuis le backend
+
     fetch('http://192.168.1.33:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
           setActivitesDisponibles(data.activites);
         }
-        setIsLoading(false); // Mettre fin au chargement
+        setIsLoading(false);
       });
   }, []);
 
   const handleEnregistrer = () => {
-    // Envoyer les activités sélectionnées au backend
+    
     fetch(`http://192.168.1.33:3000/profiles/jePeux/${user.token}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
