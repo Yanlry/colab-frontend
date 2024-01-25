@@ -173,12 +173,12 @@ export default function AccueilScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   safeAreaView: {
-    flex: 1,
     backgroundColor:'#fff'
   },
   container: {
     alignItems: 'center',
   },
+  
   //-----------------------  BOUTTON OFFRE ET DEMANDE  ---------------------------------
 
   offreEtDemande: {
@@ -226,13 +226,18 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginHorizontal:5,
   },
-
+  
   //-----------------------  ICONE FILTRE  ---------------------------------
 
   filtreIcone: {
     marginLeft:8
   },
 
+  //-----------------------   SCROLLVIEW  ---------------------------------
+
+  scroll:{
+    height:500
+  },
   //-----------------------  VIGNETTE D'ANNONCE  ---------------------------------
   
   annonce: {
@@ -289,9 +294,6 @@ const styles = StyleSheet.create({
  
   //-----------------------  AUTRE  ---------------------------------
   
-  contentContainer: {
-    paddingBottom: 20,
-  },
 
 });
 

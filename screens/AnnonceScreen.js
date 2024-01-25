@@ -342,7 +342,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginVertical: 5,
     marginHorizontal: 10,
-    marginBottom: 37,
     backgroundColor: '#fff',
     fontWeight:'bold'
   },

@@ -81,7 +81,7 @@ export default function FavorisScreen({ navigation }) {
               {/* AFFICHER LES ANNONCE FAVORIS DE TYPE: */}
               {afficherOffre ? (
                 /* OFFRE */
-                <View>
+                <View style={styles.scrollView}>
                   <ScrollView>
                     <Text style={styles.mesFavoris}>Mes offres favorites</Text>
                     {favorisOffre.length === 0 ? (
@@ -93,7 +93,7 @@ export default function FavorisScreen({ navigation }) {
                 </View>
               ) : (
                 /* DEMANDE */
-                <View>
+                <View style={styles.scrollView}>
                   <ScrollView>
                     <Text style={styles.mesFavoris}>Mes demandes favorites</Text>
                     {favorisDemande.length === 0 ? (
@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     margin:1,
     marginTop: 20,
+    marginBottom:10
   },
   categorieText: {
     fontSize: 23,
@@ -155,12 +156,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 25,
     fontWeight: 'bold',
-    padding: 20
+    paddingVertical: 5
   },
   aucunFavoris: {
     textAlign: 'center',
     marginTop: 250,
     fontSize: 30
+  },
+
+  //-----------------------  ICONE FILTRE  ---------------------------------
+
+  scrollView:{
+    height:580
   },
 
   //-----------------------  VIGNETTE D'ANNONCE  ---------------------------------
@@ -186,41 +193,35 @@ const styles = StyleSheet.create({
   },
   apercuImage: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor:'#8F8F8F',
     height: 150,
     paddingTop: 63,
     marginTop: 18,
     borderRadius: 12,
     width: 99,
     textAlign: 'center',
-    marginRight: 20
+    marginRight: 20,
   },
   apercuAnnonce: {
     width: 270,
-    height: 180,
     marginTop: 15,
-    marginRight: -30
+    paddingRight:50
   },
   apercuAnnonceTitre: {
     fontSize: 18,
-    height: 34,
   },
   apercuAnnonceDescription: {
     fontSize: 13,
-    height: 34,
-  },
-  apercuAnnonceTempsMax: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    height: 34,
   },
   apercuAnnonceExperience: {
+    fontSize: 12,
+  },
+  apercuAnnonceTempsMax: {
     fontSize: 12,
     fontWeight: 'bold',
   },
   apercuAnnonceDate: {
     fontSize: 12,
-    width: 350,
   },
 
 //----------------------- BOUTON FAVORIS  ---------------------------------
