@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 export default function MessagerieScreen() {
   return (
     <View style={styles.container}>
-      <Text>Messagerie</Text>
+      <Text>Messagerie </Text>
     </View>
   );
 }
