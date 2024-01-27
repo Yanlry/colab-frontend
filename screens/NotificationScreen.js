@@ -100,13 +100,13 @@ const NotificationScreen = ({ navigation }) => {
           style={[styles.button, styles.acceptButton]}
           onPress={() => handleAccept(item.message)}
         >
-          <FontAwesome name="check" size={20} color="white" />
+          <Text style={styles.choix}>Accepté</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.rejectButton]}
           onPress={() => handleReject(item.message)}
         >
-          <FontAwesome name="remove" size={20} color="white" />
+          <Text style={styles.choix}>Refuser</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -126,20 +126,20 @@ const NotificationScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
           <FontAwesome name='chevron-left' size={28} color={'#3A3960'} />
         </TouchableOpacity>
-        <Text style={styles.title}>Notifications</Text>
+        <Text style={styles.title}>Mes collaboration</Text>
       </View>
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[styles.tabButton, activeTab === 'offres' && styles.activeTabButton]}
           onPress={() => setActiveTab('offres')}
         >
-          <Text style={[styles.tabText, activeTab === 'offres' && styles.activeTabText]}>Vos Offres</Text>
+          <Text style={[styles.tabText, activeTab === 'offres' && styles.activeTabText]}>Reçu</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tabButton, activeTab === 'demandes' && styles.activeTabButton]}
           onPress={() => setActiveTab('demandes')}
         >
-          <Text style={[styles.tabText, activeTab === 'demandes' && styles.activeTabText]}>Vos Demandes</Text>
+          <Text style={[styles.tabText, activeTab === 'demandes' && styles.activeTabText]}>Envoyé</Text>
         </TouchableOpacity>
       </View>
 
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginLeft: 25,
-    marginRight:82
+    marginRight:60
   },
   title: {
     fontSize: 24,
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
 
   tabContainer: {
     flexDirection: 'row',
-    backgroundColor: '#E9E9E9',
+    marginTop:10
   },
   tabButton: {
     flex: 1,
@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
   notificationItem: {
     marginBottom: 16,
     padding: 16,
+    borderRadius:12,
     backgroundColor: '#E9E9E9',
   },
   notificationText: {
@@ -253,6 +254,10 @@ const styles = StyleSheet.create({
   rejectButton: {
     backgroundColor: '#EC4C4C',
     marginLeft: 15,
+  },
+  choix:{
+    color:'white',
+    fontSize:8
   },
   demandeMessageContainer: {
     marginBottom: 10,
