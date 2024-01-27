@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TouchableOpacity, ScrollView, View,SafeAreaView, Image  } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ScrollView, View,SafeAreaView, Image, Alert } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
@@ -44,20 +44,37 @@ export default function AnnonceScreen({ route, navigation }) {
     return dateObject.toLocaleDateString('fr-FR', options);
   };
 
-
   const handleColab = () => {
+    Alert.alert(
+      'Confirmation',
+      'Êtes-vous sûr de vouloir envoyer une demande de colab ?',
+      [
+        { text: 'Non', style: 'cancel' },
+        { text: 'Oui', onPress: () => envoyerDemandeColab() },
+      ],
+      { cancelable: false }
+    );
+  };
+  
+  const envoyerDemandeColab = () => {
     fetch('http://192.168.1.33:3000/propositionCollabs/propositions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: annonce.token, cible: annonce.username, initiateur: utilisateur.username }),
     })
-
-
       .then(response => response.json())
-    navigation.navigate('Notification')
-
-  }
-
+      .then(() => {
+        Alert.alert(
+          'Felicitation !',
+          'Votre demande de colab a été envoyée avec succès !',
+          [{ text: 'OK', onPress: () => console.log('Demande de colab envoyée') }]
+        );
+      })
+      .catch(error => {
+        console.error('Erreur lors de l\'envoi de la demande de colab', error);
+      });
+  };
+  
   return (
     <SafeAreaView style={styles.safeAreaView}>
           <View style={styles.container}>

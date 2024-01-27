@@ -60,6 +60,7 @@ export default function ActiviteScreen({ navigation }) {
         body: JSON.stringify(requestBodyOffre),
       });
       const dataOffre = await responseOffre.json();
+      console.log('Réponse jePeux:', dataOffre);
       dispatch(jePeux(dataOffre.user));
   
       const responseDemande = await fetch(`http://192.168.1.33:3000/profiles/jeVeux`, {
@@ -68,6 +69,7 @@ export default function ActiviteScreen({ navigation }) {
         body: JSON.stringify(requestBodyDemande),
       });
       const dataDemande = await responseDemande.json();
+      console.log('Réponse jeVeux:', dataDemande);
       dispatch(jeVeux(dataDemande.user));
   
       navigation.navigate('Profil');

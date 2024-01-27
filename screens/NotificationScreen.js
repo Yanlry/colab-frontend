@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   },
   choix:{
     color:'white',
-    fontSize:8
+    fontSize:18
   },
   demandeMessageContainer: {
     marginBottom: 10,

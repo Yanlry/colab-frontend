@@ -162,8 +162,18 @@ export default function AccueilScreen({ navigation }) {
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
               >
                 {afficherOffre ? lesOffres : lesDemandes}
+                {afficherOffre && lesOffres.length === 0 && (
+                  <Text style={styles.messageAucuneOffre}>
+                    Aucune offre disponible dans vos catégories demandées.
+                  </Text>
+                )}
+                {!afficherOffre && lesDemandes.length === 0 && (
+                  <Text style={styles.messageAucuneOffre}>
+                    Aucune demande disponible dans vos catégories offertes.
+                  </Text>
+                )}
               </ScrollView>
-              </View>
+            </View>
             </View>
         </ TouchableWithoutFeedback>
       </ KeyboardAvoidingView>
@@ -294,6 +304,12 @@ const styles = StyleSheet.create({
  
   //-----------------------  AUTRE  ---------------------------------
   
+  messageAucuneOffre: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 18,
+    color: 'gray',
+  },
 
 });
 
