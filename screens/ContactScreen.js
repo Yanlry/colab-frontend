@@ -84,11 +84,12 @@ export default function ContactScreen({ navigation }) {
         {contactsTries().map((contact, index) => (
           <View key={index} style={styles.contactContainer}>
             <TouchableOpacity style={styles.contactItem} onPress={() => appelerNumero(contact.phone)}>
-              <FontAwesome name='phone' size={18} color={'#3A3960'} />
+            <FontAwesome name='user' size={35} color={'#182A49'} />
               <View style={styles.contactInfo}>
-                <Text style={styles.contactName}>Nom d'utilisateur: {contact.username}</Text>
-                <Text style={styles.contactNumber}>Numéro de téléphone: {contact.phone}</Text>
+                <Text style={styles.contactName}>{contact.username}</Text>
+                <Text style={styles.contactNumber}>{contact.phone}</Text>
               </View>
+              <FontAwesome name='phone' size={35} color={'#182A49'} style={styles.telIcon}/>
             </TouchableOpacity>
           </View>
         ))}
@@ -125,13 +126,17 @@ const styles = StyleSheet.create({
   contactItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginLeft: 10,
   },
   contactInfo: {
-    marginLeft: 10,
+    marginLeft: 20,
   },
   contactName: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  telIcon:{
+marginLeft:154
   },
   contactNumber: {
     fontSize: 14,
