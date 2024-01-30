@@ -13,14 +13,14 @@ export default function AccueilScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = () => {
-    fetch(`http://192.168.1.33:3000/annonces/offres/${utilisateur.token}`)
+    fetch(`http://172.20.10.5:3000/annonces/offres/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
         setOffreDate(trierDateAnnonce);
       });
 
-    fetch(`http://192.168.1.33:3000/annonces/demandes/${utilisateur.token}`)
+    fetch(`http://172.20.10.5:3000/annonces/demandes/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -150,10 +150,10 @@ export default function AccueilScreen({ navigation }) {
                   style={styles.rechercheText}
                   value={recherche}
                   onChangeText={text => setRecherche(text)}
-                  placeholder="Rechercher..."
+                  placeholder="Rechercher une annonce..."
                 />
                 <TouchableOpacity style={styles.filtreAnnonce}>
-                  <FontAwesome name="filter" size={30} style={styles.filtreIcone} />
+                  <FontAwesome name="filter" size={25} style={styles.filtreIcone} />
                 </TouchableOpacity>
               </View>
               <View style={styles.scroll}>
@@ -164,12 +164,12 @@ export default function AccueilScreen({ navigation }) {
                 {afficherOffre ? lesOffres : lesDemandes}
                 {afficherOffre && lesOffres.length === 0 && (
                   <Text style={styles.messageAucuneOffre}>
-                    Aucune offre disponible dans vos catégories demandées.
+                   Désolé, actuellement personne n'est disponible pour enseigner les catégories que vous demandez.
                   </Text>
                 )}
                 {!afficherOffre && lesDemandes.length === 0 && (
                   <Text style={styles.messageAucuneOffre}>
-                    Aucune demande disponible dans vos catégories offertes.
+                   Désolé, actuellement personne n'est disponible pour apprendre les catégories que vous proposez.
                   </Text>
                 )}
               </ScrollView>
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     borderColor:'#8F8F8F',
     height: 50,
     width: 310,
-    fontSize: 20,
+    fontSize: 15,
     paddingLeft: 30,
     margin: 12,
     borderRadius: 12,
@@ -308,6 +308,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     fontSize: 18,
+    marginHorizontal:15,
     color: 'gray',
   },
 

@@ -36,9 +36,21 @@ export default function UtilisateurScreen({ navigation }) {
               <TouchableOpacity style={styles.mesMenu} onPress={() => navigation.navigate('MesAnnonces')}>
                 <Text style={styles.mesMenuTitre}>Mes annonces</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.mesMenu} >
+                <Text style={styles.mesMenuTitre}>Notifications</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.mesMenu} >
+                <Text style={styles.mesMenuTitre}>F.A.Q</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.mesMenu} >
+                <Text style={styles.mesMenuTitre}>Préférence de l'application</Text>
+              </TouchableOpacity>
               <TouchableOpacity style={styles.mesMenu} onPress={() => setConfirmerDeconnexion(true)}>
                 <Text style={styles.mesMenuTitre}>Se déconnecter</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> 
+              <TouchableOpacity style={styles.menuSupprimer} >
+                <Text style={styles.mesMenuTitre}>Supprimer profil</Text>
+              </TouchableOpacity> 
             </View>
 
             {/* Boîte de dialogue de confirmation */}
@@ -104,12 +116,19 @@ title: {
     justifyContent: 'center',
     width: 250,
     height: 60,
-    borderWidth: 1,
     margin:10,
     backgroundColor: '#182A49'
   },
+  menuSupprimer: {
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 250,
+    height: 60,
+    margin:10,
+    backgroundColor: '#C14A44'
+  },
   mesMenuTitre: {
-    fontWeight: 'bold',
     fontSize:18,
     color: 'white',
   },

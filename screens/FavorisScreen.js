@@ -83,7 +83,6 @@ export default function FavorisScreen({ navigation }) {
                 /* OFFRE */
                 <View style={styles.scrollView}>
                   <ScrollView>
-                    <Text style={styles.mesFavoris}>Mes offres favorites</Text>
                     {favorisOffre.length === 0 ? (
                       <Text style={styles.aucunFavoris}>Aucune offre en favoris</Text>
                       ) : (
@@ -95,7 +94,6 @@ export default function FavorisScreen({ navigation }) {
                 /* DEMANDE */
                 <View style={styles.scrollView}>
                   <ScrollView>
-                    <Text style={styles.mesFavoris}>Mes demandes favorites</Text>
                     {favorisDemande.length === 0 ? (
                       <Text style={styles.aucunFavoris}>Aucune demande en favoris</Text>
                     ) : (
@@ -149,19 +147,13 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
 
-
   //-----------------------  TITRE DE LA PAGE  ---------------------------------
 
-  mesFavoris: {
-    textAlign: 'center',
-    fontSize: 25,
-    fontWeight: 'bold',
-    paddingVertical: 5
-  },
   aucunFavoris: {
     textAlign: 'center',
     marginTop: 250,
-    fontSize: 30
+    fontSize: 20,
+    color:'gray'
   },
 
   //-----------------------  ICONE FILTRE  ---------------------------------

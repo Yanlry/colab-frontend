@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, SafeAreaView } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useSelector } from 'react-redux';
 
@@ -21,7 +21,7 @@ export default function PublierScreen({ navigation }) {
   const [afficherMessage, setAfficherMessage] = useState(false);
 
   useEffect(() => {
-    fetch('http://192.168.1.33:3000/profiles/activites')
+    fetch('http://172.20.10.5:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -46,7 +46,7 @@ export default function PublierScreen({ navigation }) {
       date: new Date(),
     };
 
-    fetch(`http://192.168.1.33:3000/annonces/publier/${utilisateur.token}`, {
+    fetch(`http://172.20.10.5:3000/annonces/publier/${utilisateur.token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -74,9 +74,9 @@ export default function PublierScreen({ navigation }) {
 <SafeAreaView style={styles.safeAreaView}>
   <KeyboardAvoidingView>
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <ScrollView>
       <View style={styles.container}>
         <View style={styles.content}>
-          <Text style={styles.titre}>Publier une annonce</Text>
           <Text style={styles.titreCritere}>Titre</Text>
           <TextInput
             style={styles.saisie}
@@ -110,10 +110,8 @@ export default function PublierScreen({ navigation }) {
             badgeColors={['#50B200', '#182A49', '#C23B3B', '#4E98C2']}
             badgeDotColors={['white']}
             badgeTextStyle={{ color: 'white' }}
-            style={{
-              borderColor: '#ccc',
-              borderWidth: 1,
-            }}
+            placeholderStyle={{ color: 'gray' }}
+            style={styles.dropDownPicker}
           />
           <Text style={styles.titreDescription}>Description</Text>
           <TextInput
@@ -163,6 +161,7 @@ export default function PublierScreen({ navigation }) {
           </View>
         )}
       </View>
+      </ScrollView>
     </TouchableWithoutFeedback>
   </KeyboardAvoidingView>
 </SafeAreaView>
@@ -184,16 +183,20 @@ const styles = StyleSheet.create({
   titreCritere: {
     fontSize: 16,
     color: '#182A49',
+    marginBottom:10,
+    marginTop:10,
+    fontWeight:'bold'
   },
   titre: {
     fontSize: 24,
-    marginBottom: 20,
     fontWeight: 'bold',
     color: '#182A49',
   },
   titreDescription: {
     fontSize: 16,
-    marginTop: 10,
+    marginTop: 20,
+    marginBottom:10,
+    fontWeight: 'bold',
     color: '#182A49',
   },
 
@@ -206,7 +209,7 @@ const styles = StyleSheet.create({
     height: 45,
     padding: 10,
     marginBottom: 10,
-    width: '100%',
+    width: '95%',
   },
   saisieDescription: {
     borderWidth: 1,
@@ -215,12 +218,19 @@ const styles = StyleSheet.create({
     height: 95,
     padding: 10,
     marginBottom: 10,
-    width: '100%',
+    width: '95%',
   },
-
+  dropDownPicker:{
+    borderColor: '#ccc',
+    borderWidth: 1,
+    width:'95%',
+    marginLeft:9
+  },
   //-----------------------  BOUTTON PUBLIER ---------------------------------
 
   publierButton: {
+    marginTop:20,
+    marginBottom:20,
     width: 200,
     height: 40,
     backgroundColor: '#182A49',

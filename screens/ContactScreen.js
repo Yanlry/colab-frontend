@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl, Linking } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, RefreshControl, Linking } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector } from 'react-redux';
 
 export default function ContactScreen({ navigation }) {
   const user = useSelector(state => state.utilisateur.value);
+
   const [contacts, setContacts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [recherche, setRecherche] = useState('');
+  const [contactsFiltres, setContactsFiltres] = useState([]);
 
   const fetchContacts = () => {
     const requestBody = {
       token: user.token,
     };
-    fetch('http://192.168.1.33:3000/propositionCollabs/collaboration/contact', {
+    fetch('http://172.20.10.5:3000/propositionCollabs/collaboration/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,6 +40,17 @@ export default function ContactScreen({ navigation }) {
     Linking.openURL(numeroFormate);
   };
 
+  const rechercherContact = (contact) => {
+    const rechercheMinuscules = recherche.toLowerCase();
+    const numeroMinuscules = contact.phone.toLowerCase();
+    const usernameMinuscules = contact.username.toLowerCase();
+  
+    return (
+      usernameMinuscules.includes(rechercheMinuscules) ||
+      numeroMinuscules.includes(rechercheMinuscules)
+    );
+  };
+
   const onRefresh = () => {
     setRefreshing(true);
     fetchContacts();
@@ -46,6 +60,11 @@ export default function ContactScreen({ navigation }) {
   useEffect(() => {
     fetchContacts();
   }, []);
+
+  useEffect(() => {
+    const contactsFiltres = contacts.filter(rechercherContact);
+    setContactsFiltres(contactsFiltres);
+  }, [contacts, recherche]);
 
   const organiserContacts = () => {
     const contactsOrganises = {};
@@ -59,42 +78,41 @@ export default function ContactScreen({ navigation }) {
     return contactsOrganises;
   };
 
-  const contactsTries = () => {
-    const contactsOrganises = organiserContacts();
-    const clesTries = Object.keys(contactsOrganises).sort();
-    const contactsTries = [];
-    clesTries.forEach(key => {
-      contactsTries.push(...contactsOrganises[key]);
-    });
-    return contactsTries;
-  };
-
   return (
-    <ScrollView
-      style={styles.container}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
+    <View style={styles.container}>
+      <View style={styles.rechercher}>
+        <TextInput
+          style={styles.rechercheText}
+          value={recherche}
+          onChangeText={text => setRecherche(text)}
+          placeholder="Rechercher un contact ou un numéro..."
         />
-      }
-    >
-      <View style={styles.content}>
-        <Text style={styles.title}>Mes contacts</Text>
-        {contactsTries().map((contact, index) => (
-          <View key={index} style={styles.contactContainer}>
-            <TouchableOpacity style={styles.contactItem} onPress={() => appelerNumero(contact.phone)}>
-            <FontAwesome name='user' size={35} color={'#182A49'} />
-              <View style={styles.contactInfo}>
-                <Text style={styles.contactName}>{contact.username}</Text>
-                <Text style={styles.contactNumber}>{contact.phone}</Text>
-              </View>
-              <FontAwesome name='phone' size={35} color={'#182A49'} style={styles.telIcon}/>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+          <FontAwesome name='search' size={22} color={'grey'} style={styles.searchIcon}/>
+        </View>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+        >
+          <View style={styles.content}>
+          {contactsFiltres.map((contact, index) => (
+            <View key={index} style={styles.contactContainer}>
+              <TouchableOpacity style={styles.contactItem} onPress={() => appelerNumero(contact.phone)}>
+                <FontAwesome name='user' size={35} color={'#182A49'} />
+                <View style={styles.contactInfo}>
+                  <Text style={styles.contactName}>{contact.username}</Text>
+                  <Text style={styles.contactNumber}>{contact.phone}</Text>
+                </View>
+                <FontAwesome name='phone' size={35} color={'#182A49'} style={styles.telIcon}/>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -107,14 +125,31 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 
-//-----------------------  TITRE  ---------------------------------
+//-----------------------  BARRE DE RECHERCHE  ---------------------------------
 
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
+rechercher: {
+  width:350,
+  justifyContent: 'center',
+  marginTop:15,
+  marginLeft:15
+},
+rechercheText: {
+  justifyContent:'center',
+  borderWidth: 1,
+  borderColor:'#8F8F8F',
+  height: 50,
+  width: 330,
+  fontSize: 15,
+  paddingLeft: 30,
+  margin: 12,
+  borderRadius: 12,
+  marginHorizontal:5,
+},
+searchIcon: {
+  position: 'absolute',
+  paddingBottom:5,
+  paddingLeft:295
+},
 
 //----------------------- FICHE CONTACT  ---------------------------------
 
@@ -141,4 +176,5 @@ marginLeft:154
   contactNumber: {
     fontSize: 14,
   },
+  
 });
