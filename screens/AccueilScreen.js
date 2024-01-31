@@ -13,14 +13,14 @@ export default function AccueilScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = () => {
-    fetch(`http://172.20.10.5:3000/annonces/offres/${utilisateur.token}`)
+    fetch(`http://192.168.1.33:3000/annonces/offres/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
         setOffreDate(trierDateAnnonce);
       });
 
-    fetch(`http://172.20.10.5:3000/annonces/demandes/${utilisateur.token}`)
+    fetch(`http://192.168.1.33:3000/annonces/demandes/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -59,32 +59,38 @@ export default function AccueilScreen({ navigation }) {
       <View style={styles.imageAnnonce}>
         <Text style={styles.apercuImage}>Image </Text>
       </View>
-      <Text style={styles.apercuAnnonce}>
+        <View style={styles.mesCritere}>
+      <View style={styles.apercuAnnonce}>
         <Text style={styles.apercuAnnonceTitre}>
           {annonce.title.length > 30 ? annonce.title.substring(0, 28) + "..." : annonce.title} {"\n"}
         </Text>
-        {"\n"}
+        <View>
         <Text style={styles.apercuAnnonceDescription}>
           {annonce.description.length > 130 ? annonce.description.substring(0, 130) + "..." : annonce.description} {"\n"}
         </Text>
-        {"\n"}
+        </View>
+        <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceExperience}>
-          Expérience en années: {annonce.experience}
+          Expérience dans le domaine : {annonce.experience} ans
         </Text>
-        {"\n"}
+        </View>
+        <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceTempsMax}>
-          Nombre d'heures par semaine : {annonce.tempsMax}
+          Disponible : {annonce.tempsMax} heures / semaine
         </Text>
-        {"\n"}
+        </View>
+        <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceTempsMax}>
-          Mes disponibilités : {annonce.disponibilite}
+          Moment des séances : {annonce.disponibilite}
         </Text>
-        {"\n"}
-        {"\n"}
+        </View>
+        <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceDate}>
           Mise en ligne le : {formatDate(annonce.date)}
         </Text>
-      </Text>
+        </View>
+        </View>
+      </View>
     </TouchableOpacity>
   ));
 
@@ -103,15 +109,16 @@ export default function AccueilScreen({ navigation }) {
         </Text>
         {"\n"}
         <Text style={styles.apercuAnnonceExperience}>
-          Expérience en années: {annonce.experience}
+          Expérience de l'éléve : {annonce.experience} ans
         </Text>
         {"\n"}
         <Text style={styles.apercuAnnonceTempsMax}>
-          Nombre d'heures par semaine : {annonce.tempsMax}
+          Disponible : {annonce.tempsMax} h / semaine
         </Text>
         {"\n"}
+        {"\n"}
         <Text style={styles.apercuAnnonceTempsMax}>
-          Mes disponibilités : {annonce.disponibilite}
+          Moment des séances : {annonce.disponibilite}
         </Text>
         {"\n"}
         {"\n"}
@@ -278,7 +285,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     width: 99,
     textAlign: 'center',
-    marginRight: 20,
+    marginRight: 10,
   },
   apercuAnnonce: {
     width: 270,
@@ -290,9 +297,11 @@ const styles = StyleSheet.create({
   },
   apercuAnnonceDescription: {
     fontSize: 13,
+    marginBottom:15
   },
   apercuAnnonceExperience: {
     fontSize: 12,
+    fontWeight:'bold',
   },
   apercuAnnonceTempsMax: {
     fontSize: 12,
@@ -300,6 +309,7 @@ const styles = StyleSheet.create({
   },
   apercuAnnonceDate: {
     fontSize: 12,
+    marginTop:8
   },
  
   //-----------------------  AUTRE  ---------------------------------
@@ -310,6 +320,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginHorizontal:15,
     color: 'gray',
+  },
+
+  containerCritere:{
+    marginVertical:3
+  },
+  mesCritere:{
   },
 
 });

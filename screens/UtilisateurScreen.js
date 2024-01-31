@@ -137,7 +137,7 @@ title: {
 
   confirmation: {
     position: 'absolute',
-    top: 0,
+    top: -120,
     bottom: 0,
     left: 0,
     right: 0,
@@ -174,6 +174,7 @@ title: {
     justifyContent: 'center',
   },
   confirmationBouttonOui: {
+    width:100,
     backgroundColor: '#3CB371',
   },
   confirmationBouttonAnnule: {

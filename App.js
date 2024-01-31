@@ -26,8 +26,8 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import utilisateur from './reducers/utilisateur';
 
-LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-LogBox.ignoreAllLogs();//Ignore all log notifications
+LogBox.ignoreLogs(['Warning: ...']); 
+LogBox.ignoreAllLogs();
 
 const store = configureStore({
   reducer: { utilisateur },
@@ -133,5 +133,6 @@ const styles = StyleSheet.create({
   },
   iconeUser: {
     marginTop: 5
-  }
+  },
+
 });

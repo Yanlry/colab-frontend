@@ -21,7 +21,7 @@ export default function PublierScreen({ navigation }) {
   const [afficherMessage, setAfficherMessage] = useState(false);
 
   useEffect(() => {
-    fetch('http://172.20.10.5:3000/profiles/activites')
+    fetch('http://192.168.1.33:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -29,6 +29,13 @@ export default function PublierScreen({ navigation }) {
         }
       });
   }, []);
+
+  useEffect(() => {
+
+    if (offreOuvert && secteurActivite.length === 1) {
+      setOffreOuvert(false);
+    }
+  }, [secteurActivite]);
 
   const envoyerDonnee = () => {
     if (!type || !title || !secteurActivite.length === 0 || !description || !tempsMax || !experience || !disponibilite) {
@@ -46,7 +53,7 @@ export default function PublierScreen({ navigation }) {
       date: new Date(),
     };
 
-    fetch(`http://172.20.10.5:3000/annonces/publier/${utilisateur.token}`, {
+    fetch(`http://192.168.1.33:3000/annonces/publier/${utilisateur.token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -98,7 +105,7 @@ export default function PublierScreen({ navigation }) {
               value: activite,
             }))}
             open={offreOuvert}
-            setOpen={() => setOffreOuvert(!offreOuvert)}
+            setOpen={(value) => setOffreOuvert(value)}
             value={secteurActivite}
             setValue={(values) => setSecteurActivite(values)}
             placeholder="Selectionnez votre activité"
@@ -112,6 +119,7 @@ export default function PublierScreen({ navigation }) {
             badgeTextStyle={{ color: 'white' }}
             placeholderStyle={{ color: 'gray' }}
             style={styles.dropDownPicker}
+            dropDownContainerStyle={{ width: '95%', marginLeft: 9 }}
           />
           <Text style={styles.titreDescription}>Description</Text>
           <TextInput
@@ -175,6 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff',
   },
   content: {
+    marginTop:10,
     alignItems: 'center',
   },
 
@@ -236,7 +245,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#182A49',
     padding: 10,
     justifyContent: 'center',
-    borderRadius: 5,
+    borderRadius:100,
   },
   publierButtonText: {
     color: '#fff',

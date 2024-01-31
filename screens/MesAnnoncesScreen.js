@@ -10,7 +10,7 @@ export default function MesAnnoncesScreen({ navigation }) {
   const [mesAnnonces, setMesAnnonces] = useState([]);
 
   useEffect(() => {
-    fetch(`http://172.20.10.5:3000/annonces/mesAnnonces/${utilisateur.token}`)
+    fetch(`http://192.168.1.33:3000/annonces/mesAnnonces/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));

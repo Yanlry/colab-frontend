@@ -57,7 +57,7 @@ export default function AnnonceScreen({ route, navigation }) {
   };
   
   const envoyerDemandeColab = () => {
-    fetch('http://172.20.10.5:3000/propositionCollabs/propositions', {
+    fetch('http://192.168.1.33:3000/propositionCollabs/propositions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: annonce.token, cible: annonce.username, initiateur: utilisateur.username }),
@@ -138,7 +138,7 @@ export default function AnnonceScreen({ route, navigation }) {
                   {/*  DISPONIBILITÉ */}
                   <View style={styles.titreEtLogo}>
                     <FontAwesome name='hourglass' size={15} color="#182A49" />
-                    <Text style={styles.titre}>Disponibilité</Text>
+                    <Text style={styles.titre}>Moment des séances</Text>
                   </View>
                   <Text style={styles.critereReponse}>{annonce.disponibilite}</Text>
                 </View>
@@ -156,7 +156,7 @@ export default function AnnonceScreen({ route, navigation }) {
                   {/* TEMPS MAX */}
                   <View style={styles.titreEtLogo}>
                     <FontAwesome name='users' size={15} color="#182A49" />
-                    <Text style={styles.titre}>Temps max</Text>
+                    <Text style={styles.titre}>Disponibilité</Text>
                   </View>
                   <Text style={styles.critereReponse}>{annonce.tempsMax} heure / semaine </Text>
                 </View>

@@ -15,7 +15,7 @@ export default function ContactScreen({ navigation }) {
     const requestBody = {
       token: user.token,
     };
-    fetch('http://172.20.10.5:3000/propositionCollabs/collaboration/contact', {
+    fetch('http://192.168.1.33:3000/propositionCollabs/collaboration/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -148,7 +148,7 @@ rechercheText: {
 searchIcon: {
   position: 'absolute',
   paddingBottom:5,
-  paddingLeft:295
+  marginLeft:295,
 },
 
 //----------------------- FICHE CONTACT  ---------------------------------

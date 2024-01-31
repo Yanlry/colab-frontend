@@ -21,7 +21,7 @@ export default function InscriptionScreen({ navigation }) {
   };
 
   const handleEnregistrer = () => {
-    fetch('http://172.20.10.5:3000/users/signup', {
+    fetch('http://192.168.1.33:3000/users/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email, password: password, username: username, phone: phoneNumber }),
@@ -56,14 +56,12 @@ export default function InscriptionScreen({ navigation }) {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>  
       <View style={styles.container}>
         <View style={styles.header}>
-
           <TouchableOpacity onPress={() => navigation.navigate('Connexion')} style={styles.icone}>
             <FontAwesome name='chevron-left' size={28} color={'#3A3960'} />
           </TouchableOpacity>
           <Text style={styles.title}>Création du profil</Text>
         </View>
         <Image resizeMode="contain" source={require('../assets/logo.png')} style={styles.logo} />
-
             <Text style={styles.bienvenueMsg}>Commencez par créer votre compte afin d'accéder aux annonces disponibles.</Text>
           <View style={styles.formulaire}>
             <View>
@@ -114,7 +112,7 @@ safeAreaView: {
   backgroundColor:'#fff'
   },
 
-  //-----------------------  LOGO  ---------------------------------
+//-----------------------  LOGO  ---------------------------------
 
 logo: {
   height: 200,
@@ -147,7 +145,7 @@ title: {
     textAlign: 'center',
   },
 
-//-----------------------FORMULAIRE D'INSCRIPTION  ---------------------------------
+//----------------------- FORMULAIRE D'INSCRIPTION  ---------------------------------
 
   formulaire: {
     flex: 1,
