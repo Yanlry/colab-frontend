@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     borderWidth: 1,
-    borderColor:'grey',
+    borderColor:'#8F8F8F',
     borderRadius: 12,
     marginVertical: 5,
     marginHorizontal: 10
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
 
   annonceCritere: {
     borderWidth: 1,
-    borderColor:'grey',
+    borderColor:'#8F8F8F',
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 15,
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
 
   utilisateur: {
     borderWidth: 1,
-    borderColor:'grey',
+    borderColor:'#8F8F8F',
     borderRadius: 12,
     height: 90,
     flexDirection: 'row',
@@ -372,15 +372,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     height: 85,
-    borderTopWidth: 1,
     borderColor: 'grey',
     flexDirection: 'row',
   },
   colabBtn: {
-    width: 280,
+    width: 200,
     height: 50,
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#182A49'
