@@ -281,7 +281,6 @@ const styles = StyleSheet.create({
     borderColor:'#8F8F8F',
     height: 150,
     paddingTop: 63,
-    marginTop: 18,
     borderRadius: 12,
     width: 99,
     textAlign: 'center',
@@ -289,7 +288,6 @@ const styles = StyleSheet.create({
   },
   apercuAnnonce: {
     width: 270,
-    marginTop: 15,
     paddingRight:50
   },
   apercuAnnonceTitre: {
@@ -297,7 +295,7 @@ const styles = StyleSheet.create({
   },
   apercuAnnonceDescription: {
     fontSize: 13,
-    marginBottom:15
+    marginBottom:19
   },
   apercuAnnonceExperience: {
     fontSize: 12,
@@ -309,7 +307,7 @@ const styles = StyleSheet.create({
   },
   apercuAnnonceDate: {
     fontSize: 12,
-    marginTop:8
+    marginTop:15
   },
  
   //-----------------------  AUTRE  ---------------------------------
