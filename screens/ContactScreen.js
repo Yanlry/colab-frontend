@@ -137,7 +137,7 @@ rechercheText: {
   justifyContent:'center',
   borderWidth: 1,
   borderColor:'#8F8F8F',
-  height: 50,
+  height: 40,
   width: 330,
   fontSize: 15,
   paddingLeft: 30,

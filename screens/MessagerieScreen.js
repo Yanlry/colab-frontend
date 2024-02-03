@@ -2,14 +2,14 @@ import React from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { View, Text, StyleSheet, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, ScrollView, TouchableOpacity } from 'react-native';
 
-export default function MessagerieScreen() {
+export default function MessagerieScreen({navigation}) {
   return (
   <SafeAreaView style={styles.safeAreaView}>
     <KeyboardAvoidingView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView>
           <View style={styles.container}>
-            <TouchableOpacity style={styles.containerMessage}>
+            <TouchableOpacity  onPress={() => navigation.navigate('Conversation')} style={styles.containerMessage}>
             <FontAwesome name='user' size={35} color={'#182A49'} style={styles.iconMessage}/>
             <View>
               <Text style={styles.nomMessage}>Antoine</Text>
