@@ -20,7 +20,7 @@ export default function ActiviteScreen({ navigation }) {
 
   useEffect(() => {
     
-    fetch('http://192.168.1.33:3000/profiles/activites')
+    fetch('http://192.168.1.9:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -54,7 +54,7 @@ export default function ActiviteScreen({ navigation }) {
     };
   
     try {
-      const responseOffre = await fetch(`http://192.168.1.33:3000/profiles/jePeux`, {
+      const responseOffre = await fetch(`http://192.168.1.9:3000/profiles/jePeux`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBodyOffre),
@@ -63,7 +63,7 @@ export default function ActiviteScreen({ navigation }) {
       console.log('Réponse jePeux:', dataOffre);
       dispatch(jePeux(dataOffre.user));
   
-      const responseDemande = await fetch(`http://192.168.1.33:3000/profiles/jeVeux`, {
+      const responseDemande = await fetch(`http://192.168.1.9:3000/profiles/jeVeux`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBodyDemande),

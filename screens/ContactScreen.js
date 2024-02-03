@@ -15,7 +15,7 @@ export default function ContactScreen({ navigation }) {
     const requestBody = {
       token: user.token,
     };
-    fetch('http://192.168.1.33:3000/propositionCollabs/collaboration/contact', {
+    fetch('http://192.168.1.9:3000/propositionCollabs/collaboration/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -29,8 +29,8 @@ export default function MessagerieScreen({navigation}) {
                 {/* Header avec le nom de la personne */}
                 <TouchableOpacity>
                 <View style={styles.nomContact}>
-                    <FontAwesome name='user' size={35} color={'#182A49'} style={styles.headerIcon} />
                     <Text style={styles.headerText}>Antoine</Text>
+                    <FontAwesome name='user' size={35} color={'#182A49'} style={styles.headerIcon} />
                 </View>
                 </TouchableOpacity>
             </View>
@@ -39,7 +39,7 @@ export default function MessagerieScreen({navigation}) {
             <View style={styles.conversationContainer}>
               {/* Messages */}
               <ScrollView
-                contentContainerStyle={{ flexGrow: 1 }}
+                contentContainerStyle={{ flexGrow: 1, backgroundColor:'#fff' }}
                 inverted
                 keyboardShouldPersistTaps="handled"
                 keyboardDismissMode="on-drag"
@@ -87,9 +87,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   nomContact: {
-    alignItems: 'center',
     marginLeft:80,
-    marginBottom: 16,
+    flexDirection:'row',
+    alignItems:'center',
+    marginLeft:75,
   },
   headerMessage:{
     flexDirection:'row',
@@ -102,6 +103,7 @@ const styles = StyleSheet.create({
   headerIcon: {
     marginTop:15,
     marginBottom: 10,
+    marginLeft:90
   },
   headerText: {
     fontSize: 18,
@@ -111,12 +113,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 10,
     justifyContent: 'flex-end', 
-    padding:10
   },
   messageContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
+    paddingTop:6
   },
   messageBubble: {
     marginRight: 8,
@@ -131,6 +130,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    padding:10
   },
   textInput: {
     flex: 1,
@@ -154,25 +154,22 @@ userMessageContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end', 
-    marginBottom: 10,
   },
   userMessageBubble: {
     marginLeft: 8,
     borderRadius: 8,
     backgroundColor: '#007BFF',
-    padding: 10,
   },
   otherMessageContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start', 
-    marginBottom: 10,
   },
   otherMessageBubble: {
     marginRight: 8,
+    marginLeft: 8,
     borderRadius: 8,
-    backgroundColor: '#FFFFFF',
-    padding: 10,
+    backgroundColor: '#e6e6e6',
   },
   messageText: {
     fontSize: 16,

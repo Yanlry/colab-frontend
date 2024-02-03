@@ -57,7 +57,7 @@ export default function AnnonceScreen({ route, navigation }) {
   };
   
   const envoyerDemandeColab = () => {
-    fetch('http://192.168.1.33:3000/propositionCollabs/propositions', {
+    fetch('http://192.168.1.9:3000/propositionCollabs/propositions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: annonce.token, cible: annonce.username, initiateur: utilisateur.username }),

@@ -21,7 +21,7 @@ export default function InscriptionScreen({ navigation }) {
   };
 
   const handleEnregistrer = () => {
-    fetch('http://192.168.1.33:3000/users/signup', {
+    fetch('http://192.168.1.9:3000/users/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email, password: password, username: username, phone: phoneNumber }),

@@ -21,7 +21,7 @@ export default function PublierScreen({ navigation }) {
   const [afficherMessage, setAfficherMessage] = useState(false);
 
   useEffect(() => {
-    fetch('http://192.168.1.33:3000/profiles/activites')
+    fetch('http://192.168.1.9:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -53,7 +53,7 @@ export default function PublierScreen({ navigation }) {
       date: new Date(),
     };
 
-    fetch(`http://192.168.1.33:3000/annonces/publier/${utilisateur.token}`, {
+    fetch(`http://192.168.1.9:3000/annonces/publier/${utilisateur.token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
