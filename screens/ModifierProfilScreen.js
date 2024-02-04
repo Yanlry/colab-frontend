@@ -16,7 +16,7 @@ export default function ModifierProfilScreen({ navigation }) {
 
   useEffect(() => {
 
-    fetch('http://192.168.1.9:3000/profiles/activites')
+    fetch('http://192.168.1.33:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -28,13 +28,13 @@ export default function ModifierProfilScreen({ navigation }) {
 
   const handleEnregistrer = () => {
     
-    fetch(`http://192.168.1.9:3000/profiles/jePeux/${user.token}`, {
+    fetch(`http://192.168.1.33:3000/profiles/jePeux/${user.token}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ activites: offre }),
     });
 
-    fetch(`http://192.168.1.9:3000/profiles/jeVeux/${user.token}`, {
+    fetch(`http://192.168.1.33:3000/profiles/jeVeux/${user.token}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ activites: demande }),

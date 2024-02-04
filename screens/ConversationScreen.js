@@ -27,11 +27,11 @@ export default function MessagerieScreen({navigation}) {
                     <FontAwesome name='chevron-left' size={28} color={'#182A49'} />
                 </TouchableOpacity>
                 {/* Header avec le nom de la personne */}
-                <TouchableOpacity>
                 <View style={styles.nomContact}>
                     <Text style={styles.headerText}>Antoine</Text>
-                    <FontAwesome name='user' size={35} color={'#182A49'} style={styles.headerIcon} />
                 </View>
+                <TouchableOpacity>
+                    <FontAwesome name='user' size={35} color={'#182A49'} style={styles.headerIcon} />
                 </TouchableOpacity>
             </View>
 
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   headerIcon: {
     marginTop:15,
     marginBottom: 10,
-    marginLeft:90
+    marginLeft:100
   },
   headerText: {
     fontSize: 18,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding:10
+    paddingHorizontal:10
   },
   textInput: {
     flex: 1,

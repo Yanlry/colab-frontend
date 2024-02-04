@@ -57,7 +57,7 @@ export default function AnnonceScreen({ route, navigation }) {
   };
   
   const envoyerDemandeColab = () => {
-    fetch('http://192.168.1.9:3000/propositionCollabs/propositions', {
+    fetch('http://192.168.1.33:3000/propositionCollabs/propositions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: annonce.token, cible: annonce.username, initiateur: utilisateur.username }),
@@ -370,10 +370,11 @@ const styles = StyleSheet.create({
 
   colabBar: {
     alignItems: 'center',
-    justifyContent: 'space-around',
-    height: 85,
+    justifyContent: 'center',
+    height: 65,
     borderColor: 'grey',
     flexDirection: 'row',
+    marginTop:15,
   },
   colabBtn: {
     width: 200,
@@ -387,10 +388,6 @@ const styles = StyleSheet.create({
   colabText: {
     fontSize: 30,
     color: 'white'
-  },
-  nbColabIcone: {
-    marginLeft: 50,
-    marginTop: 10
   },
 });
 

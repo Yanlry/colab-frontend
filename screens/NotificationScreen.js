@@ -16,8 +16,8 @@ const NotificationScreen = ({ navigation }) => {
 
   const fetchNotifications = () => {
     const url = activeTab === 'demandes'
-      ? 'http://192.168.1.9:3000/propositionCollabs/propositions/initiateur'
-      : 'http://192.168.1.9:3000/propositionCollabs/propositions/cible';
+      ? 'http://192.168.1.33:3000/propositionCollabs/propositions/initiateur'
+      : 'http://192.168.1.33:3000/propositionCollabs/propositions/cible';
 
     const requestBody = {
       token: user.token,
@@ -54,7 +54,7 @@ const NotificationScreen = ({ navigation }) => {
   }, [lastAcceptedMessage]);
 
   const handleAccept = (message) => {
-    const acceptUrl = 'http://192.168.1.9:3000/propositionCollabs/propositions/accept';
+    const acceptUrl = 'http://192.168.1.33:3000/propositionCollabs/propositions/accept';
     const requestBody = {
       token: user.token,
       message: message,
@@ -82,7 +82,7 @@ const NotificationScreen = ({ navigation }) => {
   
   const handleReject = (message) => {
 
-    const rejectUrl = 'http://192.168.1.9:3000/propositionCollabs/propositions/refuse';
+    const rejectUrl = 'http://192.168.1.33:3000/propositionCollabs/propositions/refuse';
     const requestBody = {
       token: user.token,
       message: message,
@@ -109,7 +109,7 @@ const NotificationScreen = ({ navigation }) => {
 
     const propositionCollabsId = item?.propositionCollabsId || item?._id;
    
-    const deleteUrl = 'http://192.168.1.9:3000/propositionCollabs/collaboration/delete';
+    const deleteUrl = 'http://192.168.1.33:3000/propositionCollabs/collaboration/delete';
   
     fetch(deleteUrl, {
       method: 'DELETE',
