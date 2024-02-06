@@ -24,38 +24,42 @@ export default function FavorisScreen({ navigation }) {
   };
 
   const mesFavoris = (favoris) => favoris.map(annonce => (
-    <TouchableOpacity key={annonce.token} style={styles.annonce} onPress={() => navigation.navigate('Annonce', { annonce: annonce })} >
-
-      <View style={styles.image}>
+    <TouchableOpacity key={annonce.token} style={styles.annonce} onPress={() => navigation.navigate('Annonce', { annonce: annonce })}>
+      <View style={styles.imageAnnonce}>
         <Text style={styles.apercuImage}>Image </Text>
       </View>
-
-      <Text style={styles.apercuAnnonce}>
-        <Text style={styles.apercuAnnonceTitre} >
-          {annonce.title.length > 30 ? annonce.title.substring(0, 26) + "..." : annonce.title} {"\n"}
+        <View style={styles.mesCritere}>
+      <View style={styles.apercuAnnonce}>
+        <Text style={styles.apercuAnnonceTitre}>
+          {annonce.title.length > 30 ? annonce.title.substring(0, 28) + "..." : annonce.title} {"\n"}
         </Text>
-        {"\n"}
+        <View>
         <Text style={styles.apercuAnnonceDescription}>
-          {annonce.description.length > 100 ? annonce.description.substring(0, 100) + "..." : annonce.description} {"\n"}
+          {annonce.description.length > 130 ? annonce.description.substring(0, 130) + "..." : annonce.description} {"\n"}
         </Text>
-        {"\n"}
+        </View>
+        <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceExperience}>
-          Expérience en années: {annonce.experience}
+          Expérience dans le domaine : {annonce.experience} ans
         </Text>
-        {"\n"}
+        </View>
+        <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceTempsMax}>
-          Nombre d'heures par semaine : {annonce.tempsMax}
+          Disponible : {annonce.tempsMax} heures / semaine
         </Text>
-        {"\n"}
-        {"\n"}
+        </View>
+        <View style={styles.containerCritere}>
+        <Text style={styles.apercuAnnonceTempsMax}>
+          Moment des séances : {annonce.disponibilite}
+        </Text>
+        </View>
+        <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceDate}>
           Mise en ligne le : {formatDate(annonce.date)}
         </Text>
-      </Text>
-
-      <TouchableOpacity style={styles.favorisBtn} onPress={() => retirerDesFavoris(annonce.token)}>
-        <FontAwesome name="heart" size={30} style={styles.favorisIcone} />
-      </TouchableOpacity>
+        </View>
+        </View>
+      </View>
     </TouchableOpacity>
   ));
 
@@ -115,6 +119,9 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: 'center',
+  },
+  containerCritere:{
+    marginVertical:3
   },
 
   //-----------------------  BOUTTON OFFRE ET DEMANDE  ---------------------------------
@@ -188,15 +195,13 @@ const styles = StyleSheet.create({
     borderColor:'#8F8F8F',
     height: 150,
     paddingTop: 63,
-    marginTop: 18,
     borderRadius: 12,
     width: 99,
     textAlign: 'center',
-    marginRight: 20,
+    marginRight: 10,
   },
   apercuAnnonce: {
     width: 270,
-    marginTop: 15,
     paddingRight:50
   },
   apercuAnnonceTitre: {
@@ -204,9 +209,11 @@ const styles = StyleSheet.create({
   },
   apercuAnnonceDescription: {
     fontSize: 13,
+    marginBottom:19
   },
   apercuAnnonceExperience: {
     fontSize: 12,
+    fontWeight:'bold',
   },
   apercuAnnonceTempsMax: {
     fontSize: 12,
@@ -214,6 +221,7 @@ const styles = StyleSheet.create({
   },
   apercuAnnonceDate: {
     fontSize: 12,
+    marginTop:15
   },
 
 //----------------------- BOUTON FAVORIS  ---------------------------------
