@@ -115,7 +115,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end', 
   },
   messageContainer: {
-    paddingTop:6
+    paddingTop:9,
+    paddingHorizontal:4
   },
   messageBubble: {
     marginRight: 8,

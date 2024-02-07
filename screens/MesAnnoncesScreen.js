@@ -27,36 +27,43 @@ export default function MesAnnoncesScreen({ navigation }) {
 
   const lesOffres = mesAnnonces.map(annonce => (
 
-    <TouchableOpacity key={annonce._id} style={styles.annonce} onPress={() => navigation.navigate('MonAnnonce', { annonce: annonce })} >
-
-      <View style={styles.imageAnnonce}>
-        <Text style={styles.apercuImage}>Image </Text>
-      </View>
-
-      <Text style={styles.apercuAnnonce}>
-        <Text style={styles.apercuAnnonceTitre} >
-          {annonce.title.length > 30 ? annonce.title.substring(0, 28) + "..." : annonce.title} {"\n"}
-        </Text>
-        {"\n"}
-        <Text style={styles.apercuAnnonceDescription}>
-          {annonce.description.length > 130 ? annonce.description.substring(0, 130) + "..." : annonce.description} {"\n"}
-        </Text>
-        {"\n"}
-        <Text style={styles.apercuAnnonceExperience}>
-          Expérience en années: {annonce.experience}
-        </Text>
-        {"\n"}
-        <Text style={styles.apercuAnnonceTempsMax}>
-          Nombre d'heures par semaine : {annonce.tempsMax}
-        </Text>
-        {"\n"}
-        {"\n"}
-        <Text style={styles.apercuAnnonceDate}>
-          Mise en ligne le : {formatDate(annonce.date)}
-        </Text>
+    <TouchableOpacity key={annonce.token} style={styles.annonce} onPress={() => navigation.navigate('Annonce', { annonce: annonce })}>
+    <View style={styles.imageAnnonce}>
+      <Text style={styles.apercuImage}>Image </Text>
+    </View>
+      <View style={styles.mesCritere}>
+    <View style={styles.apercuAnnonce}>
+      <Text style={styles.apercuAnnonceTitre}>
+        {annonce.title.length > 30 ? annonce.title.substring(0, 28) + "..." : annonce.title} {"\n"}
       </Text>
-
-    </TouchableOpacity>
+      <View>
+      <Text style={styles.apercuAnnonceDescription}>
+        {annonce.description.length > 130 ? annonce.description.substring(0, 130) + "..." : annonce.description} {"\n"}
+      </Text>
+      </View>
+      <View style={styles.containerCritere}>
+      <Text style={styles.apercuAnnonceExperience}>
+        Expérience dans le domaine : {annonce.experience} ans
+      </Text>
+      </View>
+      <View style={styles.containerCritere}>
+      <Text style={styles.apercuAnnonceTempsMax}>
+        Disponible : {annonce.tempsMax} heures / semaine
+      </Text>
+      </View>
+      <View style={styles.containerCritere}>
+      <Text style={styles.apercuAnnonceTempsMax}>
+        Moment des séances : {annonce.disponibilite}
+      </Text>
+      </View>
+      <View style={styles.containerCritere}>
+      <Text style={styles.apercuAnnonceDate}>
+        Mise en ligne le : {formatDate(annonce.date)}
+      </Text>
+      </View>
+      </View>
+    </View>
+  </TouchableOpacity>
   ))
 
   return (
@@ -96,6 +103,9 @@ const styles = StyleSheet.create({
   },
   menu: {
     alignItems: 'center',
+  },
+  containerCritere:{
+    marginVertical:3
   },
 
 // ------------------- ICONE RETOUR ARRIERE ---------------------
@@ -147,15 +157,13 @@ apercuImage: {
   borderColor:'#8F8F8F',
   height: 150,
   paddingTop: 63,
-  marginTop: 18,
   borderRadius: 12,
   width: 99,
   textAlign: 'center',
-  marginRight: 20,
+  marginRight: 10,
 },
 apercuAnnonce: {
   width: 270,
-  marginTop: 15,
   paddingRight:50
 },
 apercuAnnonceTitre: {
@@ -163,9 +171,11 @@ apercuAnnonceTitre: {
 },
 apercuAnnonceDescription: {
   fontSize: 13,
+  marginBottom:19
 },
 apercuAnnonceExperience: {
   fontSize: 12,
+  fontWeight:'bold',
 },
 apercuAnnonceTempsMax: {
   fontSize: 12,
@@ -173,5 +183,7 @@ apercuAnnonceTempsMax: {
 },
 apercuAnnonceDate: {
   fontSize: 12,
+  marginTop:15
 },
+
 });
