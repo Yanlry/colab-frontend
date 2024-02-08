@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   containerCritere:{
-    marginVertical:3
+    marginVertical:3,
   },
   
   //-----------------------  BOUTTON OFFRE ET DEMANDE  ---------------------------------
