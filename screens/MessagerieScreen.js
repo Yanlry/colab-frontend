@@ -13,7 +13,7 @@ export default function MessagerieScreen({navigation}) {
             <FontAwesome name='user' size={35} color={'#182A49'} style={styles.iconMessage}/>
             <View>
               <Text style={styles.nomMessage}>Antoine</Text>
-              <Text style={styles.message}>Je n'en ai aucune idées , il faudrais que je re..</Text>
+              <Text style={styles.message}>Je n'en ai aucune idées , il faudrais que je voi..</Text>
             </View>
             </TouchableOpacity>
           </View>
