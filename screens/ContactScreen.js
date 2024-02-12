@@ -15,7 +15,7 @@ export default function ContactScreen({ navigation }) {
     const requestBody = {
       token: user.token,
     };
-    fetch('http://192.168.1.33:3000/propositionCollabs/collaboration/contact', {
+    fetch('http://172.20.10.5:3000/propositionCollabs/collaboration/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -39,6 +39,12 @@ export default function ContactScreen({ navigation }) {
     const numeroFormate = `tel:${numero}`;
     Linking.openURL(numeroFormate);
   };
+  
+  const envoyerMessage = (contact) => {
+    navigation.navigate('Conversation', { contactId: contact.id, contactUsername: contact.username });
+  };
+  
+  
 
   const rechercherContact = (contact) => {
     const rechercheMinuscules = recherche.toLowerCase();
@@ -107,6 +113,10 @@ export default function ContactScreen({ navigation }) {
                   <Text style={styles.contactNumber}>{contact.phone}</Text>
                 </View>
                 <FontAwesome name='phone' size={35} color={'#182A49'} style={styles.telIcon}/>
+              </TouchableOpacity>
+               {/* Bouton d'envoi de message */}
+               <TouchableOpacity style={styles.messageButton} onPress={() => envoyerMessage(contact)}>
+                <FontAwesome name='comment' size={25} color={'#182A49'} />
               </TouchableOpacity>
             </View>
           ))}
@@ -177,4 +187,12 @@ marginLeft:154
     fontSize: 14,
   },
   
+
+  messageButton: {
+    position:'absolute',
+    marginLeft:240,
+    marginTop:2,
+    width:100,
+    height:80
+  }
 });

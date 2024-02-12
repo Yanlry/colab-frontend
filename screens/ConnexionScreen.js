@@ -19,7 +19,7 @@ export default function ConnexionScreen({ navigation }) {
 
   const handleConnection = () => {
     
-    fetch('http://192.168.1.33:3000/users/signin', {
+    fetch('http://172.20.10.5:3000/users/signin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email, password: motDePasse }),

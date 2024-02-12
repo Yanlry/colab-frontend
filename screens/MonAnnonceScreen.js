@@ -25,7 +25,7 @@ export default function MonAnnonceScreen({ route, navigation }) {
   const supprimerAnnonce = () => {
 
 
-    fetch(`http://192.168.1.33:3000/annonces/supprime/${utilisateur.token}`, {
+    fetch(`http://172.20.10.5:3000/annonces/supprime/${utilisateur.token}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

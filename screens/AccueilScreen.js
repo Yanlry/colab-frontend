@@ -13,14 +13,14 @@ export default function AccueilScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = () => {
-    fetch(`http://192.168.1.33:3000/annonces/offres/${utilisateur.token}`)
+    fetch(`http://172.20.10.5:3000/annonces/offres/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
         setOffreDate(trierDateAnnonce);
       });
 
-    fetch(`http://192.168.1.33:3000/annonces/demandes/${utilisateur.token}`)
+    fetch(`http://172.20.10.5:3000/annonces/demandes/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));

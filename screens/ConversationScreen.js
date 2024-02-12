@@ -1,19 +1,29 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity, SafeAreaView, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-export default function MessagerieScreen({navigation}) {
-  const [messages, setMessages] = useState([
-    { text: "Je n'en ai aucune idée, il faudrait que je regarde et je te tiendrai au courant. De toute façon, ne t'inquiète pas, je reviens vers toi dès que j'en sais plus", isUser: false },
-    { text: "Aucune idée", isUser: false },
-  ]);
+export default function ConversationScreen({navigation, route }) {
+  const { conversationId, name } = route.params;
+  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState('');
 
-  const [inputText, setInputText] = useState("");
+  useEffect(() => {
+    // Charger les messages de la conversation depuis le backend
+    // Vous devrez remplacer cette partie par une requête à votre API
+    const mockMessages = [
+      { text: 'Salut, comment ça va ?', isUser: false },
+      { text: 'Ça va bien, merci ! Et toi ?', isUser: true },
+      // Ajoutez d'autres messages ici
+    ];
+    setMessages(mockMessages);
+  }, [conversationId]);
 
   const addMessage = () => {
-    if (inputText.trim() !== "") {
+    if (inputText.trim() !== '') {
+      // Envoyer le message au backend (vous devrez implémenter cette partie)
+      // Puis, mettre à jour l'état local avec le nouveau message
       setMessages([...messages, { text: inputText.trim(), isUser: true }]);
-      setInputText(""); 
+      setInputText('');
     }
   };
 
@@ -21,50 +31,46 @@ export default function MessagerieScreen({navigation}) {
     <SafeAreaView style={styles.safeAreaView}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardAvoidingView}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
+          <View style={styles.container}>
             <View style={styles.headerMessage}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
                     <FontAwesome name='chevron-left' size={28} color={'#182A49'} />
                 </TouchableOpacity>
-                {/* Header avec le nom de la personne */}
-                <View style={styles.nomContact}>
-                    <Text style={styles.headerText}>Antoine</Text>
-                </View>
-                <TouchableOpacity>
-                    <FontAwesome name='user' size={35} color={'#182A49'} style={styles.headerIcon} />
-                </TouchableOpacity>
+              <View style={styles.nomContact}>
+                <Text style={styles.headerText}>{name}</Text>
+              </View>
+              <TouchableOpacity>
+                <FontAwesome name='user' size={35} color={'#182A49'} style={styles.headerIcon} />
+              </TouchableOpacity>
             </View>
 
-            {/* Zone de conversation */}
             <View style={styles.conversationContainer}>
-              {/* Messages */}
               <ScrollView
-                contentContainerStyle={{ flexGrow: 1, backgroundColor:'#fff' }}
+                contentContainerStyle={{ flexGrow: 1, backgroundColor: '#fff' }}
                 inverted
-                keyboardShouldPersistTaps="handled"
-                keyboardDismissMode="on-drag"
+                keyboardShouldPersistTaps='handled'
+                keyboardDismissMode='on-drag'
                 onScrollBeginDrag={() => Keyboard.dismiss()}
-             >
+              >
                 {messages.map((message, index) => (
-                    <View key={index} style={[styles.messageContainer, message.isUser ? styles.userMessageContainer : styles.otherMessageContainer]}>
+                  <View key={index} style={[styles.messageContainer, message.isUser ? styles.userMessageContainer : styles.otherMessageContainer]}>
                     <View style={[styles.messageBubble, message.isUser ? styles.userMessageBubble : styles.otherMessageBubble]}>
-                        <Text style={[styles.messageText, message.isUser ? styles.userMessageText : styles.otherMessageText]}>{message.text}</Text>
+                      <Text style={[styles.messageText, message.isUser ? styles.userMessageText : styles.otherMessageText]}>{message.text}</Text>
                     </View>
-                    </View>
+                  </View>
                 ))}
-                </ScrollView>
+              </ScrollView>
 
-              {/* Saisie de texte */}
               <View style={styles.inputContainer}>
                 <TextInput
-                  placeholder="Votre message"
+                  placeholder='Votre message'
                   style={styles.textInput}
                   value={inputText}
                   onChangeText={(text) => setInputText(text)}
                   onSubmitEditing={addMessage}
                 />
                 <TouchableOpacity onPress={() => addMessage()}>
-                  <FontAwesome name='send' size={20} color={'#007BFF'} style={styles.sendIcon}/>
+                  <FontAwesome name='send' size={20} color={'#007BFF'} style={styles.sendIcon} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -74,6 +80,7 @@ export default function MessagerieScreen({navigation}) {
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   safeAreaView: {

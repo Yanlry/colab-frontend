@@ -1,28 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, FlatList } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { View, Text, StyleSheet, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, ScrollView, TouchableOpacity } from 'react-native';
 
-export default function MessagerieScreen({navigation}) {
+export default function MessagerieScreen({ navigation }) {
+
+  const [conversations, setConversations] = useState([]);
+
+  useEffect(() => {
+    // Charger les conversations depuis le backend
+    // Vous devrez remplacer cette partie par une requête à votre API
+    fetch(`http://172.20.10.5:3000/messages`)
+      .then(response => response.json())
+      .then(data => {
+        setConversations(data)
+  
+  }, []);
+})
+
   return (
-  <SafeAreaView style={styles.safeAreaView}>
-    <KeyboardAvoidingView>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView>
-          <View style={styles.container}>
-            <TouchableOpacity  onPress={() => navigation.navigate('Conversation')} style={styles.containerMessage}>
-            <FontAwesome name='user' size={35} color={'#182A49'} style={styles.iconMessage}/>
-            <View>
-              <Text style={styles.nomMessage}>Antoine</Text>
-              <Text style={styles.message}>Je n'en ai aucune idées il faudrais que je voi..</Text>
-            </View>
+    <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.container}>
+        <FlatList
+          data={conversations}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => navigation.navigate('Conversation', { conversationId: item.id, name: item.name })} style={styles.containerMessage}>
+              <FontAwesome name='user' size={35} color={'#182A49'} style={styles.iconMessage} />
+              <View>
+                <Text style={styles.nomMessage}>{item.name}</Text>
+                <Text style={styles.message}>{item.lastMessage}</Text>
+              </View>
             </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
-  </SafeAreaView>
+          )}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   safeAreaView: {
