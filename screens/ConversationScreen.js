@@ -20,6 +20,7 @@ export default function ConversationScreen({navigation, route }) {
 
   const addMessage = () => {
     if (inputText.trim() !== '') {
+      
       // Envoyer le message au backend (vous devrez implémenter cette partie)
       // Puis, mettre à jour l'état local avec le nouveau message
       setMessages([...messages, { text: inputText.trim(), isUser: true }]);
