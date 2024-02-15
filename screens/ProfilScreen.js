@@ -24,7 +24,7 @@ export default function ProfilScreen({ navigation }) {
     };
 
 
-    fetch(`http://172.20.10.5:3000/profiles/bio`, {
+    fetch(`http://192.168.1.33:3000/profiles/bio`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody),

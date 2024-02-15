@@ -19,7 +19,7 @@ export default function ConnexionScreen({ navigation }) {
 
   const handleConnection = () => {
     
-    fetch('http://172.20.10.5:3000/users/signin', {
+    fetch('http://192.168.1.33:3000/users/signin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email, password: motDePasse }),
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     height: 58,
     width: 350,
     marginTop: 24,
-    borderRadius: 15,
+    borderRadius: 32,
   },
   saisieMdp: {
     display: 'flex',
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     height: 58,
     width: 350,
     marginTop: 24,
-    borderRadius: 15,
+    borderRadius: 32,
   },
   saisieMdpEtIcon: {
     flexDirection: 'row'
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   homeBtn: {
     width: 350,
     height: 45,
-    borderRadius: 12,
+    borderRadius: 32,
     marginTop: 34,
     alignItems: 'center',
     justifyContent: 'center',
