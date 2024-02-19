@@ -1,110 +1,80 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, FlatList } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useSelector } from 'react-redux';
 
 export default function MessagerieScreen({ navigation }) {
+  const [conversations, setConversations] = useState([
+    { id: 1, name: 'Benoit', lastMessage: 'Salut comment ça va ?', messages: [] },
+    { id: 2, name: 'Johan', lastMessage: 'Une prochaine fois', messages: [] },
+    { id: 3, name: 'Ismael', lastMessage: 'Pas trop compris', messages: [] },
+    { id: 4, name: 'Meriton', lastMessage: 'Salut, il faudrait vraiment ce voir pour que je comprenne mieux de quoi tu veux parler', messages: [] },
+    { id: 5, name: 'Eddy', lastMessage: 'Tu verra avec lui mais je pense pas que ça lui plaise', messages: [] },
+    // Ajoutez d'autres conversations ici
+  ]);
 
-  const [sentMessages, setSentMessages] = useState([]);
-  const [receivedMessages, setReceivedMessages] = useState([]);
-
-  // Récupérer le token d'utilisateur depuis le Redux Store
-  const utilisateur = useSelector(state => state.utilisateur.value);
-  
-
-  useEffect(() => {
-    if (utilisateur) {
-      // Charger les messages envoyés par l'utilisateur depuis le backend
-      fetch(`http://192.168.1.33:3000/messages/sent/${utilisateur.token}`)
-        .then(response => response.json())
-        .then(data => {
-          setSentMessages(data);
-        })
-        .catch(error => {
-          console.error('Erreur lors du chargement des messages envoyés :', error);
-        });
-
-      // Charger les messages reçus par l'utilisateur depuis le backend
-      fetch(`http://192.168.1.33:3000/messages/received/${utilisateur.token}`)
-        .then(response => response.json())
-        .then(data => {
-          setReceivedMessages(data);
-        })
-        .catch(error => {
-          console.error('Erreur lors du chargement des messages reçus :', error);
-        });
-    }
-  }, [utilisateur]);
+  const renderConversationItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Conversation', { conversationId: item.id, name: item.name, messages: item.messages })}
+      style={styles.conversationContainer}
+    >
+      <FontAwesome name='user' size={35} color={'#182A49'} style={styles.iconMessage} />
+      <View style={styles.bubbleContainer}>
+        <View style={styles.bubble}>
+          <Text style={styles.nomMessage}>{item.name}</Text>
+          <Text style={styles.message}>
+            {item.lastMessage.length > 45 ? `${item.lastMessage.substring(0, 45)}...` : item.lastMessage}
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
-        <Text>Mes messages envoyés :</Text>
         <FlatList
-          data={sentMessages}
+          data={conversations}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('Conversation', { conversationId: item.id, name: item.name })} style={styles.containerMessage}>
-              <FontAwesome name='user' size={35} color={'#182A49'} style={styles.iconMessage} />
-              <View>
-                <Text style={styles.nomMessage}>{item.name}</Text>
-                <Text style={styles.message}>{item.lastMessage}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
-        <Text>Mes messages reçus :</Text>
-        <FlatList
-          data={receivedMessages}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate('Conversation', { conversationId: item.id, name: item.name })} style={styles.containerMessage}>
-              <FontAwesome name='user' size={35} color={'#182A49'} style={styles.iconMessage} />
-              <View>
-                <Text style={styles.nomMessage}>{item.name}</Text>
-                <Text style={styles.message}>{item.lastMessage}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
+          renderItem={renderConversationItem}
         />
       </View>
     </SafeAreaView>
   );
 }
 
-
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor:'#fff',
+    backgroundColor: '#fff',
   },
   container: {
-    marginTop:10,
-    justifyContent: 'center',
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  conversationContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
   },
-
-//-----------------------  MESSAGE  ---------------------------------
-  
-  iconMessage:{
-    marginRight:20
+  iconMessage: {
+    marginRight: 10,
   },
-  containerMessage: {
-    flexDirection:'row',  
-    borderBottomWidth:1,
-    borderColor:'#C9C9C9',
-    width:320,
-    height:50,
-    alignItems:'center',
-    marginTop:15,
-    justifyContent:'flex-start'
+  bubbleContainer: {
+    flex: 1,
   },
-  nomMessage:{
-    fontWeight:'bold',
-    fontSize:17,
-    marginBottom:5
+  bubble: {
+    paddingVertical: 8,
+    paddingLeft: 10,
   },
-  message:{
-    marginBottom:5
+  nomMessage: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  message: {
+    fontSize: 14,
   },
 });

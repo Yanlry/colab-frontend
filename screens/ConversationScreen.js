@@ -1,26 +1,17 @@
+// ConversationScreen.js
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-export default function ConversationScreen({navigation, route }) {
-  const { conversationId, name } = route.params;
-  const [messages, setMessages] = useState([]);
+export default function ConversationScreen({ navigation, route }) {
+  
+  const { conversationId, name, messages: initialMessages } = route.params;
+  const [messages, setMessages] = useState(initialMessages || []);
   const [inputText, setInputText] = useState('');
-
-  useEffect(() => {
-    // Charger les messages de la conversation depuis le backend
-    // Vous devrez remplacer cette partie par une requête à votre API
-    const mockMessages = [
-      { text: 'Salut, comment ça va ?', isUser: false },
-      { text: 'Ça va bien, merci ! Et toi ?', isUser: true },
-      // Ajoutez d'autres messages ici
-    ];
-    setMessages(mockMessages);
-  }, [conversationId]);
 
   const addMessage = () => {
     if (inputText.trim() !== '') {
-      
       // Envoyer le message au backend (vous devrez implémenter cette partie)
       // Puis, mettre à jour l'état local avec le nouveau message
       setMessages([...messages, { text: inputText.trim(), isUser: true }]);
@@ -34,9 +25,9 @@ export default function ConversationScreen({navigation, route }) {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.container}>
             <View style={styles.headerMessage}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
-                    <FontAwesome name='chevron-left' size={28} color={'#182A49'} />
-                </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
+                <FontAwesome name='chevron-left' size={28} color={'#182A49'} />
+              </TouchableOpacity>
               <View style={styles.nomContact}>
                 <Text style={styles.headerText}>{name}</Text>
               </View>
@@ -81,7 +72,6 @@ export default function ConversationScreen({navigation, route }) {
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   safeAreaView: {
