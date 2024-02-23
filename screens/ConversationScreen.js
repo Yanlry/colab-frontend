@@ -1,24 +1,68 @@
-// ConversationScreen.js
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useSelector, useDispatch } from 'react-redux';
+import { setDestinataireToken } from '../reducers/utilisateur';
 
 export default function ConversationScreen({ navigation, route }) {
-  
-  const { conversationId, name, messages: initialMessages } = route.params;
-  const [messages, setMessages] = useState(initialMessages || []);
+
+  const dispatch = useDispatch();
+  const utilisateurDestinataireToken = useSelector(state => state.utilisateur.destinataireToken);
+  const senderToken = useSelector(state => state.utilisateur.value.token);
+
+  const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
+  const [contactUsername, setContactUsername] = useState('');
+
+  useEffect(() => {
+    const { contactToken } = route.params;
+    dispatch(setDestinataireToken(contactToken));
+    console.log('Recipient Token updated:', contactToken);
+  }, [route.params, dispatch]);
+  
+
+  useEffect(() => {
+    const { contactUsername } = route.params;
+    setContactUsername(contactUsername);
+  }, []);
 
   const addMessage = () => {
     if (inputText.trim() !== '') {
-      // Envoyer le message au backend (vous devrez implémenter cette partie)
-      // Puis, mettre à jour l'état local avec le nouveau message
-      setMessages([...messages, { text: inputText.trim(), isUser: true }]);
-      setInputText('');
+      console.log('Recipient Token:', utilisateurDestinataireToken);
+      fetch('http://192.168.1.33:3000/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: inputText.trim(),
+          senderToken: senderToken,
+          recipientToken: utilisateurDestinataireToken,
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.success !== undefined) {
+          if (data.success) {
+            setMessages([...messages, { text: inputText.trim(), isUser: true }]);
+            setInputText('');
+          } else {
+            console.log('Erreur lors de l\'envoi du message au serveur:', data.error);
+          }
+        } else {
+          console.log('Réponse du serveur non conforme:', data);
+        }
+      })
+      .catch(error => {
+        console.error('Erreur lors de la connexion au serveur:', error);
+      });
     }
   };
+  
+  
 
+  
+  
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardAvoidingView}>
@@ -29,7 +73,7 @@ export default function ConversationScreen({ navigation, route }) {
                 <FontAwesome name='chevron-left' size={28} color={'#182A49'} />
               </TouchableOpacity>
               <View style={styles.nomContact}>
-                <Text style={styles.headerText}>{name}</Text>
+                <Text style={styles.headerText}>{contactUsername}</Text>
               </View>
               <TouchableOpacity>
                 <FontAwesome name='user' size={35} color={'#182A49'} style={styles.headerIcon} />
@@ -73,6 +117,7 @@ export default function ConversationScreen({ navigation, route }) {
   );
 }
 
+
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
@@ -85,27 +130,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   nomContact: {
-    marginLeft:80,
-    flexDirection:'row',
-    alignItems:'center',
-    marginLeft:75,
+    justifyContent:'center',
+  },
+  headerText:{
   },
   headerMessage:{
     flexDirection:'row',
+    justifyContent:'space-around'
   },
   icon:{
-    width:50,
-    marginLeft:30,
     marginTop:20,
   },
   headerIcon: {
     marginTop:15,
     marginBottom: 10,
-    marginLeft:100
   },
   headerText: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginHorizontal:30
   },
   conversationContainer: {
     flex: 1,

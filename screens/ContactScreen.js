@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, RefreshControl, Linking } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setDestinataireToken } from '../reducers/utilisateur';
+
 
 export default function ContactScreen({ navigation }) {
+
+  const dispatch = useDispatch();
+
   const user = useSelector(state => state.utilisateur.value);
 
   const [contacts, setContacts] = useState([]);
@@ -15,7 +20,7 @@ export default function ContactScreen({ navigation }) {
     const requestBody = {
       token: user.token,
     };
-    fetch('http://172.20.10.5:3000/propositionCollabs/collaboration/contact', {
+    fetch('http://192.168.1.33:3000/propositionCollabs/collaboration/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,12 +45,23 @@ export default function ContactScreen({ navigation }) {
     Linking.openURL(numeroFormate);
   };
   
-  const envoyerMessage = (contact) => {
-    navigation.navigate('Conversation', { contactId: contact.id, contactUsername: contact.username });
+  const ouvrirConversation = (contact) => {
+    if (contact.token) {
+      // Mettez à jour le token du destinataire dans le reducer
+      dispatch(setDestinataireToken(contact.token));
+  
+      // Naviguez vers la page de conversation
+      navigation.navigate('Conversation', {
+        contactId: contact.id,
+        contactUsername: contact.username,
+        contactName: contact.name,
+        contactPhone: contact.phone,
+      });
+    } else {
+      console.log('Le contact ne possède pas de token.');
+    }
   };
   
-  
-
   const rechercherContact = (contact) => {
     const rechercheMinuscules = recherche.toLowerCase();
     const numeroMinuscules = contact.phone.toLowerCase();
@@ -72,18 +88,6 @@ export default function ContactScreen({ navigation }) {
     setContactsFiltres(contactsFiltres);
   }, [contacts, recherche]);
 
-  const organiserContacts = () => {
-    const contactsOrganises = {};
-    contacts.forEach(contact => {
-      const firstLetter = contact.username.charAt(0).toUpperCase();
-      if (!contactsOrganises[firstLetter]) {
-        contactsOrganises[firstLetter] = [];
-      }
-      contactsOrganises[firstLetter].push(contact);
-    });
-    return contactsOrganises;
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.rechercher}>
@@ -105,21 +109,24 @@ export default function ContactScreen({ navigation }) {
         >
           <View style={styles.content}>
           {contactsFiltres.map((contact, index) => (
-            <View key={index} style={styles.contactContainer}>
-              <TouchableOpacity style={styles.contactItem} onPress={() => appelerNumero(contact.phone)}>
-                <FontAwesome name='user' size={35} color={'#182A49'} />
-                <View style={styles.contactInfo}>
-                  <Text style={styles.contactName}>{contact.username}</Text>
-                  <Text style={styles.contactNumber}>{contact.phone}</Text>
+              <View key={index} style={styles.contactContainer}>
+                <TouchableOpacity style={styles.contactItem}>
+                  <FontAwesome name='user' size={35} color={'#182A49'} />
+                  <View style={styles.contactInfo}>
+                    <Text style={styles.contactName}>{contact.username}</Text>
+                    <Text style={styles.contactNumber}>{contact.phone}</Text>
+                  </View>
+                </TouchableOpacity>
+                <View style={styles.actionButtons}>
+                  <TouchableOpacity style={styles.phoneButton} onPress={() => appelerNumero(contact.phone)}>
+                    <FontAwesome name='phone' size={35} color={'#182A49'} style={styles.telIcon}/>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.messageButton} onPress={() => ouvrirConversation(contact)}>
+                    <FontAwesome name='comment' size={25} color={'#182A49'} />
+                  </TouchableOpacity>
                 </View>
-                <FontAwesome name='phone' size={35} color={'#182A49'} style={styles.telIcon}/>
-              </TouchableOpacity>
-               {/* Bouton d'envoi de message */}
-               <TouchableOpacity style={styles.messageButton} onPress={() => envoyerMessage(contact)}>
-                <FontAwesome name='comment' size={25} color={'#182A49'} />
-              </TouchableOpacity>
-            </View>
-          ))}
+              </View>
+            ))}
         </View>
       </ScrollView>
     </View>
@@ -167,11 +174,17 @@ searchIcon: {
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     paddingBottom: 10,
+    flexDirection:'row'
   },
   contactItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 10,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
   },
   contactInfo: {
     marginLeft: 20,
@@ -180,19 +193,18 @@ searchIcon: {
     fontSize: 16,
     fontWeight: 'bold',
   },
-  telIcon:{
-marginLeft:154
+  telIcon: {
+    position: 'absolute',
+    marginLeft: 160,
+    marginTop: -20, 
   },
   contactNumber: {
     fontSize: 14,
   },
-  
-
   messageButton: {
     position:'absolute',
-    marginLeft:240,
-    marginTop:2,
-    width:100,
-    height:80
+    marginLeft:110,
+    width:40,
+    height:40,
   }
 });
