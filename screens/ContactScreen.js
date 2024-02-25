@@ -4,13 +4,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from 'react-redux';
 import { setDestinataireToken } from '../reducers/utilisateur';
 
-
 export default function ContactScreen({ navigation }) {
-
   const dispatch = useDispatch();
-
   const user = useSelector(state => state.utilisateur.value);
-
   const [contacts, setContacts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [recherche, setRecherche] = useState('');
@@ -20,7 +16,7 @@ export default function ContactScreen({ navigation }) {
     const requestBody = {
       token: user.token,
     };
-    fetch('http://192.168.1.33:3000/propositionCollabs/collaboration/contact', {
+    fetch('http://172.20.10.5:3000/propositionCollabs/collaboration/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,29 +40,38 @@ export default function ContactScreen({ navigation }) {
     const numeroFormate = `tel:${numero}`;
     Linking.openURL(numeroFormate);
   };
-  
+
   const ouvrirConversation = (contact) => {
-    if (contact.token) {
+    console.log('Contact reçu:', contact);
+  
+    if (contact && contact.token) {
+      console.log('Contact avec token:', contact);
+  
       // Mettez à jour le token du destinataire dans le reducer
       dispatch(setDestinataireToken(contact.token));
   
+      // Log pour vérifier que le token est correct
+      console.log('Token du destinataire mis à jour:', contact.token);
+  
       // Naviguez vers la page de conversation
       navigation.navigate('Conversation', {
+        contactToken: contact.token,
         contactId: contact.id,
         contactUsername: contact.username,
         contactName: contact.name,
         contactPhone: contact.phone,
       });
     } else {
-      console.log('Le contact ne possède pas de token.');
+      console.log('Le contact ne possède pas de token ou est mal défini.');
     }
   };
   
+
   const rechercherContact = (contact) => {
     const rechercheMinuscules = recherche.toLowerCase();
     const numeroMinuscules = contact.phone.toLowerCase();
     const usernameMinuscules = contact.username.toLowerCase();
-  
+
     return (
       usernameMinuscules.includes(rechercheMinuscules) ||
       numeroMinuscules.includes(rechercheMinuscules)
@@ -80,13 +85,16 @@ export default function ContactScreen({ navigation }) {
   };
 
   useEffect(() => {
+    console.log('Effect fetchContacts');
     fetchContacts();
   }, []);
 
   useEffect(() => {
+    console.log('Effect filterContacts');
     const contactsFiltres = contacts.filter(rechercherContact);
     setContactsFiltres(contactsFiltres);
   }, [contacts, recherche]);
+
 
   return (
     <View style={styles.container}>

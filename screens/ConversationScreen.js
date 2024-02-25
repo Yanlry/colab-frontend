@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,22 +14,38 @@ export default function ConversationScreen({ navigation, route }) {
   const [inputText, setInputText] = useState('');
   const [contactUsername, setContactUsername] = useState('');
 
+  const fetchMessages = () => {
+    const url = `http://172.20.10.5:3000/messages/${utilisateurDestinataireToken}/${senderToken}`;
+  
+    console.log('URL de la requête:', url);
+  
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const trierDateMessages = data.messages.sort((a, b) => new Date(a.date) - new Date(b.date));
+        setMessages(trierDateMessages);
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des messages:', error);
+      });
+  };
+  
   useEffect(() => {
-    const { contactToken } = route.params;
-    dispatch(setDestinataireToken(contactToken));
-    console.log('Recipient Token updated:', contactToken);
-  }, [route.params, dispatch]);
+    fetchMessages();
+  }, [utilisateurDestinataireToken]);
   
 
   useEffect(() => {
-    const { contactUsername } = route.params;
+    const { contactToken, contactUsername } = route.params;
+    dispatch(setDestinataireToken(contactToken));
     setContactUsername(contactUsername);
-  }, []);
+    console.log('Recipient Token updated:', contactToken);
+  }, [route.params, dispatch]);
 
   const addMessage = () => {
     if (inputText.trim() !== '') {
       console.log('Recipient Token:', utilisateurDestinataireToken);
-      fetch('http://192.168.1.33:3000/messages', {
+      fetch('http://172.20.10.5:3000/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,13 +68,15 @@ export default function ConversationScreen({ navigation, route }) {
         } else {
           console.log('Réponse du serveur non conforme:', data);
         }
+        // Mettez à jour l'état des messages en utilisant le champ correct
+        setMessages([...messages, { text: inputText.trim(), isUser: true, recipientToken: data.recipientToken }]);
       })
+      
       .catch(error => {
         console.error('Erreur lors de la connexion au serveur:', error);
       });
     }
   };
-  
   
 
   
@@ -81,21 +99,21 @@ export default function ConversationScreen({ navigation, route }) {
             </View>
 
             <View style={styles.conversationContainer}>
-              <ScrollView
-                contentContainerStyle={{ flexGrow: 1, backgroundColor: '#fff' }}
-                inverted
-                keyboardShouldPersistTaps='handled'
-                keyboardDismissMode='on-drag'
-                onScrollBeginDrag={() => Keyboard.dismiss()}
-              >
-                {messages.map((message, index) => (
-                  <View key={index} style={[styles.messageContainer, message.isUser ? styles.userMessageContainer : styles.otherMessageContainer]}>
-                    <View style={[styles.messageBubble, message.isUser ? styles.userMessageBubble : styles.otherMessageBubble]}>
-                      <Text style={[styles.messageText, message.isUser ? styles.userMessageText : styles.otherMessageText]}>{message.text}</Text>
-                    </View>
+            <ScrollView
+              contentContainerStyle={{ flexGrow: 1, backgroundColor: '#fff' }}
+              inverted
+              keyboardShouldPersistTaps='handled'
+              keyboardDismissMode='on-drag'
+              onScrollBeginDrag={() => Keyboard.dismiss()}
+            >
+              {messages.map((message, index) => (
+                <View key={index} style={[styles.messageContainer, message.isUser ? styles.userMessageContainer : styles.otherMessageContainer]}>
+                  <View style={[styles.messageBubble, message.isUser ? styles.userMessageBubble : styles.otherMessageBubble]}>
+                    <Text style={[styles.messageText, message.isUser ? styles.userMessageText : styles.otherMessageText]}>{message.text}</Text>
                   </View>
-                ))}
-              </ScrollView>
+                </View>
+              ))}
+            </ScrollView>
 
               <View style={styles.inputContainer}>
                 <TextInput
