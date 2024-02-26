@@ -42,16 +42,9 @@ export default function ContactScreen({ navigation }) {
   };
 
   const ouvrirConversation = (contact) => {
-    console.log('Contact reçu:', contact);
-  
     if (contact && contact.token) {
-      console.log('Contact avec token:', contact);
-  
       // Mettez à jour le token du destinataire dans le reducer
       dispatch(setDestinataireToken(contact.token));
-  
-      // Log pour vérifier que le token est correct
-      console.log('Token du destinataire mis à jour:', contact.token);
   
       // Naviguez vers la page de conversation
       navigation.navigate('Conversation', {
@@ -61,8 +54,6 @@ export default function ContactScreen({ navigation }) {
         contactName: contact.name,
         contactPhone: contact.phone,
       });
-    } else {
-      console.log('Le contact ne possède pas de token ou est mal défini.');
     }
   };
   
