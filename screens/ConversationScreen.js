@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, ScrollView, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from 'react-redux';
 import { setDestinataireToken } from '../reducers/utilisateur';
@@ -13,9 +13,10 @@ export default function ConversationScreen({ navigation, route }) {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [contactUsername, setContactUsername] = useState('');
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   const fetchMessages = () => {
-    const url = `http://172.20.10.5:3000/messages/${utilisateurDestinataireToken}/${senderToken}`;
+    const url = `http://192.168.1.33:3000/messages/${utilisateurDestinataireToken}/${senderToken}`;
     
     fetch(url)
       .then(response => response.json())
@@ -23,20 +24,13 @@ export default function ConversationScreen({ navigation, route }) {
         const messagesWithUserFlag = data.messages.map(message => {
           return { ...message, isUser: message.senderToken === senderToken };
         });
-  
-        // Tri des messages par date (ou tout autre critère approprié)
-        const sortedMessages = messagesWithUserFlag.sort((a, b) => new Date(a.date) - new Date(b.date));
-  
-        // Inversion de l'ordre pour afficher les messages les plus récents en bas
-        const reversedMessages = sortedMessages.reverse();
-  
-        setMessages(reversedMessages);
+        const sortedMessages = messagesWithUserFlag.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setMessages(sortedMessages);
       })
       .catch(error => {
         console.error('Erreur lors de la récupération des messages:', error);
       });
   };
-  
   
   useEffect(() => {
     fetchMessages();
@@ -46,12 +40,11 @@ export default function ConversationScreen({ navigation, route }) {
     const { contactToken, contactUsername } = route.params;
     dispatch(setDestinataireToken(contactToken));
     setContactUsername(contactUsername);
-    console.log('Recipient Token updated:', contactToken);
   }, [route.params, dispatch]);
 
   const addMessage = () => {
     if (inputText.trim() !== '') {
-      fetch('http://172.20.10.5:3000/messages', {
+      fetch('http://192.168.1.33:3000/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,13 +57,9 @@ export default function ConversationScreen({ navigation, route }) {
       })
       .then(response => response.json())
       .then(data => {
-        if (data && data.success !== undefined) {
-          if (data.success) {
-          } else {
-            console.log('Erreur lors de l\'envoi du message au serveur:', data.error);
-          }
+        if (data && data.success) {
         } else {
-          console.log('Réponse du serveur non conforme:', data);
+          console.log('Erreur lors de l\'envoi du message au serveur:', data.error || 'Erreur inconnue');
         }
         fetchMessages();
         setInputText('');
@@ -81,68 +70,69 @@ export default function ConversationScreen({ navigation, route }) {
     }
   };
   
-  
-  
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardAvoidingView}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          
-          <View style={styles.container}>
-            <View style={styles.headerMessage}>
-              <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
-                <FontAwesome name='chevron-left' size={28} color={'#182A49'} />
-              </TouchableOpacity>
-              <View style={styles.nomContact}>
-                <Text style={styles.headerText}>{contactUsername}</Text>
-              </View>
-              <TouchableOpacity>
-                <FontAwesome name='user' size={35} color={'#182A49'} style={styles.headerIcon} />
-              </TouchableOpacity>
-            </View>
-           
-                <FlatList
-                  data={messages}
-                  renderItem={({ item, index }) => (
-                    <View key={index} style={[styles.messageContainer, item.isUser ? styles.userMessageContainer : styles.otherMessageContainer]}>
-                      <View style={[styles.messageBubble, item.isUser ? styles.userMessageBubble : styles.otherMessageBubble]}>
-                        <Text style={[styles.messageText, item.isUser ? styles.userMessageText : styles.otherMessageText]}>{item.text}</Text>
-                      </View>
-                    </View>
-                  )}
-                  inverted
-                  onScrollBeginDrag={() => Keyboard.dismiss()}
-                  keyboardShouldPersistTaps='handled'
-                  keyboardDismissMode='on-drag'
-                  keyExtractor={(item, index) => index.toString()}
-                  contentContainerStyle={styles.messageList}
-                  />
-            
-              <View style={styles.inputContainer}>
-                <TextInput
-                  placeholder='Votre message'
-                  style={styles.textInput}
-                  value={inputText}
-                  onChangeText={(text) => setInputText(text)}
-                  onSubmitEditing={addMessage}
-                  />
-                <TouchableOpacity onPress={() => addMessage()}>
-                  <FontAwesome name='send' size={20} color={'#007BFF'} style={styles.sendIcon} />
-                </TouchableOpacity>
+  <View style={styles.container}>
+    <View style={styles.headerMessage}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
+        <FontAwesome name='chevron-left' size={28} color={'#182A49'} />
+      </TouchableOpacity>
+      <View style={styles.nomContact}>
+        <Text style={styles.headerText}>{contactUsername}</Text>
+      </View>
+      <TouchableOpacity>
+        <FontAwesome name='user' size={35} color={'#182A49'} style={styles.headerIcon} />
+      </TouchableOpacity>
+    </View>
+
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      style={styles.keyboardAvoidingView}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <FlatList
+          data={messages}
+          renderItem={({ item, index }) => (
+            <View key={index} style={[styles.messageContainer, item.isUser ? styles.userMessageContainer : styles.otherMessageContainer]}>
+              <View style={[styles.messageBubble, item.isUser ? styles.userMessageBubble : styles.otherMessageBubble]}>
+                <Text style={[styles.messageText, item.isUser ? styles.userMessageText : styles.otherMessageText]}>{item.text}</Text>
               </View>
             </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          )}
+          inverted
+          onScrollBeginDrag={() => Keyboard.dismiss()}
+          keyboardShouldPersistTaps='handled'
+          keyboardDismissMode='on-drag'
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.messageList}
+        />
+      </TouchableWithoutFeedback>
+
+      <View style={styles.inputContainer}>
+            <TextInput
+              placeholder='Votre message'
+              style={[styles.textInput, isInputFocused ? { marginBottom: 50 } : null ]}
+              value={inputText}
+              onChangeText={(text) => setInputText(text)}
+              onSubmitEditing={addMessage}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
+            />
+        <TouchableOpacity onPress={() => addMessage()}>
+          <FontAwesome name='send' size={20} color={'#007BFF'} style={[styles.sendIcon,  isInputFocused ? { marginBottom: 50 } : null]} />
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
+  </View>
+</SafeAreaView>
+
   );
 }
 
 
 const styles = StyleSheet.create({
-  safeAreaView: {
-    backgroundColor: '#blue',
-  },
   keyboardAvoidingView: {
+    flex:1,
   },  
   container: {
     height: '100%',

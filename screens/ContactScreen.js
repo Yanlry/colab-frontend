@@ -16,7 +16,7 @@ export default function ContactScreen({ navigation }) {
     const requestBody = {
       token: user.token,
     };
-    fetch('http://172.20.10.5:3000/propositionCollabs/collaboration/contact', {
+    fetch('http://192.168.1.33:3000/propositionCollabs/collaboration/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +43,6 @@ export default function ContactScreen({ navigation }) {
 
   const ouvrirConversation = (contact) => {
     if (contact && contact.token) {
-      // Mettez à jour le token du destinataire dans le reducer
       dispatch(setDestinataireToken(contact.token));
   
       // Naviguez vers la page de conversation
@@ -76,12 +75,10 @@ export default function ContactScreen({ navigation }) {
   };
 
   useEffect(() => {
-    console.log('Effect fetchContacts');
     fetchContacts();
   }, []);
 
   useEffect(() => {
-    console.log('Effect filterContacts');
     const contactsFiltres = contacts.filter(rechercherContact);
     setContactsFiltres(contactsFiltres);
   }, [contacts, recherche]);
