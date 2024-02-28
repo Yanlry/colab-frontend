@@ -60,7 +60,6 @@ export default function MessagerieScreen({ navigation }) {
           keyExtractor={(item) => item.messageId.toString()}
           renderItem={renderMessageItem}
         />
-
         </View>
       </View>
     </SafeAreaView>
