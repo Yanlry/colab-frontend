@@ -24,7 +24,7 @@ export default function MessagerieScreen({ navigation }) {
         setMessages(data.messages);
       })
       .catch(error => {
-        console.error('Erreur lors de la récupération des messages:', error);
+        console.error('Erreur lors de la récupération des messages :', error);
       });
   };
 
