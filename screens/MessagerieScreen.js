@@ -29,8 +29,7 @@ export default function MessagerieScreen({ navigation }) {
   };
 
   useEffect(() => {
-    console.log("Le composant MessagerieScreen est monté");
-    // Appeler fetchMessages au montage du composant
+    console.log("Le composant MessagerieScreen est monté")
     fetchMessages();
   }, []);
 
