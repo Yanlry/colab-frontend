@@ -4,68 +4,74 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector } from 'react-redux';
 
 export default function MessagerieScreen({ navigation }) {
-  
+
   const utilisateurDestinataireToken = useSelector(state => state.utilisateur.destinataireToken);
+  const senderToken = useSelector(state => state.utilisateur.value.token);
   const [messages, setMessages] = useState([]);
+  const [forceUpdate, setForceUpdate] = useState(0);
 
   const fetchMessages = () => {
-    console.log("Début de fetchMessages");
-    const url = `http://192.168.1.33:3000/messages/messages/${utilisateurDestinataireToken}`;
-
+    const url = `http://localhost:3000/messages/conversations/${senderToken}/`;
+      
     fetch(url)
       .then(response => {
-        console.log("Statut de la réponse fetchMessages:", response.status);
         if (!response.ok) {
           throw new Error('Erreur de réseau ou serveur non trouvé');
         }
         return response.json();
       })
       .then(data => {
+        console.log('Data from API:', data);
         setMessages(data.messages);
+        setForceUpdate(prev => prev + 1);
       })
       .catch(error => {
-        console.error('Erreur lors de la récupération des messages :', error);
+        console.error('Erreur lors de la récupération des messages:', error);
       });
   };
+  
+  
 
   useEffect(() => {
-    console.log("Le composant MessagerieScreen est monté")
     fetchMessages();
   }, []);
 
-  const renderMessageItem = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('Conversation', { conversationId: item.id, name: item.senderName, messages: [item] })}
-      style={styles.conversationContainer} // Utilisez le même style que pour les conversations
-    >
-      <FontAwesome name='user' size={35} color={'#182A49'} style={styles.iconMessage} />
-      <View style={styles.bubbleContainer}>
-        <View style={styles.bubble}>
-          <Text style={styles.nomMessage}>{item.senderName}</Text>
-          <Text style={styles.message}>
-            {item.text.length > 45 ? `${item.text.substring(0, 45)}...` : item.text}
-          </Text>
+  const renderMessageItem = ({ item }) => {
+    console.log('Rendering message item:', item);
+    
+    return (
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Conversation', { conversationId: item._id, name: item.participants.join(', '), messages: item.messages })}
+        style={styles.conversationContainer}
+      >
+        <FontAwesome name='user' size={35} color={'#182A49'} style={styles.iconMessage} />
+        <View style={styles.bubbleContainer}>
+          <View style={styles.bubble}>
+            <Text style={styles.nomMessage}>{item.participants.join(', ')}</Text>
+            <Text style={styles.message}>
+              {item.lastMessage ? (item.lastMessage.length > 45 ? `${item.lastMessage.substring(0, 45)}...` : item.lastMessage) : ''}
+            </Text>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
         <View style={styles.maListe}>
-        <FlatList
-          data={messages}
-          keyExtractor={(item) => item.messageId.toString()}
-          renderItem={renderMessageItem}
-        />
+          <FlatList
+            data={messages}
+            extraData={forceUpdate}
+            keyExtractor={(item) => item._id.toString()}
+            renderItem={renderMessageItem}
+          />
         </View>
       </View>
     </SafeAreaView>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   safeAreaView: {
@@ -82,7 +88,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#green',
   },
   iconMessage: {
     marginRight: 10,
@@ -100,6 +106,5 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 14,
-   
   },
 });

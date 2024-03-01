@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, TextI
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from 'react-redux';
 import { setDestinataireToken } from '../reducers/utilisateur';
+import { v4 as uuidv4 } from 'react-native-uuid';
+
 
 export default function ConversationScreen({ navigation, route }) {
 
@@ -44,31 +46,57 @@ export default function ConversationScreen({ navigation, route }) {
 
   const addMessage = () => {
     if (inputText.trim() !== '') {
+      const messageData = {
+        text: inputText.trim(),
+        senderToken: senderToken,
+        recipientToken: utilisateurDestinataireToken,
+      };
+  
+      // Vérifiez si la conversation existe déjà
+      const existingConversation = messages.find(msg =>
+        msg.conversation.participants &&
+        msg.conversation.participants.includes(senderToken) &&
+        msg.conversation.participants.includes(utilisateurDestinataireToken)
+      );
+  
+      // Si la conversation existe, mettez-la à jour; sinon, créez-en une nouvelle
+      if (existingConversation) {
+        existingConversation.lastMessage = messageData.text;
+        // Ajoutez une logique pour mettre à jour d'autres détails de la conversation si nécessaire
+      } else {
+        messages.push({
+          id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`, // Génère un identifiant unique basé sur le temps actuel
+          participants: [senderToken, utilisateurDestinataireToken],
+          lastMessage: messageData.text,
+          // Ajoutez d'autres détails de la conversation si nécessaire
+        });
+      }
+  
+      // Ensuite, envoyez le message au serveur
       fetch('http://192.168.1.33:3000/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          text: inputText.trim(),
-          senderToken: senderToken,
-          recipientToken: utilisateurDestinataireToken,
-        }),
+        body: JSON.stringify(messageData),
       })
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.success) {
-        } else {
-          console.log('Erreur lors de l\'envoi du message au serveur:', data.error || 'Erreur inconnue');
-        }
-        fetchMessages();
-        setInputText('');
-      })
-      .catch(error => {
-        console.error('Erreur lors de la connexion au serveur:', error);
-      });
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.success) {
+            // Gérez le succès si nécessaire
+          } else {
+            console.log('Erreur lors de l\'envoi du message au serveur:', data.error || 'Erreur inconnue');
+          }
+          fetchMessages();
+          setInputText('');
+        })
+        .catch(error => {
+          console.error('Erreur lors de la connexion au serveur:', error);
+        });
     }
   };
+  
+
   
   return (
     <SafeAreaView style={styles.safeAreaView}>
