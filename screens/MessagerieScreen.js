@@ -7,12 +7,13 @@ export default function MessagerieScreen({ navigation }) {
 
   const utilisateurDestinataireToken = useSelector(state => state.utilisateur.destinataireToken);
   const senderToken = useSelector(state => state.utilisateur.value.token);
+  
   const [messages, setMessages] = useState([]);
   const [forceUpdate, setForceUpdate] = useState(0);
 
   const fetchMessages = () => {
-    const url = `http://localhost:3000/messages/conversations/${senderToken}/`;
-      
+    const url = `http://192.168.1.33:3000/messages/conversations/${senderToken}`;
+    
     fetch(url)
       .then(response => {
         if (!response.ok) {
@@ -22,15 +23,12 @@ export default function MessagerieScreen({ navigation }) {
       })
       .then(data => {
         console.log('Data from API:', data);
-        setMessages(data.messages);
-        setForceUpdate(prev => prev + 1);
+        setMessages(data.conversations); // Mettez à jour avec le bon chemin de données
       })
       .catch(error => {
         console.error('Erreur lors de la récupération des messages:', error);
       });
   };
-  
-  
 
   useEffect(() => {
     fetchMessages();
