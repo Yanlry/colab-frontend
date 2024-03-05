@@ -50,7 +50,6 @@ export default function ConversationScreen({ navigation, route }) {
         recipientToken: utilisateurDestinataireToken,
       };
   
-      // Vérifiez si une conversation avec ces participants existe déjà
       const existingConversationIndex = messages.findIndex(msg =>
         msg.conversation &&
         msg.conversation.participants &&
@@ -58,14 +57,13 @@ export default function ConversationScreen({ navigation, route }) {
         msg.conversation.participants.includes(utilisateurDestinataireToken)
       );
   
-      // Si la conversation existe, mettez à jour; sinon, créez-en une nouvelle
       if (existingConversationIndex !== -1) {
         const existingConversation = messages[existingConversationIndex];
         existingConversation.lastMessage = messageData.text;
         // Ajoutez une logique pour mettre à jour d'autres détails de la conversation si nécessaire
       } else {
         const newConversation = {
-          id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`, // Génère un identifiant unique basé sur le temps actuel
+          id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
           participants: [senderToken, utilisateurDestinataireToken],
           lastMessage: messageData.text,
         };
