@@ -57,7 +57,7 @@ export default function AnnonceScreen({ route, navigation }) {
   };
   
   const envoyerDemandeColab = () => {
-    fetch('http://192.168.1.33:3000/propositionCollabs/propositions', {
+    fetch('http://192.168.1.109:3000/propositionCollabs/propositions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: annonce.token, cible: annonce.username, initiateur: utilisateur.username }),
@@ -131,14 +131,14 @@ export default function AnnonceScreen({ route, navigation }) {
                   {/* SECTEUR D'ACTIVITE */}
                   <View style={styles.titreEtLogo}>
                     <FontAwesome name='list' size={15} color="#182A49" />
-                    <Text style={styles.titre}>Secteur d'activité</Text>
+                    <Text style={styles.titre}>Domaine</Text>
                   </View>
                   <Text style={styles.critereReponse}> {annonce.secteurActivite} </Text>
 
                   {/*  DISPONIBILITÉ */}
                   <View style={styles.titreEtLogo}>
                     <FontAwesome name='hourglass' size={15} color="#182A49" />
-                    <Text style={styles.titre}>Moment des séances</Text>
+                    <Text style={styles.titre}>Disponibilité</Text>
                   </View>
                   <Text style={styles.critereReponse}>{annonce.disponibilite}</Text>
                 </View>
@@ -149,14 +149,14 @@ export default function AnnonceScreen({ route, navigation }) {
                   {/* EXPÉRIENCE */}
                   <View style={styles.titreEtLogo}>
                     <FontAwesome name='briefcase' size={15} color="#182A49" />
-                    <Text style={styles.titre} >Mon expérience</Text>
+                    <Text style={styles.titre} >Expérience</Text>
                   </View>
                   <Text style={styles.critereReponse}>{annonce.experience} ans</Text>
 
                   {/* TEMPS MAX */}
                   <View style={styles.titreEtLogo}>
                     <FontAwesome name='users' size={15} color="#182A49" />
-                    <Text style={styles.titre}>Disponibilité</Text>
+                    <Text style={styles.titre}>Fréquence</Text>
                   </View>
                   <Text style={styles.critereReponse}>{annonce.tempsMax} heure / semaine </Text>
                 </View>
@@ -235,7 +235,6 @@ const styles = StyleSheet.create({
   },
   annonceEnTete: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     paddingHorizontal: 20,
   },
   annonceDate: {
@@ -244,11 +243,13 @@ const styles = StyleSheet.create({
   },
   annonceTitre: {
     fontSize: 29,
+    paddingRight:'5%',
     width: 335,
   },
   annonceFavoris: {
     position:'absolute',
-    marginLeft:320
+    marginLeft:'95%',
+    paddingLeft:10
   },
   annonceTypeEtDate: {
     flexDirection:'row',
@@ -353,17 +354,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor:'#FF1F1F',
     borderRadius: 12,
-    height: 30,
+    height: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 5,
     marginHorizontal: 10,
-    backgroundColor: '#fff',
+    backgroundColor: '#d40a0a',
     fontWeight:'bold'
   },
   textSignalez: {
-    color:'#FF1F1F'
+    color:'white'
   },
 
   // ------------------- COLAB BAR ---------------------

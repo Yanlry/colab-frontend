@@ -31,26 +31,26 @@ export default function FavorisScreen({ navigation }) {
         <View style={styles.mesCritere}>
       <View style={styles.apercuAnnonce}>
         <Text style={styles.apercuAnnonceTitre}>
-          {annonce.title.length > 30 ? annonce.title.substring(0, 28) + "..." : annonce.title} {"\n"}
+          {annonce.title.length > 49 ? annonce.title.substring(0, 48) + "..." : annonce.title} {"\n"}
         </Text>
         <View>
         <Text style={styles.apercuAnnonceDescription}>
-          {annonce.description.length > 130 ? annonce.description.substring(0, 130) + "..." : annonce.description} {"\n"}
+          {annonce.description.length > 68 ? annonce.description.substring(0, 67) + "..." : annonce.description} {"\n"}
         </Text>
         </View>
         <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceExperience}>
-          Expérience dans le domaine : {annonce.experience} ans
+          Expérience : {annonce.experience} ans
         </Text>
         </View>
         <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceTempsMax}>
-          Disponible : {annonce.tempsMax} heures / semaine
+          Fréquence : {annonce.tempsMax} heures / semaine
         </Text>
         </View>
         <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceTempsMax}>
-          Moment des séances : {annonce.disponibilite}
+          Disponibilité : {annonce.disponibilite}
         </Text>
         </View>
         <View style={styles.containerCritere}>
@@ -73,12 +73,12 @@ export default function FavorisScreen({ navigation }) {
               <View style={styles.offreEtDemande}>
                 {/*  BOUTON OFFRE  */}
                 <TouchableOpacity style={[styles.categorieBtn, afficherOffre && styles.categorieActive]} onPress={() => setAfficherOffre(true)}>
-                  <Text style={[styles.categorieText, afficherOffre && styles.textActive]}>Offre</Text>
+                  <Text style={[styles.categorieText, afficherOffre && styles.textActive]}>Apprendre</Text>
                 </TouchableOpacity>
 
                 {/*  BOUTON DEMANDE  */}
                 <TouchableOpacity style={[styles.categorieBtn, !afficherOffre && styles.categorieActive]} onPress={() => setAfficherOffre(false)}>
-                  <Text style={[styles.categorieText, !afficherOffre && styles.textActive]}>Demande</Text>
+                  <Text style={[styles.categorieText, !afficherOffre && styles.textActive]}>Enseigner</Text>
                 </TouchableOpacity>
               </View>
 
@@ -114,14 +114,8 @@ export default function FavorisScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   safeAreaView: {
-    flex: 1,
+    height: '100%',
     backgroundColor:'#fff'
-  },
-  container: {
-    alignItems: 'center',
-  },
-  containerCritere:{
-    marginVertical:3
   },
 
   //-----------------------  BOUTTON OFFRE ET DEMANDE  ---------------------------------
@@ -134,7 +128,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     borderColor: 'gray',
-    width: 180,
+    width: '47%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
@@ -166,7 +160,7 @@ const styles = StyleSheet.create({
   //-----------------------  ICONE FILTRE  ---------------------------------
 
   scrollView:{
-    height:580
+    height:'88%'
   },
 
   //-----------------------  VIGNETTE D'ANNONCE  ---------------------------------
@@ -177,9 +171,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 12,
     margin: 10,
-    padding: 10,
-    justifyContent: 'space-between',
-    textAlign: 'center',
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOpacity: 0.1,
@@ -201,15 +192,13 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   apercuAnnonce: {
-    width: 270,
-    paddingRight:50
+    width: '85%',
   },
   apercuAnnonceTitre: {
     fontSize: 18,
   },
   apercuAnnonceDescription: {
     fontSize: 13,
-    marginBottom:19
   },
   apercuAnnonceExperience: {
     fontSize: 12,
@@ -223,6 +212,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop:15
   },
+ 
 
 //----------------------- BOUTON FAVORIS  ---------------------------------
 

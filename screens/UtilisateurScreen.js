@@ -80,7 +80,8 @@ export default function UtilisateurScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor:'#fff'
+    backgroundColor:'#fff',
+    alignItems:'center'
   },
 
 
@@ -93,8 +94,8 @@ const styles = StyleSheet.create({
   marginBottom: 10,
 },
 icon: {
-  marginLeft: 25,
-  marginRight:60
+  marginLeft: '1%',
+  marginRight:'20%',
 },
 title: {
   fontSize: 24,

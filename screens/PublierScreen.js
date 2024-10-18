@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, SafeAreaView } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useSelector } from 'react-redux';
+import MapView, { Marker } from 'react-native-maps';
+import GeoAPIGouvAutocomplete from './GeoAPIGouvAutocomplete';
 
 export default function PublierScreen({ navigation }) {
 
@@ -9,19 +11,21 @@ export default function PublierScreen({ navigation }) {
 
   const [activitesDisponibles, setActivitesDisponibles] = useState([]);
   const [offreOuvert, setOffreOuvert] = useState(false);
-
   const [type, setType] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tempsMax, setTempsMax] = useState('');
   const [experience, setExperience] = useState('');
-  const [secteurActivite, setSecteurActivite] = useState([])
-  const [disponibilite, setDisponibilite] = useState('')
+  const [secteurActivite, setSecteurActivite] = useState([]);
+  const [disponibilite, setDisponibilite] = useState('');
+  const [ville, setVille] = useState('');
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
 
   const [afficherMessage, setAfficherMessage] = useState(false);
 
   useEffect(() => {
-    fetch('http://192.168.1.33:3000/profiles/activites')
+    fetch('http://192.168.1.109:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -31,29 +35,34 @@ export default function PublierScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-
     if (offreOuvert && secteurActivite.length === 1) {
       setOffreOuvert(false);
     }
   }, [secteurActivite]);
 
   const envoyerDonnee = () => {
-    if (!type || !title || !secteurActivite.length === 0 || !description || !tempsMax || !experience || !disponibilite) {
+    if (!type || !title || secteurActivite.length === 0 || !description || !tempsMax || !experience || !disponibilite || !ville) {
+      console.log("Vérifiez tous les champs obligatoires");
       return;
     }
 
     const annonceData = {
-      type: type,
-      title: title,
-      description: description,
-      secteurActivite: secteurActivite,
-      tempsMax: tempsMax,
-      experience: experience,
-      disponibilite: disponibilite,
+      type,
+      title,
+      description,
+      secteurActivite,
+      tempsMax,
+      experience,
+      disponibilite,
+      ville,
+      latitude,
+      longitude,
       date: new Date(),
     };
 
-    fetch(`http://192.168.1.33:3000/annonces/publier/${utilisateur.token}`, {
+    console.log("Données de l'annonce envoyées :", annonceData);
+
+    fetch(`http://192.168.1.109:3000/annonces/publier/${utilisateur.token}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -63,6 +72,9 @@ export default function PublierScreen({ navigation }) {
       .then(response => response.json())
       .then(data => {
         setAfficherMessage(true);
+      })
+      .catch(error => {
+        console.error(error);
       });
   };
 
@@ -73,230 +85,236 @@ export default function PublierScreen({ navigation }) {
     setDescription('');
     setTempsMax('');
     setExperience('');
-    setDisponibilite('')
+    setDisponibilite('');
+    setVille('');
+    setLatitude(null);
+    setLongitude(null);
     navigation.navigate('Accueil');
   };
 
+  const supprimerVille = () => {
+    setVille('');
+    setLatitude(null);
+    setLongitude(null);
+  };
+
   return (
-<SafeAreaView style={styles.safeAreaView}>
-  <KeyboardAvoidingView>
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.titreCritere}>Titre</Text>
-          <TextInput
-            style={styles.saisie}
-            placeholder="Titre de l'annonce"
-            value={title}
-            onChangeText={(text) => setTitle(text)}
-          />
-          <Text style={styles.titreCritere}>Type d'annonce</Text>
-          <TextInput
-            style={styles.saisie}
-            placeholder="Choississez entre : Offre ou Demande"
-            value={type}
-            onChangeText={(text) => setType(text)}
-          />
-          <Text style={styles.titreCritere}>Secteur d'activités</Text>
-          <DropDownPicker
-            items={activitesDisponibles.map(activite => ({
-              label: activite,
-              value: activite,
-            }))}
-            open={offreOuvert}
-            setOpen={(value) => setOffreOuvert(value)}
-            value={secteurActivite}
-            setValue={(values) => setSecteurActivite(values)}
-            placeholder="Selectionnez votre activité"
-            showTickIcon={true}
-            multiple={true}
-            min={1}
-            max={1}
-            mode='BADGE'
-            badgeColors={['#50B200', '#182A49', '#C23B3B', '#4E98C2']}
-            badgeDotColors={['white']}
-            badgeTextStyle={{ color: 'white' }}
-            placeholderStyle={{ color: 'gray' }}
-            style={styles.dropDownPicker}
-            dropDownContainerStyle={{ width: '95%', marginLeft: 9 }}
-          />
-          <Text style={styles.titreDescription}>Description</Text>
-          <TextInput
-            style={styles.saisieDescription}
-            placeholder="Description de l'annonce"
-            value={description}
-            onChangeText={(text) => setDescription(text)}
-            multiline
-          />
-          <Text style={styles.titreCritere}>Expérience en années</Text>
-          <TextInput
-            style={styles.saisie}
-            placeholder="Votre niveau ou le niveau que vous recherchez ?"
-            value={experience}
-            onChangeText={(text) => setExperience(text)}
-            keyboardType="numeric"
-          />
-          <Text style={styles.titreCritere}>Vos disponibilité</Text>
-          <TextInput
-            style={styles.saisie}
-            placeholder="Vos disponibilite : Semaine , soir , ou Week-end ?"
-            value={disponibilite}
-            onChangeText={(text) => setDisponibilite(text)}
-          />
-          <Text style={styles.titreCritere}>Temps par semaine</Text>
-          <TextInput
-            style={styles.saisie}
-            placeholder="Temps a consacrer par semaine ?"
-            value={tempsMax}
-            onChangeText={(text) => setTempsMax(text)}
-            keyboardType="numeric"
-          />
-
-          <TouchableOpacity style={styles.publierButton} onPress={() => envoyerDonnee()}>
-            <Text style={styles.publierButtonText}>Publier</Text>
-          </TouchableOpacity>
-        </View>
-        {afficherMessage && (
-          <View style={styles.messageValidation}>
-            <View style={styles.annonceCree}>
-              <Text style={styles.annonceCreeText}>Annonce créée avec succès !</Text>
-
-              <TouchableOpacity style={styles.okButton} onPress={() => cacherMessage()}>
-                <Text style={styles.okButtonText}>Retour a l'accueil</Text>
+    <SafeAreaView style={styles.safeAreaView}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <View style={styles.content}>
+              <Text style={styles.titreCritere}>Titre</Text>
+              <TextInput
+                style={styles.saisie}
+                placeholder="Titre de l'annonce"
+                value={title}
+                onChangeText={(text) => setTitle(text)}
+              />
+              <Text style={styles.titreCritere}>Localisation</Text>
+              <GeoAPIGouvAutocomplete
+                onCitySelected={(city) => {
+                  setVille(city.nom);
+                }}
+              />
+              {ville && (
+                <View style={styles.villeContainer}>
+                  <Text style={styles.selectedCity}>
+                    Ville sélectionnée : <Text style={styles.selectedCity2}>{ville}</Text>
+                  </Text>
+                  <TouchableOpacity onPress={supprimerVille}>
+                    <Text style={styles.supprimerVille}>l Supprimer</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              {latitude && longitude && (
+                <MapView
+                  style={styles.map}
+                  region={{
+                    latitude,
+                    longitude,
+                    latitudeDelta: 0.05,
+                    longitudeDelta: 0.05,
+                  }}
+                >
+                  <Marker coordinate={{ latitude, longitude }} />
+                </MapView>
+              )}
+              <Text style={styles.titreCritere}>Type d'annonce</Text>
+              <TextInput
+                style={styles.saisie}
+                placeholder="Choisissez entre : Offre ou Demande"
+                value={type}
+                onChangeText={(text) => setType(text)}
+                />
+                  
+              <Text style={styles.titreCritere}>Secteur d'activités</Text>
+              <DropDownPicker
+                items={activitesDisponibles.map(activite => ({
+                  label: activite,
+                  value: activite,
+                }))}
+                open={offreOuvert}
+                setOpen={setOffreOuvert}
+                value={secteurActivite}
+                setValue={setSecteurActivite}
+                placeholder="Sélectionnez votre activité"
+                showTickIcon={true}
+                multiple={true}
+                min={1}
+                max={1}
+                mode="BADGE"
+                badgeColors={['#50B200', '#182A49', '#C23B3B', '#4E98C2']}
+                badgeDotColors={['white']}
+                badgeTextStyle={{ color: 'white' }}
+                placeholderStyle={{ color: 'gray' }}
+                style={styles.dropDownPicker}
+                dropDownContainerStyle={{ width: '95%', marginLeft: 9 }}
+                />
+                </View>
+                <ScrollView style={styles.scrollContent}>
+              <Text style={styles.titreDescription}>Description</Text>
+              <TextInput
+                style={styles.saisieDescription}
+                placeholder="Description de l'annonce"
+                value={description}
+                onChangeText={(text) => setDescription(text)}
+                multiline
+              />
+              <Text style={styles.titreCritere}>Expérience en années</Text>
+              <TextInput
+                style={styles.saisie}
+                placeholder="Votre niveau ou le niveau que vous recherchez ?"
+                value={experience}
+                onChangeText={(text) => setExperience(text)}
+                keyboardType="numeric"
+              />
+              <Text style={styles.titreCritere}>Vos disponibilités</Text>
+              <TextInput
+                style={styles.saisie}
+                placeholder="Vos disponibilités : Semaine, soir, ou Week-end ?"
+                value={disponibilite}
+                onChangeText={(text) => setDisponibilite(text)}
+              />
+              <Text style={styles.titreCritere}>Temps par semaine</Text>
+              <TextInput
+                style={styles.saisie}
+                placeholder="Temps à consacrer par semaine ?"
+                value={tempsMax}
+                onChangeText={(text) => setTempsMax(text)}
+                keyboardType="numeric"
+              />
+              <TouchableOpacity style={styles.boutonEnvoyer} onPress={envoyerDonnee}>
+                <Text style={styles.textEnvoyer}>Publier l'annonce</Text>
               </TouchableOpacity>
-            </View>
+              {afficherMessage && (
+                <View style={styles.messageContainer}>
+                  <Text style={styles.messageText}>Votre annonce a bien été enregistrée !</Text>
+                  <TouchableOpacity style={styles.boutonOK} onPress={cacherMessage}>
+                    <Text style={styles.textOK}>OK</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </ScrollView>
           </View>
-        )}
-      </View>
-      </ScrollView>
-    </TouchableWithoutFeedback>
-  </KeyboardAvoidingView>
-</SafeAreaView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
-
 const styles = StyleSheet.create({
- safeAreaView: {
+  safeAreaView: {
     flex: 1,
-    backgroundColor:'#fff',
+    backgroundColor: '#fff',
+  },
+  container: {
+    flex: 1,
   },
   content: {
-    marginTop:10,
-    alignItems: 'center',
+    padding: 20,
   },
-
-  //-----------------------  RUBRIQUE : Titre , type , secteur d'activité , description , ...  ---------------------------------
-
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 20, 
+  },
   titreCritere: {
     fontSize: 16,
-    color: '#182A49',
-    marginBottom:10,
-    marginTop:10,
-    fontWeight:'bold'
-  },
-  titre: {
-    fontSize: 24,
     fontWeight: 'bold',
-    color: '#182A49',
+    marginBottom: 10,
+  },
+  saisie: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 20,
+  },
+  dropDownPicker: {
+    marginBottom: 20,
   },
   titreDescription: {
     fontSize: 16,
-    marginTop: 20,
-    marginBottom:10,
     fontWeight: 'bold',
-    color: '#182A49',
-  },
-
-  //-----------------------  CHAMPS DE SAISIE  ---------------------------------
-  
-  saisie: {
-    borderWidth: 1,
-    borderColor: '#D1D1D1',
-    borderRadius: 8,
-    height: 45,
-    padding: 10,
     marginBottom: 10,
-    width: '95%',
   },
   saisieDescription: {
     borderWidth: 1,
-    borderColor: '#D1D1D1',
-    borderRadius: 8,
-    height: 95,
-    padding: 10,
-    marginBottom: 10,
-    width: '95%',
-  },
-  dropDownPicker:{
     borderColor: '#ccc',
-    borderWidth: 1,
-    width:'95%',
-    marginLeft:9
-  },
-  //-----------------------  BOUTTON PUBLIER ---------------------------------
-
-  publierButton: {
-    marginTop:20,
-    marginBottom:20,
-    width: 200,
-    height: 40,
-    backgroundColor: '#182A49',
+    borderRadius: 5,
     padding: 10,
-    justifyContent: 'center',
-    borderRadius:100,
+    height: 100,
+    marginBottom: 20,
+    textAlignVertical: 'top',
   },
-  publierButtonText: {
+  boutonEnvoyer: {
+    backgroundColor: '#007BFF',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  textEnvoyer: {
     color: '#fff',
-    fontSize: 18,
-    textAlign: 'center',
+    fontSize: 16,
     fontWeight: 'bold',
   },
-
-  //-----------------------  MESSAGE DE VALIDATION ---------------------------------
-
-  messageValidation: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
+  messageContainer: {
+    marginTop: 20,
     alignItems: 'center',
-    zIndex: 1000,
   },
-  annonceCree: {
-    position: 'absolute',
-    borderWidth: 1,
-    height: 250,
-    width: 330,
-    justifyContent: 'center',
+  messageText: {
+    fontSize: 16,
+    color: '#28A745',
+    marginBottom: 10,
+  },
+  boutonOK: {
+    backgroundColor: '#28A745',
+    padding: 10,
+    borderRadius: 5,
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    paddingBottom: 40,
   },
-  annonceCreeText: {
-    textAlign: 'center',
-    fontSize: 23,
-    margin: 45,
+  textOK: {
+    color: '#fff',
+    fontSize: 16,
   },
-
-  //-----------------------  BOUTON OK ---------------------------------
-
-  okButton: {
-    borderWidth: 1,
-    backgroundColor: '#182A49',
-    justifyContent: 'center',
+  villeContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 12,
-    height: 50,
-    width: 150,
+    marginBottom: 20,
   },
-  okButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
+  selectedCity: {
+    fontSize: 16,
+    marginRight: 10,
+  },
+  selectedCity2: {
+    color: 'blue',
+  },
+  supprimerVille: {
+    color: 'red',
+  },
+  map: {
+    width: '100%',
+    height: 200,
+    marginBottom: 20,
   },
 });

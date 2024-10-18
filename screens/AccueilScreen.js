@@ -14,14 +14,14 @@ export default function AccueilScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = () => {
-    fetch(`http://192.168.1.33:3000/annonces/offres/${utilisateur.token}`)
+    fetch(`http://192.168.1.109:3000/annonces/offres/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
         setOffreDate(trierDateAnnonce);
       });
 
-    fetch(`http://192.168.1.33:3000/annonces/demandes/${utilisateur.token}`)
+    fetch(`http://192.168.1.109:3000/annonces/demandes/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -63,26 +63,26 @@ export default function AccueilScreen({ navigation }) {
         <View style={styles.mesCritere}>
       <View style={styles.apercuAnnonce}>
         <Text style={styles.apercuAnnonceTitre}>
-          {annonce.title.length > 30 ? annonce.title.substring(0, 28) + "..." : annonce.title} {"\n"}
+          {annonce.title.length > 49 ? annonce.title.substring(0, 48) + "..." : annonce.title} {"\n"}
         </Text>
         <View>
         <Text style={styles.apercuAnnonceDescription}>
-          {annonce.description.length > 130 ? annonce.description.substring(0, 130) + "..." : annonce.description} {"\n"}
+          {annonce.description.length > 61 ? annonce.description.substring(0,60) + "..." : annonce.description} {"\n"}
         </Text>
         </View>
         <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceExperience}>
-          Expérience dans le domaine : {annonce.experience} ans
+          Expérience : {annonce.experience} ans
         </Text>
         </View>
         <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceTempsMax}>
-          Disponible : {annonce.tempsMax} heures / semaine
+          Fréquence : {annonce.tempsMax} heures / semaine
         </Text>
         </View>
         <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceTempsMax}>
-          Moment des séances : {annonce.disponibilite}
+          Disponibilité : {annonce.disponibilite}
         </Text>
         </View>
         <View style={styles.containerCritere}>
@@ -98,35 +98,40 @@ export default function AccueilScreen({ navigation }) {
   const lesDemandes = demandeDate.filter(annonce => !afficherOffre && rechercherAnnonce(annonce)).map(annonce => (
     <TouchableOpacity key={annonce.token} style={styles.annonce} onPress={() => navigation.navigate('Annonce', { annonce: annonce })}>
       <View style={styles.imageAnnonce}>
-        <Text style={styles.apercuImage}>Image</Text>
+        <Text style={styles.apercuImage}>Image </Text>
       </View>
-      <Text style={styles.apercuAnnonce}>
+        <View style={styles.mesCritere}>
+      <View style={styles.apercuAnnonce}>
         <Text style={styles.apercuAnnonceTitre}>
-          {annonce.title.length > 30 ? annonce.title.substring(0, 28) + "..." : annonce.title} {"\n"}
+          {annonce.title.length > 49 ? annonce.title.substring(0, 48) + "..." : annonce.title} {"\n"}
         </Text>
-        {"\n"}
+        <View>
         <Text style={styles.apercuAnnonceDescription}>
-          {annonce.description.length > 100 ? annonce.description.substring(0, 100) + "..." : annonce.description} {"\n"}
+          {annonce.description.length > 61 ? annonce.description.substring(0,60) + "..." : annonce.description} {"\n"}
         </Text>
-        {"\n"}
+        </View>
+        <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceExperience}>
-          Expérience de l'éléve : {annonce.experience} ans
+          Expérience min. recherché : {annonce.experience} ans
         </Text>
-        {"\n"}
+        </View>
+        <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceTempsMax}>
-          Disponible : {annonce.tempsMax} h / semaine
+          Fréquence : {annonce.tempsMax} heures / semaine
         </Text>
-        {"\n"}
-        {"\n"}
+        </View>
+        <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceTempsMax}>
-          Moment des séances : {annonce.disponibilite}
+        Disponibilité : {annonce.disponibilite}
         </Text>
-        {"\n"}
-        {"\n"}
+        </View>
+        <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceDate}>
           Mise en ligne le : {formatDate(annonce.date)}
         </Text>
-      </Text>
+        </View>
+        </View>
+      </View>
     </TouchableOpacity>
   ));
 
@@ -147,10 +152,10 @@ export default function AccueilScreen({ navigation }) {
             <View style={styles.container}>
               <View style={styles.offreEtDemande}>
                 <TouchableOpacity style={[styles.categorieBtn, afficherOffre && styles.categorieActive]} onPress={() => afficheOffre()}>
-                  <Text style={[styles.categorieText, afficherOffre && styles.textActive]}>Offre</Text>
+                  <Text style={[styles.categorieText, afficherOffre && styles.textActive]}>Apprendre</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.categorieBtn, !afficherOffre && styles.categorieActive]} onPress={() => afficheDemande()}>
-                  <Text style={[styles.categorieText, !afficherOffre && styles.textActive]}>Demande</Text>
+                  <Text style={[styles.categorieText, !afficherOffre && styles.textActive]}>Enseigner</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.rechercher}>
@@ -191,15 +196,10 @@ export default function AccueilScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   safeAreaView: {
-    backgroundColor:'#fff'
+    backgroundColor:'#fff',
+    height: '100%'
   },
-  container: {
-    alignItems: 'center',
-  },
-  containerCritere:{
-    marginVertical:3,
-  },
-  
+
   //-----------------------  BOUTTON OFFRE ET DEMANDE  ---------------------------------
 
   offreEtDemande: {
@@ -210,13 +210,12 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     borderColor:'#8F8F8F',
-    width: 180,
+    width: '47%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
     borderRadius: 12,
     marginTop: 20,
-    margin:1,
   },
   categorieText: {
     fontSize: 23,
@@ -235,15 +234,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
+    marginVertical:'6%',
   },
   rechercheText: {
     borderWidth: 1,
     borderColor:'#8F8F8F',
-    height: 50,
-    width: 310,
+    height:'200%',
+    width: '85%',
     fontSize: 15,
     paddingLeft: 30,
-    margin: 12,
     borderRadius: 12,
     marginHorizontal:5,
   },
@@ -257,19 +256,16 @@ const styles = StyleSheet.create({
   //-----------------------   SCROLLVIEW  ---------------------------------
 
   scroll:{
-    height:500
+    height: '80%'
   },
   //-----------------------  VIGNETTE D'ANNONCE  ---------------------------------
   
   annonce: {
     height: 190,
-    width: '94%',
+    width: '96%',
     flexDirection: 'row',
     borderRadius: 12,
     margin: 10,
-    padding: 10,
-    justifyContent: 'space-between',
-    textAlign: 'center',
     backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOpacity: 0.1,
@@ -291,15 +287,13 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   apercuAnnonce: {
-    width: 270,
-    paddingRight:50
+    width: '85%',
   },
   apercuAnnonceTitre: {
     fontSize: 18,
   },
   apercuAnnonceDescription: {
     fontSize: 13,
-    marginBottom:19
   },
   apercuAnnonceExperience: {
     fontSize: 12,

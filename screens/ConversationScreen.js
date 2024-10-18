@@ -16,7 +16,7 @@ export default function ConversationScreen({ navigation, route }) {
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   const fetchMessages = () => {
-    const url = `http://192.168.1.33:3000/messages/${utilisateurDestinataireToken}/${senderToken}`;
+    const url = `http://192.168.1.109:3000/messages/${utilisateurDestinataireToken}/${senderToken}`;
     
     fetch(url)
       .then(response => response.json())
@@ -70,7 +70,7 @@ export default function ConversationScreen({ navigation, route }) {
         messages.push(newConversation);
       }
 
-      fetch('http://192.168.1.33:3000/messages', {
+      fetch('http://192.168.1.109:3000/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -20,7 +20,7 @@ export default function ActiviteScreen({ navigation }) {
 
   useEffect(() => {
     
-    fetch('http://192.168.1.33:3000/profiles/activites')
+    fetch('http://192.168.1.109:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -54,7 +54,7 @@ export default function ActiviteScreen({ navigation }) {
     };
   
     try {
-      const responseOffre = await fetch(`http://192.168.1.33:3000/profiles/jePeux`, {
+      const responseOffre = await fetch(`http://192.168.1.109:3000/profiles/jePeux`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBodyOffre),
@@ -63,7 +63,7 @@ export default function ActiviteScreen({ navigation }) {
       console.log('Réponse jePeux:', dataOffre);
       dispatch(jePeux(dataOffre.user));
   
-      const responseDemande = await fetch(`http://192.168.1.33:3000/profiles/jeVeux`, {
+      const responseDemande = await fetch(`http://192.168.1.109:3000/profiles/jeVeux`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBodyDemande),
@@ -84,13 +84,13 @@ export default function ActiviteScreen({ navigation }) {
           <View style={styles.container}>
             <View style={styles.contentContainer}>
               <Text style={styles.confirmationCreation}>Profil crée avec succés !</Text>
-              <Text style={styles.welcomeText}>Sélectionnez au moins une catégorie dans laquelle vous aspirez à acquérir de nouvelles connaissances, ainsi qu'une catégorie où vous désirez apporter votre aide à autrui.</Text>
+              <Text style={styles.welcomeText}>Sélectionnez <Text style={styles.boldText}>au moins une</Text> catégorie dans laquelle vous aspirez à acquérir de nouvelles connaissances, ainsi qu'une catégorie où vous désirez apporter votre aide à autrui.</Text>
 
               {isLoading && <Text style={styles.loadingMsg}>Chargement des activités en cours...</Text>}
               {!isLoading && (
                 <View>
                   <View style={styles.offreContainer}>
-                    <Text style={styles.activityLabel}>Donnez votre aide ( 1 activité min.) :</Text>
+                    <Text style={styles.activityLabel}>Que pouvez-vous enseigner ?</Text>
                     <DropDownPicker
                       items={activitesDisponibles.map(activite => ({
                         label: activite,
@@ -116,7 +116,7 @@ export default function ActiviteScreen({ navigation }) {
                   </View>
 
                   <View style={styles.demandeContainer}>
-                    <Text style={styles.activityLabel}>Demandez de l'aide ( 1 activité min.) :</Text>
+                    <Text style={styles.activityLabel}>Que voulez-vous apprendre ?</Text>
                     <DropDownPicker
                       items={activitesDisponibles && activitesDisponibles.map(activite => ({
                         label: activite,
@@ -176,6 +176,9 @@ const styles = StyleSheet.create({
     textAlign:'center',
     margin:15,
     marginTop:45
+  },
+  boldText: {
+    fontWeight: 'bold',
   },
 
   //-----------------------  MESSAGE DE CHARGEMENT  ---------------------------------

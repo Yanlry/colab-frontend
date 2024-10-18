@@ -21,13 +21,11 @@ export default function InscriptionScreen({ navigation }) {
   };
 
   const handleEnregistrer = () => {
-    fetch('http://192.168.1.33:3000/users/signup', {
+    fetch('http://192.168.1.109:3000/users/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email, password: password, username: username, phone: phoneNumber }),
     })
-
-
       .then(response => response.json())
       .then(data => {
         if (data.result) {
@@ -36,9 +34,7 @@ export default function InscriptionScreen({ navigation }) {
             email: data.email,
             username: data.username,
             phone: data.phone,
-
           }));
-
           setEmail('');
           setPassword('');
           navigation.navigate('Activite')
@@ -46,8 +42,6 @@ export default function InscriptionScreen({ navigation }) {
           setErrorMessage(data.error);
         }
       })
-
-
   }
 
   return (

@@ -12,7 +12,7 @@ export default function MessagerieScreen({ navigation }) {
   const [forceUpdate, setForceUpdate] = useState(0);
 
   const fetchMessages = () => {
-    const url = `http://192.168.1.33:3000/messages/conversations/${senderToken}`;
+    const url = `http://192.168.1.109:3000/messages/conversations/${senderToken}`;
     
     fetch(url)
       .then(response => {

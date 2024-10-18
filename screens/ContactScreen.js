@@ -16,7 +16,7 @@ export default function ContactScreen({ navigation }) {
     const requestBody = {
       token: user.token,
     };
-    fetch('http://192.168.1.33:3000/propositionCollabs/collaboration/contact', {
+    fetch('http://192.168.1.109:3000/propositionCollabs/collaboration/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -93,36 +93,36 @@ export default function ContactScreen({ navigation }) {
           onChangeText={text => setRecherche(text)}
           placeholder="Rechercher un contact ou un numéro..."
         />
-          <FontAwesome name='search' size={22} color={'grey'} style={styles.searchIcon}/>
-        </View>
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />
-          }
-        >
-          <View style={styles.content}>
+        <FontAwesome name='search' size={22} color={'grey'} style={styles.searchIcon}/>
+      </View>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
+        <View style={styles.content}>
           {contactsFiltres.map((contact, index) => (
-              <View key={index} style={styles.contactContainer}>
-                <TouchableOpacity style={styles.contactItem}>
-                  <FontAwesome name='user' size={35} color={'#182A49'} />
-                  <View style={styles.contactInfo}>
-                    <Text style={styles.contactName}>{contact.username}</Text>
-                    <Text style={styles.contactNumber}>{contact.phone}</Text>
-                  </View>
-                </TouchableOpacity>
-                <View style={styles.actionButtons}>
-                  <TouchableOpacity style={styles.phoneButton} onPress={() => appelerNumero(contact.phone)}>
-                    <FontAwesome name='phone' size={35} color={'#182A49'} style={styles.telIcon}/>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.messageButton} onPress={() => ouvrirConversation(contact)}>
-                    <FontAwesome name='comment' size={25} color={'#182A49'} />
-                  </TouchableOpacity>
+            <View key={index} style={styles.contactContainer}>
+              <TouchableOpacity style={styles.contactItem}>
+                <FontAwesome name='user' size={35} color={'#182A49'} />
+                <View style={styles.contactInfo}>
+                  <Text style={styles.contactName}>{contact.username}</Text>
+                  <Text style={styles.contactNumber}>{contact.phone}</Text>
                 </View>
+              </TouchableOpacity>
+              <View style={styles.actionButtons}>
+                <TouchableOpacity style={styles.phoneButton} onPress={() => appelerNumero(contact.phone)}>
+                  <FontAwesome name='phone' size={35} color={'#182A49'} style={styles.telIcon}/>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.messageButton} onPress={() => ouvrirConversation(contact)}>
+                  <FontAwesome name='comment' size={33} color={'#182A49'} />
+                </TouchableOpacity>
               </View>
-            ))}
+            </View>
+          ))}
         </View>
       </ScrollView>
     </View>
@@ -133,54 +133,47 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    alignItems: 'center',
   },
   content: {
-    padding: 20,
+    width: '100%', 
+    alignItems: 'center',
   },
 
-//-----------------------  BARRE DE RECHERCHE  ---------------------------------
+  
+  rechercher: {
+    width: '90%', 
+    justifyContent: 'center',
+    marginTop: 15,
+  },
+  rechercheText: {
+    borderWidth: 1,
+    borderColor: '#8F8F8F',
+    height: 40,
+    fontSize: 15,
+    paddingLeft: 30,
+    borderRadius: 12,
+  },
+  searchIcon: {
+    position: 'absolute',
+    right: 10,
+    top: 10,
+  },
 
-rechercher: {
-  width:350,
-  justifyContent: 'center',
-  marginTop:15,
-  marginLeft:15
-},
-rechercheText: {
-  justifyContent:'center',
-  borderWidth: 1,
-  borderColor:'#8F8F8F',
-  height: 40,
-  width: 330,
-  fontSize: 15,
-  paddingLeft: 30,
-  margin: 12,
-  borderRadius: 12,
-  marginHorizontal:5,
-},
-searchIcon: {
-  position: 'absolute',
-  paddingBottom:5,
-  marginLeft:295,
-},
-
-//----------------------- FICHE CONTACT  ---------------------------------
-
+ 
   contactContainer: {
+    width: '90%',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     paddingBottom: 10,
-    flexDirection:'row'
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   contactItem: {
+    marginTop:25,
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 10,
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
   },
   contactInfo: {
     marginLeft: 20,
@@ -189,18 +182,20 @@ searchIcon: {
     fontSize: 16,
     fontWeight: 'bold',
   },
-  telIcon: {
-    position: 'absolute',
-    marginLeft: 160,
-    marginTop: -20, 
-  },
   contactNumber: {
     fontSize: 14,
+    
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  phoneButton: {
+    marginRight: 20,
+    marginTop:25,
   },
   messageButton: {
-    position:'absolute',
-    marginLeft:110,
-    width:40,
-    height:40,
-  }
+    marginRight: 10,
+    marginTop:20,
+  },
 });
