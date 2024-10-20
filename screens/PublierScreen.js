@@ -40,12 +40,38 @@ export default function PublierScreen({ navigation }) {
     }
   }, [secteurActivite]);
 
+  const handleCitySelected = (city) => {
+    setVille(city.nom);
+    fetchCoordinates(city.nom);
+  };
+  
+  const fetchCoordinates = (ville) => {
+    // Exemple avec OpenStreetMap Nominatim
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${ville}`;
+  
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data && data.length > 0) {
+          setLatitude(parseFloat(data[0].lat)); 
+          setLongitude(parseFloat(data[0].lon)); 
+        } else {
+          console.error("Les coordonnées ne sont pas disponibles pour cette ville.");
+        }
+      })
+      .catch(error => {
+        console.error("Erreur lors de la récupération des coordonnées :", error);
+      });
+  };
+  
+  
+
   const envoyerDonnee = () => {
-    if (!type || !title || secteurActivite.length === 0 || !description || !tempsMax || !experience || !disponibilite || !ville) {
+    if (!type || !title || secteurActivite.length === 0 || !description || !tempsMax || !experience || !disponibilite || !ville || !latitude || !longitude) {
       console.log("Vérifiez tous les champs obligatoires");
       return;
     }
-
+  
     const annonceData = {
       type,
       title,
@@ -55,7 +81,7 @@ export default function PublierScreen({ navigation }) {
       experience,
       disponibilite,
       ville,
-      latitude,
+      latitude, 
       longitude,
       date: new Date(),
     };
@@ -112,10 +138,8 @@ export default function PublierScreen({ navigation }) {
                 onChangeText={(text) => setTitle(text)}
               />
               <Text style={styles.titreCritere}>Localisation</Text>
-              <GeoAPIGouvAutocomplete
-                onCitySelected={(city) => {
-                  setVille(city.nom);
-                }}
+             <GeoAPIGouvAutocomplete
+                onCitySelected={handleCitySelected}
               />
               {ville && (
                 <View style={styles.villeContainer}>
@@ -127,19 +151,7 @@ export default function PublierScreen({ navigation }) {
                   </TouchableOpacity>
                 </View>
               )}
-              {latitude && longitude && (
-                <MapView
-                  style={styles.map}
-                  region={{
-                    latitude,
-                    longitude,
-                    latitudeDelta: 0.05,
-                    longitudeDelta: 0.05,
-                  }}
-                >
-                  <Marker coordinate={{ latitude, longitude }} />
-                </MapView>
-              )}
+              
               <Text style={styles.titreCritere}>Type d'annonce</Text>
               <TextInput
                 style={styles.saisie}

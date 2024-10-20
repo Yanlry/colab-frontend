@@ -23,10 +23,10 @@ export default function AnnonceScreen({ route, navigation }) {
   }, [favoris, annonce.token]);
 
   const coordonnee = {
-    latitude: 48.8566,
-    longitude: 2.3522,
+    latitude: annonce.latitude,
+    longitude: annonce.longitude
   };
-
+  
   const gererFavoris = (annonce) => {
 
     const estDejaFavori = favoris.some(fav => fav.token === annonce.token);
@@ -164,9 +164,9 @@ export default function AnnonceScreen({ route, navigation }) {
 
               {/* MAP LOCALISATION */}
               <View style={styles.mapContainer}>
-                <MapView style={styles.map} region={{ ...coordonnee, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}>
-                  <Marker coordinate={coordonnee} />
-                </MapView>
+              <MapView style={styles.map} region={{ ...coordonnee, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}>
+                <Marker coordinate={coordonnee} />
+              </MapView>
               </View>
 
               {/* INFORMATIONS UTILISATEUR DE L'ANNONCE */}
