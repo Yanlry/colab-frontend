@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, SafeAreaView } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, SafeAreaView, Modal, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
-import MapView, { Marker } from 'react-native-maps';
 import GeoAPIGouvAutocomplete from './GeoAPIGouvAutocomplete';
+import MapView, { Marker } from 'react-native-maps';
 
 export default function PublierScreen({ navigation }) {
 
   const utilisateur = useSelector(state => state.utilisateur.value);
 
   const [activitesDisponibles, setActivitesDisponibles] = useState([]);
-  const [offreOuvert, setOffreOuvert] = useState(false);
   const [type, setType] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tempsMax, setTempsMax] = useState('');
   const [experience, setExperience] = useState('');
   const [secteurActivite, setSecteurActivite] = useState([]);
-  const [disponibilite, setDisponibilite] = useState('');
+  const [disponibilite, setDisponibilite] = useState([]);
   const [ville, setVille] = useState('');
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-
   const [afficherMessage, setAfficherMessage] = useState(false);
+  const [isTypeModalVisible, setIsTypeModalVisible] = useState(false);
+  const [isSecteurModalVisible, setIsSecteurModalVisible] = useState(false);
+  const [isDispoModalVisible, setIsDispoModalVisible] = useState(false);
+  const [isExperienceModalVisible, setIsExperienceModalVisible] = useState(false);
+  const [isTempsModalVisible, setIsTempsModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     fetch('http://192.168.1.109:3000/profiles/activites')
@@ -34,27 +37,20 @@ export default function PublierScreen({ navigation }) {
       });
   }, []);
 
-  useEffect(() => {
-    if (offreOuvert && secteurActivite.length === 1) {
-      setOffreOuvert(false);
-    }
-  }, [secteurActivite]);
-
-  const handleCitySelected = (city) => {
+const handleCitySelected = (city) => {
     setVille(city.nom);
     fetchCoordinates(city.nom);
-  };
-  
-  const fetchCoordinates = (ville) => {
-    // Exemple avec OpenStreetMap Nominatim
+};
+
+const fetchCoordinates = (ville) => {
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${ville}`;
-  
+
     fetch(url)
       .then(response => response.json())
       .then(data => {
         if (data && data.length > 0) {
-          setLatitude(parseFloat(data[0].lat)); 
-          setLongitude(parseFloat(data[0].lon)); 
+          setLatitude(parseFloat(data[0].lat));
+          setLongitude(parseFloat(data[0].lon));
         } else {
           console.error("Les coordonnées ne sont pas disponibles pour cette ville.");
         }
@@ -62,129 +58,232 @@ export default function PublierScreen({ navigation }) {
       .catch(error => {
         console.error("Erreur lors de la récupération des coordonnées :", error);
       });
+};
+
+const envoyerDonnee = () => {
+  if (!type || !title || secteurActivite.length === 0 || !description || !tempsMax || !experience || !disponibilite || !ville || !latitude || !longitude) {
+    setErrorMessage("Veuillez remplir tous les champs obligatoires.");
+    return;
+  }
+
+  // Effacez le message d'erreur si tout est correct
+  setErrorMessage('');
+
+  const annonceData = {
+    type,
+    title,
+    description,
+    secteurActivite,
+    tempsMax,
+    experience,
+    disponibilite,
+    ville,
+    latitude,
+    longitude,
+    date: new Date(),
   };
-  
-  
 
-  const envoyerDonnee = () => {
-    if (!type || !title || secteurActivite.length === 0 || !description || !tempsMax || !experience || !disponibilite || !ville || !latitude || !longitude) {
-      console.log("Vérifiez tous les champs obligatoires");
-      return;
-    }
-  
-    const annonceData = {
-      type,
-      title,
-      description,
-      secteurActivite,
-      tempsMax,
-      experience,
-      disponibilite,
-      ville,
-      latitude, 
-      longitude,
-      date: new Date(),
-    };
+  fetch(`http://192.168.1.109:3000/annonces/publier/${utilisateur.token}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(annonceData),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Réponse du serveur :", data);
 
-    console.log("Données de l'annonce envoyées :", annonceData);
-
-    fetch(`http://192.168.1.109:3000/annonces/publier/${utilisateur.token}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(annonceData),
-    })
-      .then(response => response.json())
-      .then(data => {
+      if (data.result) {
         setAfficherMessage(true);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
+        resetForm();
+      } else {
+        setErrorMessage("Erreur lors de la publication de l'annonce.");
+      }
+    })
+    .catch(error => {
+      setErrorMessage("Erreur lors de la connexion au serveur.");
+      console.error("Erreur :", error.message);
+    });
+};
 
-  const cacherMessage = () => {
-    setAfficherMessage(false);
-    setType('');
-    setTitle('');
-    setDescription('');
-    setTempsMax('');
-    setExperience('');
-    setDisponibilite('');
+const resetForm = () => {
+  setType('');
+  setTitle('');
+  setDescription('');
+  setTempsMax('');
+  setExperience('');
+  setSecteurActivite([]);
+  setDisponibilite('');
+  setVille('');
+  setLatitude(null);
+  setLongitude(null);
+};
+
+const cacherMessage = () => {
+  setAfficherMessage(false);
+  resetForm();
+  navigation.navigate('Accueil');
+};
+
+const supprimerVille = () => {
     setVille('');
     setLatitude(null);
     setLongitude(null);
-    navigation.navigate('Accueil');
-  };
+};
 
-  const supprimerVille = () => {
-    setVille('');
-    setLatitude(null);
-    setLongitude(null);
-  };
+const renderTypeModal = () => (
+    <Modal visible={isTypeModalVisible} animationType="slide" transparent={true}>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <FlatList
+            data={[{ label: 'Offre', value: 'Offre' }, { label: 'Demande', value: 'Demande' }]}
+            keyExtractor={(item) => item.value}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => { setType(item.value); setIsTypeModalVisible(false); }} style={styles.modalItem}>
+                <Text>{item.label}</Text>
+              </TouchableOpacity>
+            )}
+          />
+          <TouchableOpacity onPress={() => setIsTypeModalVisible(false)} style={styles.modalClose}>
+            <Text style={{ color: 'white' }}>Fermer</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+);
+
+const renderSecteurModal = () => (
+    <Modal visible={isSecteurModalVisible} animationType="slide" transparent={true}>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <FlatList
+            data={activitesDisponibles.map(activite => ({ label: activite, value: activite }))}
+            keyExtractor={(item) => item.value}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => { setSecteurActivite([item.value]); setIsSecteurModalVisible(false); }} style={styles.modalItem}>
+                <Text>{item.label}</Text>
+              </TouchableOpacity>
+            )}
+          />
+          <TouchableOpacity onPress={() => setIsSecteurModalVisible(false)} style={styles.modalClose}>
+            <Text style={{ color: 'white' }}>Fermer</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+);
+
+const toggleDisponibilite = (value) => {
+  // Si l'élément est déjà sélectionné, on le retire. Sinon, on l'ajoute.
+  if (disponibilite.includes(value)) {
+    setDisponibilite(disponibilite.filter(item => item !== value));
+  } else {
+    setDisponibilite([...disponibilite, value]);
+  }
+};
+
+const renderDispoModal = () => (
+  <Modal visible={isDispoModalVisible} animationType="slide" transparent={true}>
+    <View style={styles.modalContainer}>
+      <View style={styles.modalContent}>
+        <FlatList
+          data={[
+            { label: 'Semaine', value: 'Semaine' },
+            { label: 'Soir', value: 'Soir' },
+            { label: 'Week-end', value: 'Week-end' }
+          ]}
+          keyExtractor={(item) => item.value}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => toggleDisponibilite(item.value)}
+              style={[
+                styles.modalItem,
+                { backgroundColor: disponibilite.includes(item.value) ? '#d3d3d3' : 'white' } // Change la couleur si sélectionné
+              ]}
+            >
+              <Text>{item.label}</Text>
+            </TouchableOpacity>
+          )}
+        />
+        <TouchableOpacity onPress={() => setIsDispoModalVisible(false)} style={styles.modalClose}>
+          <Text style={{ color: 'white' }}>Fermer</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </Modal>
+);
+
+const renderExperienceModal = () => (
+  <Modal visible={isExperienceModalVisible} animationType="slide" transparent={true}>
+    <View style={styles.modalContainer}>
+      <View style={styles.modalContent}>
+        <FlatList
+          data={[
+            { label: 'Débutant', value: 'Débutant' },
+            { label: 'Intermédiaire', value: 'Intermédiaire' },
+            { label: 'Confirmé', value: 'Confirmé' }
+          ]}
+          keyExtractor={(item) => item.value}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => { setExperience(item.value); setIsExperienceModalVisible(false); }} style={styles.modalItem}>
+              <Text>{item.label}</Text>
+            </TouchableOpacity>
+          )}
+        />
+        <TouchableOpacity onPress={() => setIsExperienceModalVisible(false)} style={styles.modalClose}>
+          <Text style={{ color: 'white' }}>Fermer</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </Modal>
+);
+
+const renderTempsModal = () => (
+  <Modal visible={isTempsModalVisible} animationType="slide" transparent={true}>
+    <View style={styles.modalContainer}>
+      <View style={styles.modalContent}>
+        <FlatList
+          data={[
+            { label: "Moins d'une heure", value: "Moins d'une heure" },
+            { label: "Entre 1 heure et 2 heures", value: "Entre 1 heure et 2 heures" },
+            { label: "Entre 2 heures et 3 heures", value: "Entre 2 heures et 3 heures" },
+            { label: "4 heures ou plus", value: "4 heures ou plus" }
+          ]}
+          keyExtractor={(item) => item.value}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => { setTempsMax(item.value); setIsTempsModalVisible(false); }}
+              style={styles.modalItem}
+            >
+              <Text>{item.label}</Text>
+            </TouchableOpacity>
+          )}
+        />
+        <TouchableOpacity onPress={() => setIsTempsModalVisible(false)} style={styles.modalClose}>
+          <Text style={{ color: 'white' }}>Fermer</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </Modal>
+);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="height" keyboardVerticalOffset={90}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.container}>
+          <ScrollView nestedScrollEnabled={true} contentContainerStyle={styles.scrollContent}>
             <View style={styles.content}>
+              
               <Text style={styles.titreCritere}>Titre</Text>
               <TextInput
                 style={styles.saisie}
                 placeholder="Titre de l'annonce"
+                placeholderTextColor="#8E8E93"
                 value={title}
                 onChangeText={(text) => setTitle(text)}
               />
-              <Text style={styles.titreCritere}>Localisation</Text>
-             <GeoAPIGouvAutocomplete
-                onCitySelected={handleCitySelected}
-              />
-              {ville && (
-                <View style={styles.villeContainer}>
-                  <Text style={styles.selectedCity}>
-                    Ville sélectionnée : <Text style={styles.selectedCity2}>{ville}</Text>
-                  </Text>
-                  <TouchableOpacity onPress={supprimerVille}>
-                    <Text style={styles.supprimerVille}>l Supprimer</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-              
-              <Text style={styles.titreCritere}>Type d'annonce</Text>
-              <TextInput
-                style={styles.saisie}
-                placeholder="Choisissez entre : Offre ou Demande"
-                value={type}
-                onChangeText={(text) => setType(text)}
-                />
-                  
-              <Text style={styles.titreCritere}>Secteur d'activités</Text>
-              <DropDownPicker
-                items={activitesDisponibles.map(activite => ({
-                  label: activite,
-                  value: activite,
-                }))}
-                open={offreOuvert}
-                setOpen={setOffreOuvert}
-                value={secteurActivite}
-                setValue={setSecteurActivite}
-                placeholder="Sélectionnez votre activité"
-                showTickIcon={true}
-                multiple={true}
-                min={1}
-                max={1}
-                mode="BADGE"
-                badgeColors={['#50B200', '#182A49', '#C23B3B', '#4E98C2']}
-                badgeDotColors={['white']}
-                badgeTextStyle={{ color: 'white' }}
-                placeholderStyle={{ color: 'gray' }}
-                style={styles.dropDownPicker}
-                dropDownContainerStyle={{ width: '95%', marginLeft: 9 }}
-                />
-                </View>
-                <ScrollView style={styles.scrollContent}>
+      
               <Text style={styles.titreDescription}>Description</Text>
               <TextInput
                 style={styles.saisieDescription}
@@ -192,45 +291,105 @@ export default function PublierScreen({ navigation }) {
                 value={description}
                 onChangeText={(text) => setDescription(text)}
                 multiline
-              />
-              <Text style={styles.titreCritere}>Expérience en années</Text>
-              <TextInput
-                style={styles.saisie}
-                placeholder="Votre niveau ou le niveau que vous recherchez ?"
-                value={experience}
-                onChangeText={(text) => setExperience(text)}
-                keyboardType="numeric"
-              />
-              <Text style={styles.titreCritere}>Vos disponibilités</Text>
-              <TextInput
-                style={styles.saisie}
-                placeholder="Vos disponibilités : Semaine, soir, ou Week-end ?"
-                value={disponibilite}
-                onChangeText={(text) => setDisponibilite(text)}
-              />
-              <Text style={styles.titreCritere}>Temps par semaine</Text>
-              <TextInput
-                style={styles.saisie}
-                placeholder="Temps à consacrer par semaine ?"
-                value={tempsMax}
-                onChangeText={(text) => setTempsMax(text)}
-                keyboardType="numeric"
-              />
+               />
+
+              <View style={{ marginBottom: 10 }}>
+                <Text style={styles.titreCritere}>Localisation</Text>
+                <GeoAPIGouvAutocomplete onCitySelected={handleCitySelected} />
+                {ville && (
+                  <View style={styles.villeContainer}>
+                    <Text style={styles.selectedCity}>
+                      Ville sélectionnée : <Text style={styles.selectedCity2}>{ville}</Text>
+                    </Text>
+                    <TouchableOpacity onPress={supprimerVille}>
+                      <Text style={styles.supprimerVille}>Supprimer</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                {latitude && longitude && (
+                  <MapView
+                    style={styles.map}
+                    region={{
+                      latitude: latitude || 48.8566, 
+                      longitude: longitude || 2.3522,
+                      latitudeDelta: 0.05,
+                      longitudeDelta: 0.05,
+                    }}
+                    scrollEnabled={false}  // Désactiver le défilement
+                    zoomEnabled={false}    // Désactiver le zoom
+                    pitchEnabled={false}   // Désactiver l'inclinaison
+                    rotateEnabled={false}  // Désactiver la rotation
+                    pointerEvents="none"   // Empêche toute interaction avec la carte
+                  >
+                    <Marker
+                      coordinate={{ latitude: latitude, longitude: longitude }}
+                      title={ville}
+                    />
+                  </MapView>
+                )}
+              </View>
+              
+              <Text style={styles.titreCritere}>Type d'annonce</Text>
+              <TouchableOpacity style={styles.saisie} onPress={() => setIsTypeModalVisible(true)}>
+                <Text style={type ? styles.selectedText : styles.placeholderText}>
+                  {type || "Choisissez entre : Offre ou Demande"}
+                </Text>
+              </TouchableOpacity>
+
+              <Text style={styles.titreCritere}>Secteur d'activités</Text>
+                <TouchableOpacity style={styles.saisie} onPress={() => setIsSecteurModalVisible(true)}>
+                  <Text style={secteurActivite.length > 0 ? styles.selectedText : styles.placeholderText}>
+                    {secteurActivite.length > 0 ? secteurActivite[0] : "Sélectionnez votre activité"}
+                  </Text>
+                </TouchableOpacity>
+              
+              <Text style={styles.titreCritere}>Expérience</Text>
+                <TouchableOpacity style={styles.saisie} onPress={() => setIsExperienceModalVisible(true)}>
+                  <Text style={experience ? styles.selectedText : styles.placeholderText}>
+                    {experience || "Sélectionnez votre niveau dans le domaine"}
+                  </Text>
+                </TouchableOpacity>
+
+              <Text style={styles.titreCritere}>Disponibilités</Text>
+                <TouchableOpacity style={styles.saisie} onPress={() => setIsDispoModalVisible(true)}>
+                  <Text style={disponibilite.length > 0 ? styles.selectedText : styles.placeholderText}>
+                    {disponibilite.length > 0 ? disponibilite.join(', ') : "Choisissez entre : Semaine, Soir, ou Week-end"}
+                  </Text>
+                </TouchableOpacity>
+
+              <Text style={styles.titreCritere}>Temps moyen des séances</Text>
+                <TouchableOpacity style={styles.saisie} onPress={() => setIsTempsModalVisible(true)}>
+                  <Text style={tempsMax ? styles.selectedText : styles.placeholderText}>
+                    {tempsMax || "Temps moyen des séances ?"}
+                  </Text>
+                </TouchableOpacity>
+
+                {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
               <TouchableOpacity style={styles.boutonEnvoyer} onPress={envoyerDonnee}>
                 <Text style={styles.textEnvoyer}>Publier l'annonce</Text>
               </TouchableOpacity>
-              {afficherMessage && (
-                <View style={styles.messageContainer}>
-                  <Text style={styles.messageText}>Votre annonce a bien été enregistrée !</Text>
-                  <TouchableOpacity style={styles.boutonOK} onPress={cacherMessage}>
-                    <Text style={styles.textOK}>OK</Text>
+
+              <Modal
+                animationType="slide"
+                transparent={false}
+                visible={afficherMessage}
+                onRequestClose={() => {}}>
+                <View style={styles.modalContainerRegister}>
+                  <Text style={styles.modalTextRegister}>Votre annonce a bien été enregistrée !</Text>
+                  <TouchableOpacity style={styles.modalButtonRegister} onPress={cacherMessage}>
+                    <Text style={styles.modalButtonTextRegister}>OK</Text>
                   </TouchableOpacity>
                 </View>
-              )}
-            </ScrollView>
-          </View>
+              </Modal>
+            </View>
+          </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+      {renderTempsModal()}
+      {renderExperienceModal()}
+      {renderDispoModal()}        
+      {renderTypeModal()}
+      {renderSecteurModal()}
     </SafeAreaView>
   );
 }
@@ -240,20 +399,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  container: {
-    flex: 1,
-  },
   content: {
-    padding: 20,
+    paddingVertical: 20,
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 20, 
-  },
-  titreCritere: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    paddingBottom: 20,
   },
   saisie: {
     borderWidth: 1,
@@ -262,8 +413,10 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
   },
-  dropDownPicker: {
-    marginBottom: 20,
+  titreCritere: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   titreDescription: {
     fontSize: 16,
@@ -309,6 +462,68 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
+  placeholderText: {
+    color: '#8E8E93', // Gris clair
+  },
+  errorText: {
+    color: 'red',
+    textAlign:'center',
+    marginBottom: 10,
+    fontSize: 14,
+  },
+  
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    marginHorizontal: 20,
+    borderRadius: 5,
+    padding: 20,
+    width: '80%', // Réduit la largeur du modal
+    maxHeight: '50%', // Réduit la hauteur maximale du modal
+    alignSelf: 'center', // Centre le modal sur l'écran,
+  },
+  modalItem: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  modalClose: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#007BFF',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  map: {
+    height: 300, // Hauteur de la carte
+    width: '100%',
+    marginBottom: 20,
+  },
+  modalContainerRegister: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',  // Couleur de fond du modal
+  },
+  modalTextRegister: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  modalButtonRegister: {
+    backgroundColor: '#28A745',
+    padding: 15,
+    borderRadius: 5,
+  },
+  modalButtonTextRegister: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
   villeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -323,10 +538,5 @@ const styles = StyleSheet.create({
   },
   supprimerVille: {
     color: 'red',
-  },
-  map: {
-    width: '100%',
-    height: 200,
-    marginBottom: 20,
   },
 });
