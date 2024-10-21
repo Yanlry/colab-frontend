@@ -28,13 +28,13 @@ export default function ModifierProfilScreen({ navigation }) {
 
   const handleEnregistrer = () => {
     
-    fetch(`http://192.168.1.109:3000/profiles/jePeux/${user.token}`, {
+    fetch(`http://192.168.1.109:3000/profiles/teach/${user.token}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ activites: offre }),
     });
 
-    fetch(`http://192.168.1.109:3000/profiles/jeVeux/${user.token}`, {
+    fetch(`http://192.168.1.109:3000/profiles/learn/${user.token}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ activites: demande }),

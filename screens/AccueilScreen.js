@@ -7,25 +7,25 @@ export default function AccueilScreen({ navigation }) {
 
   const utilisateur = useSelector(state => state.utilisateur.value);
   
-  const [afficherOffre, setAfficherOffre] = useState(true);
+  const [afficherEnseigner, setAfficherEnseigner] = useState(true);
   const [recherche, setRecherche] = useState('');
-  const [offreDate, setOffreDate] = useState([]);
-  const [demandeDate, setDemandeDate] = useState([]);
+  const [enseignerDate, setEnseignerDate] = useState([]);
+  const [apprendreDate, setApprendreDate] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = () => {
-    fetch(`http://192.168.1.109:3000/annonces/offres/${utilisateur.token}`)
+    fetch(`http://192.168.1.109:3000/annonces/enseigner/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
-        setOffreDate(trierDateAnnonce);
+        setEnseignerDate(trierDateAnnonce);
       });
 
-    fetch(`http://192.168.1.109:3000/annonces/demandes/${utilisateur.token}`)
+    fetch(`http://192.168.1.109:3000/annonces/apprendre/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
-        setDemandeDate(trierDateAnnonce);
+        setApprendreDate(trierDateAnnonce);
       });
   };
 
@@ -55,7 +55,7 @@ export default function AccueilScreen({ navigation }) {
     return dateObject.toLocaleDateString('fr-FR', options);
   };
 
-  const lesOffres = offreDate.filter(annonce => afficherOffre && rechercherAnnonce(annonce)).map(annonce => (
+  const learn = enseignerDate.filter(annonce => afficherEnseigner && rechercherAnnonce(annonce)).map(annonce => (
     <TouchableOpacity key={annonce.token} style={styles.annonce} onPress={() => navigation.navigate('Annonce', { annonce: annonce })}>
       <View style={styles.imageAnnonce}>
         <Text style={styles.apercuImage}>Image </Text>
@@ -63,27 +63,24 @@ export default function AccueilScreen({ navigation }) {
         <View style={styles.mesCritere}>
       <View style={styles.apercuAnnonce}>
         <Text style={styles.apercuAnnonceTitre}>
-          {annonce.title.length > 49 ? annonce.title.substring(0, 48) + "..." : annonce.title} {"\n"}
+          {annonce.title.length > 46 ? annonce.title.substring(0, 45) + "..." : annonce.title} {"\n"}
         </Text>
         <View>
         <Text style={styles.apercuAnnonceDescription}>
-          {annonce.description.length > 61 ? annonce.description.substring(0,60) + "..." : annonce.description} {"\n"}
+          {annonce.description.length > 85 ? annonce.description.substring(0,84) + "..." : annonce.description} {"\n"}
         </Text>
         </View>
         <View style={styles.containerCritere}>
-        <Text style={styles.apercuAnnonceExperience}>
-          Expérience : {annonce.experience} ans
-        </Text>
+          <Text style={styles.apercuAnnonceExperience}>Expérience :</Text>
+          <Text style={styles.critereText}> {annonce.experience}</Text>
         </View>
         <View style={styles.containerCritere}>
-        <Text style={styles.apercuAnnonceTempsMax}>
-          Fréquence : {annonce.tempsMax} heures / semaine
-        </Text>
+          <Text style={styles.apercuAnnonceTempsMax}>Fréquence :</Text>
+          <Text style={styles.critereText}> {annonce.tempsMax}</Text>
         </View>
         <View style={styles.containerCritere}>
-        <Text style={styles.apercuAnnonceTempsMax}>
-          Disponibilité : {annonce.disponibilite}
-        </Text>
+          <Text style={styles.apercuAnnonceTempsMax}>Disponibilité :</Text>
+          <Text style={styles.critereText}> {Array.isArray(annonce.disponibilite) ? annonce.disponibilite.join(', ') : annonce.disponibilite}</Text> 
         </View>
         <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceDate}>
@@ -95,7 +92,7 @@ export default function AccueilScreen({ navigation }) {
     </TouchableOpacity>
   ));
 
-  const lesDemandes = demandeDate.filter(annonce => !afficherOffre && rechercherAnnonce(annonce)).map(annonce => (
+  const teach = apprendreDate.filter(annonce => !afficherEnseigner && rechercherAnnonce(annonce)).map(annonce => (
     <TouchableOpacity key={annonce.token} style={styles.annonce} onPress={() => navigation.navigate('Annonce', { annonce: annonce })}>
       <View style={styles.imageAnnonce}>
         <Text style={styles.apercuImage}>Image </Text>
@@ -103,27 +100,24 @@ export default function AccueilScreen({ navigation }) {
         <View style={styles.mesCritere}>
       <View style={styles.apercuAnnonce}>
         <Text style={styles.apercuAnnonceTitre}>
-          {annonce.title.length > 49 ? annonce.title.substring(0, 48) + "..." : annonce.title} {"\n"}
+          {annonce.title.length > 46 ? annonce.title.substring(0, 45) + "..." : annonce.title} {"\n"}
         </Text>
         <View>
         <Text style={styles.apercuAnnonceDescription}>
-          {annonce.description.length > 61 ? annonce.description.substring(0,60) + "..." : annonce.description} {"\n"}
+          {annonce.description.length > 85 ? annonce.description.substring(0,84) + "..." : annonce.description} {"\n"}
         </Text>
         </View>
         <View style={styles.containerCritere}>
-        <Text style={styles.apercuAnnonceExperience}>
-          Expérience min. recherché : {annonce.experience} ans
-        </Text>
+          <Text style={styles.apercuAnnonceExperience}>Expérience :</Text>
+          <Text style={styles.critereText}> {annonce.experience}</Text>
         </View>
         <View style={styles.containerCritere}>
-        <Text style={styles.apercuAnnonceTempsMax}>
-          Fréquence : {annonce.tempsMax} heures / semaine
-        </Text>
+          <Text style={styles.apercuAnnonceTempsMax}>Fréquence :</Text>
+          <Text style={styles.critereText}> {annonce.tempsMax}</Text>
         </View>
         <View style={styles.containerCritere}>
-        <Text style={styles.apercuAnnonceTempsMax}>
-        Disponibilité : {annonce.disponibilite}
-        </Text>
+          <Text style={styles.apercuAnnonceTempsMax}>Disponibilité :</Text>
+          <Text style={styles.critereText}> {Array.isArray(annonce.disponibilite) ? annonce.disponibilite.join(', ') : annonce.disponibilite}</Text> 
         </View>
         <View style={styles.containerCritere}>
         <Text style={styles.apercuAnnonceDate}>
@@ -136,11 +130,11 @@ export default function AccueilScreen({ navigation }) {
   ));
 
   const afficheOffre = () => {
-    setAfficherOffre(true);
+    setAfficherEnseigner(true);
   };
 
   const afficheDemande = () => {
-    setAfficherOffre(false);
+    setAfficherEnseigner(false);
   };
 
   return (
@@ -151,11 +145,11 @@ export default function AccueilScreen({ navigation }) {
           
             <View style={styles.container}>
               <View style={styles.offreEtDemande}>
-                <TouchableOpacity style={[styles.categorieBtn, afficherOffre && styles.categorieActive]} onPress={() => afficheOffre()}>
-                  <Text style={[styles.categorieText, afficherOffre && styles.textActive]}>Apprendre</Text>
+                <TouchableOpacity style={[styles.categorieBtn, afficherEnseigner && styles.categorieActive]} onPress={() => afficheOffre()}>
+                  <Text style={[styles.categorieText, afficherEnseigner && styles.textActive]}>Je veux apprendre</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.categorieBtn, !afficherOffre && styles.categorieActive]} onPress={() => afficheDemande()}>
-                  <Text style={[styles.categorieText, !afficherOffre && styles.textActive]}>Enseigner</Text>
+                <TouchableOpacity style={[styles.categorieBtn, !afficherEnseigner && styles.categorieActive]} onPress={() => afficheDemande()}>
+                  <Text style={[styles.categorieText, !afficherEnseigner && styles.textActive]}>Je veux enseigner</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.rechercher}>
@@ -174,13 +168,13 @@ export default function AccueilScreen({ navigation }) {
                 style={styles.contentContainer}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
               >
-                {afficherOffre ? lesOffres : lesDemandes}
-                {afficherOffre && lesOffres.length === 0 && (
+                {afficherEnseigner ? learn : teach}
+                {afficherEnseigner && learn.length === 0 && (
                   <Text style={styles.messageAucuneOffre}>
                    Désolé, actuellement personne n'est disponible pour enseigner les catégories que vous demandez.
                   </Text>
                 )}
-                {!afficherOffre && lesDemandes.length === 0 && (
+                {!afficherEnseigner && teach.length === 0 && (
                   <Text style={styles.messageAucuneOffre}>
                    Désolé, actuellement personne n'est disponible pour apprendre les catégories que vous proposez.
                   </Text>
@@ -199,65 +193,70 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff',
     height: '100%'
   },
+ //-----------------------  BOUTON OFFRE ET DEMANDE  ---------------------------------
 
-  //-----------------------  BOUTTON OFFRE ET DEMANDE  ---------------------------------
+ offreEtDemande: {
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  marginTop:20,
+  marginBottom: 10,
+},
+categorieBtn: {
+  height: 50,
+  borderWidth: 1,
+  borderColor:'#8F8F8F',
+  width: '47%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: '#fff',
+  borderRadius: 12,
+},
+categorieText: {
+  fontSize: 15,
+  fontWeight: 'bold',
+  color: '#182A49',
+},
+categorieActive: {
+  backgroundColor: '#182A49'
+},
+textActive: {
+  fontWeight: 'bold',
+  color: '#fff',
+},
 
-  offreEtDemande: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  categorieBtn: {
-    height: 50,
-    borderWidth: 1,
-    borderColor:'#8F8F8F',
-    width: '47%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    marginTop: 20,
-  },
-  categorieText: {
-    fontSize: 23,
-  },
-  categorieActive: {
-    backgroundColor: '#182A49'
-  },
-  textActive: {
-    fontWeight: 'bold',
-    color: '#fff',
-  },
+//-----------------------  BARRE DE RECHERCHE  ---------------------------------
 
-  //-----------------------  BARRE DE RECHERCHE  ---------------------------------
+rechercher: {
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'row',
+  marginVertical: 10,
+},
+rechercheText: {
+  borderWidth: 1,
+  borderColor:'#8F8F8F',
+  height: 45,
+  width: '80%',
+  fontSize: 16,
+  paddingLeft: 20,
+  borderRadius: 12,
+},
 
-  rechercher: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    marginVertical:'6%',
-  },
-  rechercheText: {
-    borderWidth: 1,
-    borderColor:'#8F8F8F',
-    height:'200%',
-    width: '85%',
-    fontSize: 15,
-    paddingLeft: 30,
-    borderRadius: 12,
-    marginHorizontal:5,
-  },
-  
-  //-----------------------  ICONE FILTRE  ---------------------------------
+//-----------------------  ICONE FILTRE  ---------------------------------
 
-  filtreIcone: {
-    marginLeft:8
-  },
+filtreAnnonce: {
+  padding: 10,
+},
+filtreIcone: {
+  color: '#182A49',
+},
 
-  //-----------------------   SCROLLVIEW  ---------------------------------
+//-----------------------   SCROLLVIEW  ---------------------------------
 
-  scroll:{
-    height: '80%'
-  },
+scroll:{
+  height: '80%',
+  paddingBottom: 20,
+},
   //-----------------------  VIGNETTE D'ANNONCE  ---------------------------------
   
   annonce: {
@@ -272,6 +271,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     shadowOffset: { width: 0, height: 5 },
+    paddingHorizontal:15
   },
   imageAnnonce: {
     justifyContent: 'center',
@@ -290,6 +290,8 @@ const styles = StyleSheet.create({
     width: '85%',
   },
   apercuAnnonceTitre: {
+    fontWeight:'bold',
+    paddingRight:5,
     fontSize: 18,
   },
   apercuAnnonceDescription: {
@@ -307,6 +309,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop:15
   },
+  containerCritere: {
+    flexDirection:'row'
+  },
+  critereText:{
+    fontSize:12,
+  },
  
   //-----------------------  AUTRE  ---------------------------------
   
@@ -318,4 +326,6 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
 });
+
+
 

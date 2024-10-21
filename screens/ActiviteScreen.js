@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView  } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useDispatch, useSelector } from 'react-redux';
-import { jePeux } from '../reducers/utilisateur';
-import { jeVeux } from '../reducers/utilisateur';
+import { teach } from '../reducers/utilisateur';
+import { learn } from '../reducers/utilisateur';
 
 export default function ActiviteScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -54,23 +54,23 @@ export default function ActiviteScreen({ navigation }) {
     };
   
     try {
-      const responseOffre = await fetch(`http://192.168.1.109:3000/profiles/jePeux`, {
+      const responseOffre = await fetch(`http://192.168.1.109:3000/profiles/teach`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBodyOffre),
       });
       const dataOffre = await responseOffre.json();
-      console.log('Réponse jePeux:', dataOffre);
-      dispatch(jePeux(dataOffre.user));
+      console.log('Réponse teach:', dataOffre);
+      dispatch(teach(dataOffre.user));
   
-      const responseDemande = await fetch(`http://192.168.1.109:3000/profiles/jeVeux`, {
+      const responseDemande = await fetch(`http://192.168.1.109:3000/profiles/learn`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBodyDemande),
       });
       const dataDemande = await responseDemande.json();
-      console.log('Réponse jeVeux:', dataDemande);
-      dispatch(jeVeux(dataDemande.user));
+      console.log('Réponse learn:', dataDemande);
+      dispatch(learn(dataDemande.user));
   
       navigation.navigate('Profil');
     } catch (error) {

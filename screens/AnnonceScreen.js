@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TouchableOpacity, ScrollView, View,SafeAreaView, Image, Alert } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, ScrollView, View, SafeAreaView, Image, Alert } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
-import { ajouteFavoris, suprimeFavoris } from '../reducers/utilisateur'
+import { ajouteFavoris, suprimeFavoris } from '../reducers/utilisateur';
 
 export default function AnnonceScreen({ route, navigation }) {
-
-
   const { annonce } = route.params;
-
   const dispatch = useDispatch();
-
   const favoris = useSelector(state => state.utilisateur.favoris);
   const utilisateur = useSelector(state => state.utilisateur.value);
 
@@ -24,13 +20,11 @@ export default function AnnonceScreen({ route, navigation }) {
 
   const coordonnee = {
     latitude: annonce.latitude,
-    longitude: annonce.longitude
+    longitude: annonce.longitude,
   };
-  
+
   const gererFavoris = (annonce) => {
-
     const estDejaFavori = favoris.some(fav => fav.token === annonce.token);
-
     if (estDejaFavori) {
       dispatch(suprimeFavoris(annonce.token));
     } else {
@@ -55,7 +49,7 @@ export default function AnnonceScreen({ route, navigation }) {
       { cancelable: false }
     );
   };
-  
+
   const envoyerDemandeColab = () => {
     fetch('http://192.168.1.109:3000/propositionCollabs/propositions', {
       method: 'POST',
@@ -64,331 +58,317 @@ export default function AnnonceScreen({ route, navigation }) {
     })
       .then(response => response.json())
       .then(() => {
-        Alert.alert(
-          'Felicitation !',
-          'Votre demande de colab a été envoyée avec succès !',
-          [{ text: 'OK', onPress: () => console.log('Demande de colab envoyée') }]
-        );
+        Alert.alert('Félicitations !', 'Votre demande de colab a été envoyée avec succès !', [{ text: 'OK', onPress: () => console.log('Demande de colab envoyée') }]);
       })
       .catch(error => {
         console.error('Erreur lors de l\'envoi de la demande de colab', error);
       });
   };
-  
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
-          <View style={styles.container}>
+      <View style={styles.container}>
+        {/* Navbar */}
+        <View style={styles.navBar}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <FontAwesome name='chevron-left' size={28} style={styles.goBack} color={'#182A49'} />
+          </TouchableOpacity>
+          <Image resizeMode="contain" source={require('../assets/logo.png')} style={styles.logo} />
+          <TouchableOpacity onPress={() => navigation.navigate('Utilisateur')}>
+            <FontAwesome name='user' size={30} color="#182A49" />
+          </TouchableOpacity>
+        </View>
 
-            <View style={styles.navBar}>
-              {/* BOUTON RETOUR ARRIERE */}
-              <TouchableOpacity onPress={() => navigation.goBack()}>
-                <FontAwesome name='chevron-left' size={28} style={styles.goBack} color={'#182A49'} />
-              </TouchableOpacity>
-
-              <Image resizeMode="contain" source={require('../assets/logo.png')} style={styles.logo} />
-
-              {/* BOUTON PROFIL */}
-              <TouchableOpacity onPress={() => navigation.navigate('Utilisateur')}>
-                <FontAwesome name='user' size={30} color="#182A49" />
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView style={styles.annonceComplete}>
-              <View style={styles.annonceEnTete}>
-                {/* TITRE */}
-                <Text style={styles.annonceTitre}>
-                  {annonce.title}
-                </Text>
-
-                {/* ICONE FAVORIS */}
-                <View style={styles.annonceFavoris}>
-                <TouchableOpacity onPress={() => { gererFavoris(annonce); setEnFavori(!enFavori); }} >
-                  <FontAwesome name={enFavori ? "heart" : 'heart-o'} size={30} color={enFavori ? '#C70039' : '#182A49'}  />
-                </TouchableOpacity>
-
-                </View>
-
-              </View>
-
-              {/* TYPE ET DATE DE PUBLICATION */}
-              <View style={styles.annonceTypeEtDate}>
-                <Text>Type : {annonce.type}</Text>
-                <Text>Publier le : {formatDate(annonce.date)}</Text>
-              </View>
-
-              {/* DESCRIPTION */}
-              <View style={styles.annonceDescription}>
-                <Text style={styles.annonceDescriptionText}>Description :{"\n"}</Text>
-                <Text>{annonce.description}</Text>
-              </View>
-
-              {/* CRITÉRE */}
-              <View style={styles.annonceCritere}>
-
-                {/* CRITERE COLONNE 1 */}
-                <View style={styles.critereColonne1}>
-
-                  {/* SECTEUR D'ACTIVITE */}
-                  <View style={styles.titreEtLogo}>
-                    <FontAwesome name='list' size={15} color="#182A49" />
-                    <Text style={styles.titre}>Domaine</Text>
-                  </View>
-                  <Text style={styles.critereReponse}> {annonce.secteurActivite} </Text>
-
-                  {/*  DISPONIBILITÉ */}
-                  <View style={styles.titreEtLogo}>
-                    <FontAwesome name='hourglass' size={15} color="#182A49" />
-                    <Text style={styles.titre}>Disponibilité</Text>
-                  </View>
-                  <Text style={styles.critereReponse}>{annonce.disponibilite}</Text>
-                </View>
-
-                {/* CRITÉRE COLONNE 2 */}
-                <View style={styles.critereColonne2}>
-
-                  {/* EXPÉRIENCE */}
-                  <View style={styles.titreEtLogo}>
-                    <FontAwesome name='briefcase' size={15} color="#182A49" />
-                    <Text style={styles.titre} >Expérience</Text>
-                  </View>
-                  <Text style={styles.critereReponse}>{annonce.experience} ans</Text>
-
-                  {/* TEMPS MAX */}
-                  <View style={styles.titreEtLogo}>
-                    <FontAwesome name='users' size={15} color="#182A49" />
-                    <Text style={styles.titre}>Fréquence</Text>
-                  </View>
-                  <Text style={styles.critereReponse}>{annonce.tempsMax} heure / semaine </Text>
-                </View>
-              </View>
-
-              {/* MAP LOCALISATION */}
-              <View style={styles.mapContainer}>
-              <MapView style={styles.map} region={{ ...coordonnee, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}>
-                <Marker coordinate={coordonnee} />
-              </MapView>
-              </View>
-
-              {/* INFORMATIONS UTILISATEUR DE L'ANNONCE */}
-              <TouchableOpacity style={styles.utilisateur} onPress={() => navigation.navigate('Profil')}>
-                {/* ICONE PROFIL */}
-                <View style={styles.utilisateurGauche}>
-                  <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
-                    <FontAwesome name="user" size={50} color="#182A49" />
-                  </TouchableOpacity>
-                </View>
-
-                {/* NOM D'UTILISATEUR */}
-                <Text style={styles.textUtilisateur}>Nom d'utilisateur : {annonce.username} </Text>
-                <FontAwesome name='chevron-right' size={30} color={'#182A49'} />
-              </TouchableOpacity>
-
-              {/*  SIGNALEZ ANNONCE  */}
-              <TouchableOpacity style={styles.signalez}>
-                <Text style={styles.textSignalez}>S i g n a l e z    l ' a n n o n c e</Text>
-              </TouchableOpacity>
-
-            </ScrollView>
-
-
-            {/* BARRE DE COLAB */}
-            <View style={styles.colabBar}>
-              <TouchableOpacity onPress={() => handleColab()} style={styles.colabBtn}>
-                <Text style={styles.colabText}>COLAB</Text>
+        {/* Scrollable Content */}
+        <ScrollView style={styles.annonceComplete}>
+          {/* Title and Favorites */}
+          <View style={styles.annonceEnTete}>
+            <Text style={styles.annonceTitre}>{annonce.title}</Text>
+            <View style={styles.annonceFavoris}>
+              <TouchableOpacity onPress={() => { gererFavoris(annonce); setEnFavori(!enFavori); }} >
+                <FontAwesome name={enFavori ? "heart" : 'heart-o'} size={30} color={enFavori ? '#C70039' : '#182A49'} />
               </TouchableOpacity>
             </View>
-
           </View>
-  </SafeAreaView>
+
+          {/* Type and Date */}
+          <View style={styles.annonceType}>
+            <Text style={styles.annonceTypeText}>{annonce.username} est ici pour :</Text>
+            <Text style={styles.annonceTypeDetails}>{annonce.type}</Text>
+          </View>
+
+          {/* Description */}
+          <View style={styles.annonceDescription}>
+            <Text style={styles.annonceDescriptionTitre}>Description :</Text>
+            <Text style={styles.annonceDescriptionText}>{annonce.description}</Text>
+            <View style={styles.separator}></View>
+            <Text style={styles.descriptionDate}>Publier le : {formatDate(annonce.date)}</Text>
+          </View>
+
+          {/* Criteria Section */}
+          <View style={styles.annonceCritere}>
+            <View style={styles.critereContainer}>
+              <View style={styles.titreEtLogo}>
+                <FontAwesome name='list' size={15} color="#182A49" />
+                <Text style={styles.titre}>Domaine</Text>
+              </View>
+              <Text style={styles.critereReponse}>{annonce.secteurActivite}</Text>
+            </View>
+            <View style={styles.critereContainer}>
+              <View style={styles.titreEtLogo}>
+                <FontAwesome name='hourglass' size={15} color="#182A49" />
+                <Text style={styles.titre}>Disponibilité</Text>
+              </View>
+              {/* Loop through the disponibilite array and display each item */}
+              {annonce.disponibilite.map((dispo, index) => (
+                <View key={index} style={styles.bulletItem}>
+                  <Text style={styles.critereReponse}>• {dispo}</Text>
+                </View>
+              ))}
+            </View>
+
+            <View style={styles.critereContainer}>
+              <View style={styles.titreEtLogo}>
+                <FontAwesome name='briefcase' size={15} color="#182A49" />
+                <Text style={styles.titre}>Expérience</Text>
+              </View>
+              <Text style={styles.critereReponse}>{annonce.experience}</Text>
+            </View>
+            <View style={styles.critereContainer}>
+              <View style={styles.titreEtLogo}>
+                <FontAwesome name='users' size={15} color="#182A49" />
+                <Text style={styles.titre}>Durée</Text>
+              </View>
+              <Text style={styles.critereReponse}>{annonce.tempsMax}</Text>
+            </View>
+          </View>
+
+          {/* Map */}
+          <View style={styles.mapContainer}>
+            <MapView style={styles.map}
+              region={{ ...coordonnee, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
+              scrollEnabled={false}
+              zoomEnabled={false}
+              pitchEnabled={false}
+              rotateEnabled={false}
+              pointerEvents="none">
+              <Marker coordinate={coordonnee} />
+            </MapView>
+          </View>
+
+          {/* User Information */}
+          <TouchableOpacity style={styles.utilisateur} onPress={() => navigation.navigate('Profil')}>
+            <View style={styles.utilisateurGauche}>
+              <FontAwesome name="user" size={50} color="#182A49" />
+            </View>
+            <Text style={styles.textUtilisateur}>Nom d'utilisateur : {annonce.username}</Text>
+            <FontAwesome name='chevron-right' size={30} color={'#182A49'} />
+          </TouchableOpacity>
+
+          {/* Report Button */}
+          <TouchableOpacity style={styles.signalez}>
+            <Text style={styles.textSignalez}>S i g n a l e z    l ' a n n o n c e</Text>
+          </TouchableOpacity>
+        </ScrollView>
+
+        {/* Colab Button */}
+        <View style={styles.colabBar}>
+          <TouchableOpacity onPress={handleColab} style={styles.colabBtn}>
+            <Text style={styles.colabText}>COLAB</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor:'#fff'
+    backgroundColor: '#fff',
   },
   container: {
-    flex:1
+    flex: 1,
   },
 
-  // ------------------- NAVBAR ---------------------
-  
+  // Navbar
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems:'center',
+    alignItems: 'center',
     paddingHorizontal: 30,
-    marginTop:15
+    marginTop: 15,
   },
   logo: {
     height: 38,
     width: 130,
-    marginRight: 5
   },
-  // ------------------- ANNONCE ENTIERE : SCROLLVIEW ---------------------
 
+  // Annonce Complete
   annonceComplete: {
     flex: 1,
-    marginTop:15,
-    backgroundColor: '#fff6',
+    marginTop: 15,
+    backgroundColor: '#f9f9f9',
   },
+
+  // En Tete (Title and Favorite)
   annonceEnTete: {
     flexDirection: 'row',
     paddingHorizontal: 20,
   },
-  annonceDate: {
-    paddingLeft: 20,
-    paddingTop: 5
-  },
   annonceTitre: {
-    fontSize: 29,
-    paddingRight:'5%',
-    width: 335,
+    fontSize: 30,
+    fontWeight: 'bold',
+    width: '90%',
+    marginTop:5,
+
   },
   annonceFavoris: {
-    position:'absolute',
-    marginLeft:'95%',
-    paddingLeft:10
-  },
-  annonceTypeEtDate: {
-    flexDirection:'row',
-    justifyContent:'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 15
+    justifyContent: 'center',
   },
 
-  // ------------------- DESCRIPTION ---------------------
-
-  annonceDescription: {
-    marginTop: 10,
-    padding: 10,
+  // Annonce Type
+  annonceType: {
     borderWidth: 1,
-    borderColor:'#8F8F8F',
-    borderRadius: 12,
-    marginVertical: 5,
-    marginHorizontal: 10
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 15,
+    marginTop: 15,
+    marginHorizontal: 10,
+    backgroundColor: '#fff',
+  },
+  annonceTypeText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  annonceTypeDetails: {
+    fontSize: 16,
+    marginTop: 5,
+  },
+
+  // Annonce Description
+  annonceDescription: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 15,
+    marginTop: 10,
+    marginHorizontal: 10,
+    backgroundColor: '#fff',
+  },
+  annonceDescriptionTitre: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   annonceDescriptionText: {
-    fontWeight: 'bold'
+    fontSize: 16,
+    marginTop: 5,
+  },
+  descriptionDate: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#888',
   },
 
-  // ------------------- CRITÉRE ---------------------
-
+  // Criteria
   annonceCritere: {
+    marginTop: 10,
+    paddingTop:15,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    marginHorizontal: 10,
     borderWidth: 1,
-    borderColor:'#8F8F8F',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 15,
-    borderRadius: 12,
-    marginVertical: 5,
-    marginHorizontal: 10
+    borderColor: '#ccc',
   },
-  critereColonne1: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  critereColonne2: {
-    justifyContent: 'center',
-    alignItems: 'center',
+  critereContainer: {
+    marginBottom: 10,
   },
   titreEtLogo: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 5,
   },
   titre: {
     fontWeight: 'bold',
-    padding: 10
-  },
-  critere1: {
-    fontWeight: 'bold',
-  },
-  critere2: {
-    fontWeight: 'bold'
-  },
-  critere3: {
-    fontWeight: 'bold'
-  },
-  critere4: {
-    fontWeight: 'bold'
+    fontSize: 18,
+    paddingLeft: 10,
   },
   critereReponse: {
-    padding: 7
+    paddingLeft: 25,
+    paddingBottom:2,
+    fontSize: 14,
+    color: '#555',
+  },
+  bulletItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  bulletPoint: {
+    fontSize: 16,
+    color: '#182A49', // Optional color for bullet point
   },
 
-  // ------------------- MAP ---------------------
-
+  // Map Container
   mapContainer: {
+    marginTop: 10,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
     height: 200,
   },
   map: {
-    borderRadius: 50,
     ...StyleSheet.absoluteFillObject,
   },
 
-  // ------------------- UTILISATEUR BOUTON ---------------------
-
+  // User Information
   utilisateur: {
-    borderWidth: 1,
-    borderColor:'#8F8F8F',
-    borderRadius: 12,
-    height: 90,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 20,
-    marginVertical: 5,
-    marginHorizontal: 10
+    marginTop: 10,
+    marginHorizontal: 10,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   textUtilisateur: {
-    fontSize: 23
-  },
-  utilisateurGauche: {
-    justifyContent: 'center'
+    fontSize: 18,
   },
 
-  // ------------------- SIGNALEZ ANNONCE BOUTON ---------------------
-
+  // Report Button
   signalez: {
-    borderWidth: 1,
-    borderColor:'#FF1F1F',
-    borderRadius: 12,
-    height: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 5,
+    marginTop: 10,
     marginHorizontal: 10,
+    padding: 10,
+    borderRadius: 10,
     backgroundColor: '#d40a0a',
-    fontWeight:'bold'
+    alignItems: 'center',
   },
   textSignalez: {
-    color:'white'
+    color: '#fff',
+    fontWeight: 'bold',
   },
 
-  // ------------------- COLAB BAR ---------------------
-
+  // Colab Button
   colabBar: {
-    alignItems: 'center',
     justifyContent: 'center',
-    height: 65,
-    borderColor: 'grey',
-    flexDirection: 'row',
-    marginTop:15,
+    alignItems: 'center',
+    marginTop: 15,
+    marginBottom: 20,
   },
   colabBtn: {
     width: 200,
     height: 50,
-    borderWidth: 1,
     borderRadius: 100,
-    alignItems: 'center',
+    backgroundColor: '#182A49',
     justifyContent: 'center',
-    backgroundColor: '#182A49'
+    alignItems: 'center',
   },
   colabText: {
-    fontSize: 30,
-    color: 'white'
+    fontSize: 20,
+    color: '#fff',
   },
 });
-

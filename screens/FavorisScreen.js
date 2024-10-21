@@ -9,9 +9,9 @@ export default function FavorisScreen({ navigation }) {
   const dispatch = useDispatch();
   const favoris = useSelector(state => state.utilisateur.favoris);
 
-  const [afficherOffre, setAfficherOffre] = useState(true);
-  const favorisOffre = favoris.filter(fav => fav.type === 'Offre');
-  const favorisDemande = favoris.filter(fav => fav.type === 'Demande');
+  const [afficherEnseigner, setAfficherEnseigner] = useState(true);
+  const favorisTeach = favoris.filter(fav => fav.type === 'Enseigner');
+  const favorisLearn = favoris.filter(fav => fav.type === 'Apprendre');
 
   const retirerDesFavoris = (token) => {
     dispatch(suprimeFavoris(token));
@@ -72,25 +72,25 @@ export default function FavorisScreen({ navigation }) {
               {/* BOUTON POUR FILTRER PAR TYPE */}
               <View style={styles.offreEtDemande}>
                 {/*  BOUTON OFFRE  */}
-                <TouchableOpacity style={[styles.categorieBtn, afficherOffre && styles.categorieActive]} onPress={() => setAfficherOffre(true)}>
-                  <Text style={[styles.categorieText, afficherOffre && styles.textActive]}>Apprendre</Text>
+                <TouchableOpacity style={[styles.categorieBtn, afficherEnseigner && styles.categorieActive]} onPress={() => setAfficherEnseigner(true)}>
+                  <Text style={[styles.categorieText, afficherEnseigner && styles.textActive]}>Je veux apprendre</Text>
                 </TouchableOpacity>
 
                 {/*  BOUTON DEMANDE  */}
-                <TouchableOpacity style={[styles.categorieBtn, !afficherOffre && styles.categorieActive]} onPress={() => setAfficherOffre(false)}>
-                  <Text style={[styles.categorieText, !afficherOffre && styles.textActive]}>Enseigner</Text>
+                <TouchableOpacity style={[styles.categorieBtn, !afficherEnseigner && styles.categorieActive]} onPress={() => setAfficherEnseigner(false)}>
+                  <Text style={[styles.categorieText, !afficherEnseigner && styles.textActive]}>Je veux enseigner</Text>
                 </TouchableOpacity>
               </View>
 
               {/* AFFICHER LES ANNONCE FAVORIS DE TYPE: */}
-              {afficherOffre ? (
+              {afficherEnseigner ? (
                 /* OFFRE */
                 <View style={styles.scrollView}>
                   <ScrollView>
-                    {favorisOffre.length === 0 ? (
+                    {favorisTeach.length === 0 ? (
                       <Text style={styles.aucunFavoris}>Aucune offre en favoris</Text>
                       ) : (
-                        mesFavoris(favorisOffre)
+                        mesFavoris(favorisTeach)
                         )}
                   </ScrollView>
                 </View>
@@ -98,10 +98,10 @@ export default function FavorisScreen({ navigation }) {
                 /* DEMANDE */
                 <View style={styles.scrollView}>
                   <ScrollView>
-                    {favorisDemande.length === 0 ? (
+                    {favorisLearn.length === 0 ? (
                       <Text style={styles.aucunFavoris}>Aucune demande en favoris</Text>
                     ) : (
-                      mesFavoris(favorisDemande)
+                      mesFavoris(favorisLearn)
                     )}
                   </ScrollView>
                 </View>
@@ -122,31 +122,33 @@ const styles = StyleSheet.create({
 
   offreEtDemande: {
     flexDirection: 'row',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    marginTop:20,
+    marginBottom: 20,
   },
   categorieBtn: {
     height: 50,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor:'#8F8F8F',
     width: '47%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
     borderRadius: 12,
-    margin:1,
-    marginTop: 20,
-    marginBottom:10
   },
   categorieText: {
-    fontSize: 23,
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#182A49',
   },
   categorieActive: {
     backgroundColor: '#182A49'
   },
   textActive: {
     fontWeight: 'bold',
-    color: '#fff'
+    color: '#fff',
   },
+  
 
   //-----------------------  TITRE DE LA PAGE  ---------------------------------
 
@@ -167,7 +169,7 @@ const styles = StyleSheet.create({
 
   annonce: {
     height: 190,
-    width: '94%',
+    width: '96%',
     flexDirection: 'row',
     borderRadius: 12,
     margin: 10,
@@ -177,6 +179,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     shadowOffset: { width: 0, height: 5 },
+    paddingHorizontal:15
   },
   imageAnnonce: {
     justifyContent: 'center',
@@ -195,6 +198,8 @@ const styles = StyleSheet.create({
     width: '85%',
   },
   apercuAnnonceTitre: {
+    fontWeight:'bold',
+    paddingRight:5,
     fontSize: 18,
   },
   apercuAnnonceDescription: {
@@ -212,6 +217,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop:15
   },
+  containerCritere: {
+    flexDirection:'row'
+  },
+  critereText:{
+    fontSize:12,
+  },
+ 
  
 
 //----------------------- BOUTON FAVORIS  ---------------------------------

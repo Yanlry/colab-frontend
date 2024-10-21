@@ -137,7 +137,7 @@ const renderTypeModal = () => (
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <FlatList
-            data={[{ label: 'Offre', value: 'Offre' }, { label: 'Demande', value: 'Demande' }]}
+            data={[{ label: 'Apprendre', value: 'Apprendre' }, { label: 'Enseigner', value: 'Enseigner' }]}
             keyExtractor={(item) => item.value}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => { setType(item.value); setIsTypeModalVisible(false); }} style={styles.modalItem}>
@@ -315,11 +315,11 @@ const renderTempsModal = () => (
                       latitudeDelta: 0.05,
                       longitudeDelta: 0.05,
                     }}
-                    scrollEnabled={false}  // Désactiver le défilement
-                    zoomEnabled={false}    // Désactiver le zoom
-                    pitchEnabled={false}   // Désactiver l'inclinaison
-                    rotateEnabled={false}  // Désactiver la rotation
-                    pointerEvents="none"   // Empêche toute interaction avec la carte
+                    scrollEnabled={false}  
+                    zoomEnabled={false}    
+                    pitchEnabled={false}   
+                    rotateEnabled={false}  
+                    pointerEvents="none"   
                   >
                     <Marker
                       coordinate={{ latitude: latitude, longitude: longitude }}
@@ -328,11 +328,11 @@ const renderTempsModal = () => (
                   </MapView>
                 )}
               </View>
-              
+
               <Text style={styles.titreCritere}>Type d'annonce</Text>
               <TouchableOpacity style={styles.saisie} onPress={() => setIsTypeModalVisible(true)}>
                 <Text style={type ? styles.selectedText : styles.placeholderText}>
-                  {type || "Choisissez entre : Offre ou Demande"}
+                  {type || "Souhaitez apprendre ou enseigner ?"}
                 </Text>
               </TouchableOpacity>
 

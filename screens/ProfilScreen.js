@@ -7,8 +7,8 @@ export default function ProfilScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.utilisateur.value);
 
-  const jePeux = useSelector((state) => state.utilisateur.jePeux);
-  const jeVeux = useSelector((state) => state.utilisateur.jeVeux);
+  const teach = useSelector((state) => state.utilisateur.teach);
+  const learn = useSelector((state) => state.utilisateur.learn);
   const [profileImage, setProfileImage] = useState(null);
   const [bio, setBio] = useState('');
 
@@ -114,14 +114,14 @@ export default function ProfilScreen({ navigation }) {
                 <Text style={styles.label}>Je peux aider</Text>
                 <TextInput
                   style={styles.inputJP}
-                  defaultValue={jePeux ? jePeux.join(', ') : ''}
+                  defaultValue={teach ? teach.join(', ') : ''}
                   editable={false}
                 />
 
                 <Text style={styles.label}>Je veux aider</Text>
                 <TextInput
                   style={styles.input}
-                  defaultValue={jeVeux ? jeVeux.join(', ') : ''}
+                  defaultValue={learn ? learn.join(', ') : ''}
                   editable={false}
                 />
               </View>

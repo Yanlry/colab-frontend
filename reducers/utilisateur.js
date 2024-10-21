@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   value: { token: null, email: null, username: null, phone: null },
-  jePeux: [],
-  jeVeux: [],
+  teach: [],
+  learn: [],
   favoris: [],
   collaborations: [],
   destinataireToken: null, 
@@ -20,16 +20,16 @@ export const userSlice = createSlice({
       state.value.phone = action.payload.phone;
     },
     logout: (state) => {
-      state.value = { token: null, email: null, username: null, phone: null, sexe: null, jePeux: null, jeVeux: null };
-      state.jePeux = [];
-      state.jeVeux = [];
+      state.value = { token: null, email: null, username: null, phone: null, sexe: null, teach: null, learn: null };
+      state.teach = [];
+      state.learn = [];
       state.destinataireToken = null; 
     },
-    jePeux: (state, action) => {
-      state.jePeux = action.payload;
+    teach: (state, action) => {
+      state.teach = action.payload;
     },
-    jeVeux: (state, action) => {
-      state.jeVeux = action.payload;
+    learn: (state, action) => {
+      state.learn = action.payload;
     },
     ajouteFavoris: (state, action) => {
       state.favoris.push(action.payload);
@@ -46,5 +46,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const { login, logout, jePeux, jeVeux, ajouteFavoris, suprimeFavoris, updateCollaborations, setDestinataireToken } = userSlice.actions;
+export const { login, logout, teach, learn, ajouteFavoris, suprimeFavoris, updateCollaborations, setDestinataireToken } = userSlice.actions;
 export default userSlice.reducer;
