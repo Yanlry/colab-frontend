@@ -42,13 +42,13 @@ const CustomHeader = ({ navigation }) => {
 
     <View style={styles.navBar}>
       <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-        <FontAwesome style={styles.cloche} name="bell" size={28} color="#182A49" />
+        <FontAwesome style={styles.cloche} name="bell" size={28} color="#287777" />
       </TouchableOpacity>
       <TouchableOpacity>
         <Image resizeMode="contain" source={require('./assets/logo.png')} style={styles.logo} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Utilisateur')}>
-        <FontAwesome name="user" style={styles.iconeUser} size={30} color="#182A49" />
+        <FontAwesome name="user" style={styles.iconeUser} size={30} color="#287777" />
       </TouchableOpacity>
     </View>
   );
@@ -56,11 +56,13 @@ const CustomHeader = ({ navigation }) => {
 
 const TabNavigator = ({ navigation }) => {
   return (
-
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ color }) => {
+        tabBarIcon: ({ focused }) => {
           let iconName = '';
+          let iconSize = focused ? 40 : 28; // Increase size when active
+          let backgroundColor = focused ? '#fff' : 'transparent'; // Background effect for active icon
+
           if (route.name === 'Accueil') {
             iconName = 'home';
           } else if (route.name === 'Contact') {
@@ -72,10 +74,18 @@ const TabNavigator = ({ navigation }) => {
           } else if (route.name === 'Favoris') {
             iconName = 'heart';
           }
-          return <FontAwesome name={`${iconName}`} size={28} color={color} />;
+
+          return (
+            <View style={[
+              styles.tabIconContainer,
+              focused && styles.activeTabContainer // Change style if focused
+            ]}>
+              <FontAwesome name={iconName} size={iconSize} color={focused ? '#287777' : '#FFFFFF'} />
+            </View>
+          );
         },
-        tabBarActiveTintColor: '#182A49',
-        tabBarInactiveTintColor: '#7E7E7E',
+        tabBarStyle: styles.tabBar, // Style for the tab bar
+        tabBarShowLabel: false, // Hide tab labels
         header: props => <CustomHeader {...props} navigation={navigation} />,
       })}
     >
@@ -87,6 +97,7 @@ const TabNavigator = ({ navigation }) => {
     </Tab.Navigator>
   );
 };
+
 
 export default function App() {
   return (
@@ -113,21 +124,19 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-
-// ------------------------  NAVBAR ---------------------------------
-  
+  // NavBar
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 30,
     paddingTop: 45,
     marginTop: 5,
-    height: 85,
+    height: 95,
     backgroundColor: '#fff',
   },
   logo: {
-    height: 38,
-    width: 130,
+    height: 48,
+    width: 100,
     marginRight: 5
   },
   cloche: {
@@ -137,4 +146,36 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
 
+  // Tab Bar
+  tabBar: {
+    position: 'absolute',
+    backgroundColor: '#287777',
+    paddingTop:20,
+    paddingRight:30,
+    paddingLeft:10,
+    height: 90,
+    width: 400,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.5,
+    elevation: 5,
+  },
+
+  // Tab Icon
+  tabIconContainer: {
+    width: 70,
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 35,
+    backgroundColor: 'transparent', // Default background
+  },
+  activeTabContainer: {
+    backgroundColor: '#fff', // Active tab background color
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  }
 });

@@ -71,11 +71,11 @@ export default function AnnonceScreen({ route, navigation }) {
         {/* Navbar */}
         <View style={styles.navBar}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <FontAwesome name='chevron-left' size={28} style={styles.goBack} color={'#182A49'} />
+            <FontAwesome name='chevron-left' size={28} style={styles.goBack} color={'#287777'} />
           </TouchableOpacity>
           <Image resizeMode="contain" source={require('../assets/logo.png')} style={styles.logo} />
           <TouchableOpacity onPress={() => navigation.navigate('Utilisateur')}>
-            <FontAwesome name='user' size={30} color="#182A49" />
+            <FontAwesome name='user' size={30} color="#287777" />
           </TouchableOpacity>
         </View>
 
@@ -86,7 +86,7 @@ export default function AnnonceScreen({ route, navigation }) {
             <Text style={styles.annonceTitre}>{annonce.title}</Text>
             <View style={styles.annonceFavoris}>
               <TouchableOpacity onPress={() => { gererFavoris(annonce); setEnFavori(!enFavori); }} >
-                <FontAwesome name={enFavori ? "heart" : 'heart-o'} size={30} color={enFavori ? '#C70039' : '#182A49'} />
+                <FontAwesome name={enFavori ? "heart" : 'heart-o'} size={30} color={enFavori ? '#C70039' : '#287777'} />
               </TouchableOpacity>
             </View>
           </View>
@@ -109,14 +109,14 @@ export default function AnnonceScreen({ route, navigation }) {
           <View style={styles.annonceCritere}>
             <View style={styles.critereContainer}>
               <View style={styles.titreEtLogo}>
-                <FontAwesome name='list' size={15} color="#182A49" />
+                <FontAwesome name='list' size={15} color="#287777" />
                 <Text style={styles.titre}>Domaine</Text>
               </View>
               <Text style={styles.critereReponse}>{annonce.secteurActivite}</Text>
             </View>
             <View style={styles.critereContainer}>
               <View style={styles.titreEtLogo}>
-                <FontAwesome name='hourglass' size={15} color="#182A49" />
+                <FontAwesome name='hourglass' size={15} color="#287777" />
                 <Text style={styles.titre}>Disponibilité</Text>
               </View>
               {/* Loop through the disponibilite array and display each item */}
@@ -129,14 +129,14 @@ export default function AnnonceScreen({ route, navigation }) {
 
             <View style={styles.critereContainer}>
               <View style={styles.titreEtLogo}>
-                <FontAwesome name='briefcase' size={15} color="#182A49" />
+                <FontAwesome name='briefcase' size={15} color="#287777" />
                 <Text style={styles.titre}>Expérience</Text>
               </View>
               <Text style={styles.critereReponse}>{annonce.experience}</Text>
             </View>
             <View style={styles.critereContainer}>
               <View style={styles.titreEtLogo}>
-                <FontAwesome name='users' size={15} color="#182A49" />
+                <FontAwesome name='users' size={15} color="#287777" />
                 <Text style={styles.titre}>Durée</Text>
               </View>
               <Text style={styles.critereReponse}>{annonce.tempsMax}</Text>
@@ -159,10 +159,10 @@ export default function AnnonceScreen({ route, navigation }) {
           {/* User Information */}
           <TouchableOpacity style={styles.utilisateur} onPress={() => navigation.navigate('Profil')}>
             <View style={styles.utilisateurGauche}>
-              <FontAwesome name="user" size={50} color="#182A49" />
+              <FontAwesome name="user" size={50} color="#287777" />
             </View>
             <Text style={styles.textUtilisateur}>Nom d'utilisateur : {annonce.username}</Text>
-            <FontAwesome name='chevron-right' size={30} color={'#182A49'} />
+            <FontAwesome name='chevron-right' size={30} color={'#287777'} />
           </TouchableOpacity>
 
           {/* Report Button */}
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
   },
   bulletPoint: {
     fontSize: 16,
-    color: '#182A49', // Optional color for bullet point
+    color: '#287777', // Optional color for bullet point
   },
 
   // Map Container
@@ -338,19 +338,22 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 
-  // Report Button
+ // Report Button
   signalez: {
-    marginTop: 10,
-    marginHorizontal: 10,
-    padding: 10,
     borderRadius: 10,
-    backgroundColor: '#d40a0a',
-    alignItems: 'center',
+    marginHorizontal: 10,
+    marginTop:10,
+    marginBottom:10,
+    backgroundColor: '#FF7070',
+    height: 20,
+    justifyContent: 'center', // Centre le contenu verticalement
+    alignItems: 'center',      // Centre le contenu horizontalement
   },
   textSignalez: {
     color: '#fff',
-    fontWeight: 'bold',
+    textAlign: 'center',
   },
+
 
   // Colab Button
   colabBar: {
@@ -363,7 +366,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 50,
     borderRadius: 100,
-    backgroundColor: '#182A49',
+    backgroundColor: '#287777',
     justifyContent: 'center',
     alignItems: 'center',
   },

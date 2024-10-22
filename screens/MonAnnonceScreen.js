@@ -65,14 +65,14 @@ export default function MonAnnonceScreen({ route, navigation }) {
       <View style={styles.navBar}>
         {/* BOUTON RETOUR ARRIERE */}
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome name='chevron-left' size={28} style={styles.goBack} color={'#182A49'} />
+          <FontAwesome name='chevron-left' size={28} style={styles.goBack} color={'#287777'} />
         </TouchableOpacity>
 
         <Image resizeMode="contain" source={require('../assets/logo.png')} style={styles.logo} />
 
         {/* BOUTON PROFIL */}
         <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
-          <FontAwesome name='user' size={30} color="#182A49" />
+          <FontAwesome name='user' size={30} color="#287777" />
         </TouchableOpacity>
       </View>
 
@@ -104,14 +104,14 @@ export default function MonAnnonceScreen({ route, navigation }) {
 
             {/* SECTEUR D'ACTIVITE */}
             <View style={styles.titreEtLogo}>
-              <FontAwesome name='list' size={15} color="#182A49" />
+              <FontAwesome name='list' size={15} color="#287777" />
               <Text style={styles.titre}>Secteur d'activité</Text>
             </View>
             <Text style={styles.critereReponse}> {annonce.secteurActivite} </Text>
 
             {/*  DISPONIBILITÉ */}
             <View style={styles.titreEtLogo}>
-              <FontAwesome name='hourglass' size={15} color="#182A49" />
+              <FontAwesome name='hourglass' size={15} color="#287777" />
               <Text style={styles.titre}>Disponibilité</Text>
             </View>
             <Text style={styles.critereReponse}>{annonce.experience}</Text>
@@ -122,14 +122,14 @@ export default function MonAnnonceScreen({ route, navigation }) {
 
             {/* EXPÉRIENCE */}
             <View style={styles.titreEtLogo}>
-              <FontAwesome name='briefcase' size={15} color="#182A49" />
+              <FontAwesome name='briefcase' size={15} color="#287777" />
               <Text style={styles.titre} >Mon expérience</Text>
             </View>
             <Text style={styles.critereReponse}>{annonce.experience} ans</Text>
 
             {/* TEMPS MAX */}
             <View style={styles.titreEtLogo}>
-              <FontAwesome name='users' size={15} color="#182A49" />
+              <FontAwesome name='users' size={15} color="#287777" />
               <Text style={styles.titre}>Temps max</Text>
             </View>
             <Text style={styles.critereReponse}>{annonce.tempsMax} heure / semaine </Text>
@@ -148,13 +148,13 @@ export default function MonAnnonceScreen({ route, navigation }) {
           {/* ICONE PROFIL */}
           <View style={styles.utilisateurGauche}>
             <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
-              <FontAwesome name="user" size={50} color="#182A49" />
+              <FontAwesome name="user" size={50} color="#287777" />
             </TouchableOpacity>
           </View>
 
           {/* NOM D'UTILISATEUR */}
           <Text style={styles.textUtilisateur}>Nom d'utilisateur : {utilisateur.username} </Text>
-          <FontAwesome name='chevron-right' size={30} color={'#182A49'} />
+          <FontAwesome name='chevron-right' size={30} color={'#287777'} />
         </TouchableOpacity>
 
         {/*  SIGNALEZ ANNONCE  */}

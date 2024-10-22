@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, SafeAreaView, Modal, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 import GeoAPIGouvAutocomplete from './GeoAPIGouvAutocomplete';
 import MapView, { Marker } from 'react-native-maps';
 
@@ -26,6 +27,7 @@ export default function PublierScreen({ navigation }) {
   const [isExperienceModalVisible, setIsExperienceModalVisible] = useState(false);
   const [isTempsModalVisible, setIsTempsModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const scrollViewRef = useRef(null);
 
   useEffect(() => {
     fetch('http://192.168.1.109:3000/profiles/activites')
@@ -36,6 +38,14 @@ export default function PublierScreen({ navigation }) {
         }
       });
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({ y: 0, animated: true });
+      }
+    }, [])
+  );
 
 const handleCitySelected = (city) => {
     setVille(city.nom);
@@ -199,7 +209,7 @@ const renderDispoModal = () => (
               onPress={() => toggleDisponibilite(item.value)}
               style={[
                 styles.modalItem,
-                { backgroundColor: disponibilite.includes(item.value) ? '#d3d3d3' : 'white' } // Change la couleur si sélectionné
+                { backgroundColor: disponibilite.includes(item.value) ? '#93DCDC' : 'white' } // Change la couleur si sélectionné
               ]}
             >
               <Text>{item.label}</Text>
@@ -272,7 +282,7 @@ const renderTempsModal = () => (
     <SafeAreaView style={styles.safeAreaView}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="height" keyboardVerticalOffset={90}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView nestedScrollEnabled={true} contentContainerStyle={styles.scrollContent}>
+        <ScrollView ref={scrollViewRef} nestedScrollEnabled={true} contentContainerStyle={styles.scrollContent}>
             <View style={styles.content}>
               
               <Text style={styles.titreCritere}>Titre</Text>
@@ -368,6 +378,7 @@ const renderTempsModal = () => (
               <TouchableOpacity style={styles.boutonEnvoyer} onPress={envoyerDonnee}>
                 <Text style={styles.textEnvoyer}>Publier l'annonce</Text>
               </TouchableOpacity>
+              <View style={styles.separator}></View>
 
               <Modal
                 animationType="slide"
@@ -433,7 +444,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   boutonEnvoyer: {
-    backgroundColor: '#007BFF',
+    backgroundColor: '#38A8A8',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
@@ -494,7 +505,7 @@ const styles = StyleSheet.create({
   modalClose: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#007BFF',
+    backgroundColor: '#28A745',
     alignItems: 'center',
     borderRadius: 5,
   },
@@ -538,5 +549,8 @@ const styles = StyleSheet.create({
   },
   supprimerVille: {
     color: 'red',
+  },
+  separator:{
+    marginBottom:30,
   },
 });

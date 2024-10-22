@@ -107,7 +107,7 @@ export default function ContactScreen({ navigation }) {
           {contactsFiltres.map((contact, index) => (
             <View key={index} style={styles.contactContainer}>
               <TouchableOpacity style={styles.contactItem}>
-                <FontAwesome name='user' size={35} color={'#182A49'} />
+                <FontAwesome name='user' size={35} color={'#287777'} />
                 <View style={styles.contactInfo}>
                   <Text style={styles.contactName}>{contact.username}</Text>
                   <Text style={styles.contactNumber}>{contact.phone}</Text>
@@ -115,10 +115,10 @@ export default function ContactScreen({ navigation }) {
               </TouchableOpacity>
               <View style={styles.actionButtons}>
                 <TouchableOpacity style={styles.phoneButton} onPress={() => appelerNumero(contact.phone)}>
-                  <FontAwesome name='phone' size={35} color={'#182A49'} style={styles.telIcon}/>
+                  <FontAwesome name='phone' size={35} color={'#287777'} style={styles.telIcon}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.messageButton} onPress={() => ouvrirConversation(contact)}>
-                  <FontAwesome name='comment' size={33} color={'#182A49'} />
+                  <FontAwesome name='comment' size={33} color={'#287777'} />
                 </TouchableOpacity>
               </View>
             </View>

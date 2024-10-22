@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   categorieBtn: {
     height: 50,
     borderWidth: 1,
-    borderColor:'#8F8F8F',
+    borderColor:'#287777',
     width: '47%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -139,10 +139,10 @@ const styles = StyleSheet.create({
   categorieText: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#182A49',
+    color: '#287777',
   },
   categorieActive: {
-    backgroundColor: '#182A49'
+    backgroundColor: '#287777'
   },
   textActive: {
     fontWeight: 'bold',

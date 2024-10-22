@@ -64,7 +64,7 @@ export default function ConnexionScreen({ navigation }) {
                 placeholder="Mot de passe"
               />
               <TouchableOpacity onPress={() => passwordVisible()} style={styles.eyeIcone}>
-                <FontAwesome name={voirPassword ? 'eye' : 'eye-slash'} size={25} color="gray" />
+                <FontAwesome name={voirPassword ? 'eye' : 'eye-slash'} size={25} color="#287777" />
               </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -88,7 +88,7 @@ export default function ConnexionScreen({ navigation }) {
             </View>
 
             <TouchableOpacity onPress={() => navigation.navigate('Inscription')} style={styles.inscription} >
-              <Text style={styles.creeCompte}>Pas encore de compte ?{' '} <Text style={{ fontWeight: 'bold' }}>Inscription</Text></Text>
+              <Text style={styles.creeCompte}>Pas encore de compte ?{' '} <Text style={{ fontWeight: 'bold', color:'#287777' }}>Inscription</Text></Text>
             </TouchableOpacity>
           </View>
           </TouchableWithoutFeedback>
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   logo: {
     height: 200,
     width: 300,
-    marginTop:25,
+    marginTop:65,
   },
  
 //-----------------------  CHAMPS DE SAISIE  ---------------------------------
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   saisie: {
     display: 'flex',
     borderWidth: 1,
-    borderColor:'#8F8F8F',
+    borderColor:'#287777',
     fontSize: 17,
     paddingLeft: 23,
     height: 58,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   saisieMdp: {
     display: 'flex',
     borderWidth: 1,
-    borderColor:'#8F8F8F',
+    borderColor:'#287777',
     fontSize: 17,
     paddingLeft: 23,
     height: 58,
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     marginTop: 34,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#182A49',
+    backgroundColor: '#287777',
   },
   textBtn: {
     display: 'flex',

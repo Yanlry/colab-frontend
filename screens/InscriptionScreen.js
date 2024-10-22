@@ -180,7 +180,7 @@ title: {
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 45,
-    backgroundColor: '#182A49'
+    backgroundColor: '#287777'
   },
   inscrireText: {
     color: '#fff',

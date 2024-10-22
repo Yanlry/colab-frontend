@@ -42,7 +42,7 @@ export default function MessagerieScreen({ navigation }) {
         onPress={() => navigation.navigate('Conversation', { conversationId: item._id, name: item.participants.join(', '), messages: item.messages })}
         style={styles.conversationContainer}
       >
-        <FontAwesome name='user' size={35} color={'#182A49'} style={styles.iconMessage} />
+        <FontAwesome name='user' size={35} color={'#287777'} style={styles.iconMessage} />
         <View style={styles.bubbleContainer}>
           <View style={styles.bubble}>
             <Text style={styles.nomMessage}>{item.participants.join(', ')}</Text>

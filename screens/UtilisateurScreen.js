@@ -24,7 +24,7 @@ export default function UtilisateurScreen({ navigation }) {
               {/* BOUTON RETOUR ARRIERE */}
               <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
-                  <FontAwesome name='chevron-left' size={28} color={'#182A49'} />
+                  <FontAwesome name='chevron-left' size={28} color={'#287777'} />
                 </TouchableOpacity>
                 <Text style={styles.title}>Menu utilisateur</Text>
               </View>
@@ -94,12 +94,13 @@ const styles = StyleSheet.create({
   marginBottom: 10,
 },
 icon: {
-  marginLeft: '1%',
+  marginLeft: '5%',
   marginRight:'20%',
 },
 title: {
   fontSize: 24,
   fontWeight: 'bold',
+  color: '#236C6C'
 },
   // ------------------- MENU ---------------------
 
@@ -118,7 +119,7 @@ title: {
     width: 250,
     height: 60,
     margin:10,
-    backgroundColor: '#182A49'
+    backgroundColor: '#287777'
   },
   menuSupprimer: {
     borderRadius: 12,

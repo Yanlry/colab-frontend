@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     marginTop: 70,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#182A49',
+    backgroundColor: '#287777',
   },
   registerButtonText: {
     color: '#fff',

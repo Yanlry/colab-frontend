@@ -180,6 +180,7 @@ export default function AccueilScreen({ navigation }) {
                   </Text>
                 )}
               </ScrollView>
+              <View style={styles.separator}></View>
             </View>
             </View>
         </ TouchableWithoutFeedback>
@@ -193,6 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff',
     height: '100%'
   },
+ 
  //-----------------------  BOUTON OFFRE ET DEMANDE  ---------------------------------
 
  offreEtDemande: {
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
 categorieBtn: {
   height: 50,
   borderWidth: 1,
-  borderColor:'#8F8F8F',
+  borderColor:'#287777',
   width: '47%',
   alignItems: 'center',
   justifyContent: 'center',
@@ -214,10 +216,10 @@ categorieBtn: {
 categorieText: {
   fontSize: 15,
   fontWeight: 'bold',
-  color: '#182A49',
+  color: '#287777',
 },
 categorieActive: {
-  backgroundColor: '#182A49'
+  backgroundColor: '#287777'
 },
 textActive: {
   fontWeight: 'bold',
@@ -234,7 +236,7 @@ rechercher: {
 },
 rechercheText: {
   borderWidth: 1,
-  borderColor:'#8F8F8F',
+  borderColor:'#287777',
   height: 45,
   width: '80%',
   fontSize: 16,
@@ -248,7 +250,7 @@ filtreAnnonce: {
   padding: 10,
 },
 filtreIcone: {
-  color: '#182A49',
+  color: '#194D4D',
 },
 
 //-----------------------   SCROLLVIEW  ---------------------------------
@@ -293,6 +295,7 @@ scroll:{
     fontWeight:'bold',
     paddingRight:5,
     fontSize: 18,
+    color:'#1F5C5C',
   },
   apercuAnnonceDescription: {
     fontSize: 13,
@@ -300,14 +303,19 @@ scroll:{
   apercuAnnonceExperience: {
     fontSize: 12,
     fontWeight:'bold',
+    color:'#1F5C5C',
+
   },
   apercuAnnonceTempsMax: {
     fontSize: 12,
     fontWeight: 'bold',
+    color:'#1F5C5C',
+
   },
   apercuAnnonceDate: {
     fontSize: 12,
-    marginTop:15
+    marginTop:15,
+
   },
   containerCritere: {
     flexDirection:'row'
@@ -316,6 +324,10 @@ scroll:{
     fontSize:12,
   },
  
+  separator:{
+    marginBottom:50,
+  },
+
   //-----------------------  AUTRE  ---------------------------------
   
   messageAucuneOffre: {

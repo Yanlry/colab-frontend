@@ -98,13 +98,13 @@ export default function ConversationScreen({ navigation, route }) {
   <View style={styles.container}>
     <View style={styles.headerMessage}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
-        <FontAwesome name='chevron-left' size={28} color={'#182A49'} />
+        <FontAwesome name='chevron-left' size={28} color={'#287777'} />
       </TouchableOpacity>
       <View style={styles.nomContact}>
         <Text style={styles.headerText}>{contactUsername}</Text>
       </View>
       <TouchableOpacity>
-        <FontAwesome name='user' size={35} color={'#182A49'} style={styles.headerIcon} />
+        <FontAwesome name='user' size={35} color={'#287777'} style={styles.headerIcon} />
       </TouchableOpacity>
     </View>
 
