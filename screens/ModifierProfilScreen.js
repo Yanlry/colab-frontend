@@ -1,48 +1,116 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image, Modal, FlatList } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useSelector } from 'react-redux';
 
 export default function ModifierProfilScreen({ navigation }) {
+
   const user = useSelector((state) => state.utilisateur.value);
-  const [offre, setOffre] = useState([]);
-  const [offreOuvert, setOffreOuvert] = useState(false);
-  const [demande, setDemande] = useState([]);
-  const [demandeOuvert, setDemandeOuvert] = useState(false);
-  const [activitesDisponibles, setActivitesDisponibles] = useState([]);
+
+  const [learn, setLearn] = useState([]); 
+  const [teach, setTeach] = useState([]); 
+  const [activitesDisponibles, setActivitesDisponibles] = useState([]); 
   const [isLoading, setIsLoading] = useState(true);
   const [profileImage, setProfileImage] = useState(null);
+  const [isLearnModalVisible, setIsLearnModalVisible] = useState(false);
+  const [isTeachModalVisible, setIsTeachModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
 
   useEffect(() => {
-
+    // Récupérer toutes les activités disponibles
     fetch('http://192.168.1.109:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
           setActivitesDisponibles(data.activites);
         }
+      });
+
+    // Récupérer les activités sélectionnées par l'utilisateur
+    fetch(`http://192.168.1.109:3000/annonces/activites/${user.token}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.result) {
+          setTeach(data.teach); // Activités que l'utilisateur enseigne
+          setLearn(data.learn); // Activités que l'utilisateur apprend
+        }
+        setIsLoading(false); // Arrêter le chargement une fois les données récupérées
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des activités de l\'utilisateur:', error);
         setIsLoading(false);
       });
   }, []);
 
-  const handleEnregistrer = () => {
-    
-    fetch(`http://192.168.1.109:3000/profiles/teach/${user.token}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ activites: offre }),
-    });
-
-    fetch(`http://192.168.1.109:3000/profiles/learn/${user.token}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ activites: demande }),
-    });
-
-    navigation.goBack();
+  const toggleLearnSelection = (activity) => {
+    if (learn.includes(activity)) {
+      setLearn(learn.filter(item => item !== activity)); // Retirer si déjà sélectionné
+    } else {
+      setLearn([...learn, activity]); // Ajouter si pas encore sélectionné
+    }
   };
 
+  const toggleTeachSelection = (activity) => {
+    if (teach.includes(activity)) {
+      setTeach(teach.filter(item => item !== activity)); // Retirer si déjà sélectionné
+    } else {
+      setTeach([...teach, activity]); // Ajouter si pas encore sélectionné
+    }
+  };
+
+  const handleSaveLearn = () => {
+    if (learn.length === 0) {
+      setErrorMessage('Veuillez choisir au moins une catégorie avant de valider.');
+      return;
+    }
+  
+    // Si l'utilisateur a sélectionné une catégorie, on continue le processus
+    setErrorMessage(''); // Réinitialiser le message d'erreur si tout est correct
+  
+    fetch(`http://192.168.1.109:3000/profiles/learn`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: user.token, activites: learn }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.result) {
+          console.log('Activités "learn" mises à jour avec succès');
+          setIsLearnModalVisible(false); // Fermer le modal après validation
+        } else {
+          console.error('Erreur lors de la mise à jour des activités "learn":', data.error);
+        }
+      })
+      .catch(error => console.error('Erreur lors de la mise à jour des activités "learn":', error));
+  };
+
+  const handleSaveTeach = () => {
+    if (teach.length === 0) {
+      setErrorMessage('Veuillez choisir au moins une catégorie avant de valider.');
+      return;
+    }
+  
+    // Si l'utilisateur a sélectionné une catégorie, on continue le processus
+    setErrorMessage(''); // Réinitialiser le message d'erreur si tout est correct
+  
+    fetch(`http://192.168.1.109:3000/profiles/teach`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: user.token, activites: teach }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.result) {
+          console.log('Activités "teach" mises à jour avec succès');
+          setIsTeachModalVisible(false); // Fermer le modal après validation
+        } else {
+          console.error('Erreur lors de la mise à jour des activités "teach":', data.error);
+        }
+      })
+      .catch(error => console.error('Erreur lors de la mise à jour des activités "teach":', error));
+  };  
+  
   const selectImage = async () => {
     const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -55,125 +123,200 @@ export default function ModifierProfilScreen({ navigation }) {
       setProfileImage(uri);
     }
   };
+  
+  const renderLearnModal = () => {
+    const currentCategoriesHeight = Math.min(learn.length * 50, 200); // Calculer la hauteur en fonction du nombre d'éléments sélectionnés
+    const availableCategoriesHeight = Math.min(
+      (activitesDisponibles.length - learn.length) * 50,
+      400
+    );
+
+    return (
+      <Modal visible={isLearnModalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Catégories actuelles</Text>
+            <FlatList
+              style={[styles.activitySelected, { height: currentCategoriesHeight }]}
+              data={learn}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => toggleLearnSelection(item)}
+                  style={[styles.modalItem, { backgroundColor: learn.includes(item) ? '#93DCDC' : 'white' }]}
+                >
+                  <Text>{item}</Text>
+                </TouchableOpacity>
+              )}
+            />
+
+            <Text style={styles.modalTitle}>Autres catégories</Text>
+            <FlatList
+              style={{ height: availableCategoriesHeight }}
+              data={activitesDisponibles.filter((activite) => !learn.includes(activite))}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => toggleLearnSelection(item)}
+                  style={[styles.modalItem, { backgroundColor: learn.includes(item) ? '#93DCDC' : 'white' }]}
+                >
+                  <Text>{item}</Text>
+                </TouchableOpacity>
+              )}
+            />
+
+            {/* Afficher le message d'erreur si nécessaire */}
+            {errorMessage ? (
+              <Text style={styles.errorText}>{errorMessage}</Text>
+            ) : null}
+
+            <TouchableOpacity style={styles.modalClose} onPress={handleSaveLearn}>
+              <Text style={{ color: 'white' }}>Valider</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+  
+  const renderTeachModal = () => {
+    const currentCategoriesHeight = Math.min(teach.length * 50, 200); // Calculer la hauteur en fonction du nombre d'éléments sélectionnés
+    const availableCategoriesHeight = Math.min(
+      (activitesDisponibles.length - teach.length) * 50,
+      400
+    );
+
+    return (
+      <Modal visible={isTeachModalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Catégories actuelles</Text>
+            <FlatList
+              style={[styles.activitySelected, { height: currentCategoriesHeight }]}
+              data={teach}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => toggleTeachSelection(item)}
+                  style={[styles.modalItem, { backgroundColor: teach.includes(item) ? '#93DCDC' : 'white' }]}
+                >
+                  <Text>{item}</Text>
+                </TouchableOpacity>
+              )}
+            />
+
+            <Text style={styles.modalTitle}>Autres catégories</Text>
+            <FlatList
+              style={{ height: availableCategoriesHeight }}
+              data={activitesDisponibles.filter((activite) => !teach.includes(activite))}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => toggleTeachSelection(item)}
+                  style={[styles.modalItem, { backgroundColor: teach.includes(item) ? '#93DCDC' : 'white' }]}
+                >
+                  <Text>{item}</Text>
+                </TouchableOpacity>
+              )}
+            />
+
+            {/* Afficher le message d'erreur si nécessaire */}
+            {errorMessage ? (
+              <Text style={styles.errorText}>{errorMessage}</Text>
+            ) : null}
+
+            <TouchableOpacity style={styles.modalClose} onPress={handleSaveTeach}>
+              <Text style={{ color: 'white' }}>Valider</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
 
   return (
-    <View style={localStyles.container}>
-      <View style={localStyles.titleContainer}>
-        <Text style={localStyles.titleText}>Modifier mon profil</Text>
+    <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.titleText}>Modifier mon profil</Text>
       </View>
 
-      <View style={localStyles.contentContainer}>
-        <View style={localStyles.profileImageContainer}>
+      <View style={styles.contentContainer}>
+        <View style={styles.profileImageContainer}>
           {profileImage ? (
             <TouchableOpacity onPress={selectImage}>
-              <Image source={{ uri: profileImage }} style={localStyles.profileImage} />
+              <Image source={{ uri: profileImage }} style={styles.profileImage} />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={selectImage} style={localStyles.imageUploadContainer}>
+            <TouchableOpacity onPress={selectImage} style={styles.imageUploadContainer}>
               <Text>Choisir une photo de profil</Text>
             </TouchableOpacity>
           )}
         </View>
 
-        <View style={localStyles.infoContainer}>
-          <Text style={localStyles.label}>Nom d'utilisateur</Text>
-          <View style={localStyles.inputContainer}>
-            <TextInput
-              style={localStyles.input}
-              defaultValue={user.username}
-              editable={false}
-            />
-          </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.label}>Nom d'utilisateur</Text>
+          <TextInput
+            style={styles.input}
+            defaultValue={user.username}
+            editable={false}
+          />
         </View>
 
         {isLoading ? (
-          <Text style={localStyles.conditionMsg}>Chargement des activités en cours...</Text>
-        ) : (
-          <View>
-            <View style={localStyles.listeOffre}>
-              <Text style={localStyles.label}>Donnez votre aide (1 activité min.) :</Text>
-              <DropDownPicker
-                items={activitesDisponibles.map(activite => ({
-                  label: activite,
-                  value: activite,
-                }))}
-                open={offreOuvert}
-                setOpen={() => setOffreOuvert(!offreOuvert)}
-                value={offre}
-                setValue={(value) => setOffre(value)}
-                placeholder="Selectionnez votre activité"
-                showTickIcon={true}
-                multiple={true}
-                min={1}
-                mode='BADGE'
-                badgeColors={['#50B200', '#3A3960', '#C23B3B', '#4E98C2']}
-                badgeDotColors={['white']}
-                badgeTextStyle={{ color: 'white' }}
-              />
-            </View>
+            <Text style={styles.conditionMsg}>Chargement des activités en cours...</Text>
+          ) : (
+            <View style={styles.listLearnTeach}>
+              <View style={styles.listeLearn}>
+                <Text style={styles.label}>Que pouvez voulez vous apprendre ?</Text>
+                <TouchableOpacity onPress={() => setIsLearnModalVisible(true)} style={styles.buttonList}>
+                  <Text style={styles.activitySelected}>
+                    {learn.length > 0 ? `${learn.length} activité${learn.length > 1 ? 's' : ''} choisie${learn.length > 1 ? 's' : ''}` : 'Sélectionnez vos activités à apprendre'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
-            <View style={localStyles.listeDemande}>
-              <Text style={localStyles.label}>Demandez de l'aide (1 activité min.) :</Text>
-              <DropDownPicker
-                items={activitesDisponibles.map(activite => ({
-                  label: activite,
-                  value: activite,
-                }))}
-                open={demandeOuvert}
-                setOpen={() => setDemandeOuvert(!demandeOuvert)}
-                value={demande}
-                setValue={(value) => setDemande(value)}
-                placeholder="Selectionnez votre activité"
-                showTickIcon={true}
-                multiple={true}
-                min={1}
-                mode='BADGE'
-                badgeColors={['#50B200', '#3A3960', '#C23B3B', '#4E98C2']}
-                badgeDotColors={['white']}
-                badgeTextStyle={{ color: 'white' }}
-              />
+              <View style={styles.listeTeach}>
+                <Text style={styles.label}>Que pouvez vous nous enseignez ?</Text>
+                <TouchableOpacity onPress={() => setIsTeachModalVisible(true)} style={styles.buttonList}>
+                  <Text style={styles.activitySelected}>
+                    {teach.length > 0 ? `${teach.length} activité${teach.length > 1 ? 's' : ''} choisie${teach.length > 1 ? 's' : ''}` : 'Sélectionnez vos activités à enseigner'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        )}
-      </View>
+          )}
+        </View>
 
-      <View style={localStyles.buttonContainer}>
-        <TouchableOpacity style={localStyles.button} onPress={() => navigation.goBack()}>
-          <Text style={localStyles.buttonText}>Précédent</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={localStyles.button} onPress={() => handleEnregistrer()}>
-          <Text style={localStyles.buttonText}>Terminer</Text>
+      {renderLearnModal()}
+      {renderTeachModal()}
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
+          <Text style={styles.buttonText}>Valider</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-const localStyles = StyleSheet.create({
+
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
   contentContainer: {
-    justifyContent: 'center',
     paddingVertical: 20,
     paddingHorizontal: 20,
   },
-
-// ------------------- TITRE ---------------------
-
   titleContainer: {
     alignItems: 'center',
     marginTop: 50,
-    marginBottom: 130,
   },
   titleText: {
     fontSize: 20,
     fontWeight: 'bold',
   },
-
-// ------------------- PHOTO DE PROFIL ---------------------
-  
   profileImageContainer: {
     marginBottom: 20,
     alignItems: 'center',
@@ -188,70 +331,98 @@ const localStyles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 8,
     padding: 10,
+    marginBottom:40
   },
-
-// ------------------- NOM D'UTILISATEUR ---------------------
-
   infoContainer: {
-    width: '100%',
     marginBottom: 20,
   },
   label: {
     marginBottom: 5,
+    marginTop:10,
     fontWeight: 'bold',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    marginBottom: 10,
+    textAlign:'center',
+    color:'#1F5C5C'
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     padding: 12,
-    width: '100%',
+    marginBottom: 20,
   },
-
-// ------------------- MESSAGE DE CHARGEMENT DES LISTES ---------------------
-
-  conditionMsg: {
-    justifyContent: 'center',
-    textAlign: 'center',
-    fontSize: 22,
-    padding: 10,
-  },
-
-// ------------------- MES LISTES ---------------------
-
-  listeOffre: {
-    alignItems: 'center',
-    marginTop: 30,
-    width: '100%',
-    zIndex: 999,
-  },
-  listeDemande: {
-    alignItems: 'center',
-    width: '100%',
-    marginTop: 40,
-  },
-
-// ------------------- BOUTTONS PRECEDENT ET TERMINER ---------------------
-
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginTop: 'auto',
     paddingHorizontal: 20,
     paddingBottom: 40,
+
   },
   button: {
-    backgroundColor: '#3A3960',
+    width:200,
+    backgroundColor: '#287777',
     paddingVertical: 15,
     paddingHorizontal: 30,
+    borderRadius: 8,
+  },
+  buttonList: {
+    backgroundColor: '#287777',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    marginTop:10,
     borderRadius: 8,
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
+    textAlign:'center'
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingVertical:150
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    marginHorizontal: 20,
+    borderRadius: 5,
+    padding: 20,
+    width: '80%',
+    alignSelf: 'center',
+  },
+  modalItem: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  modalClose: {
+    marginTop: 4,
+    padding: 10,
+    backgroundColor: '#28A745',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  listLearnTeach:{
+    marginTop:50
+  },
+  modalTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  activitySelected:{
+    color:'white',
+    marginBottom: 5,
+    marginTop:10,
+    fontWeight: 'bold',
+    textAlign:'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop:5
+    
   },
 });

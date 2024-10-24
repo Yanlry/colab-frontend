@@ -88,7 +88,7 @@ export default function FavorisScreen({ navigation }) {
                 <View style={styles.scrollView}>
                   <ScrollView>
                     {favorisTeach.length === 0 ? (
-                      <Text style={styles.aucunFavoris}>Aucune offre en favoris</Text>
+                      <Text style={styles.aucunFavoris}>Aucune annonce liée à l'apprentissage n'a été ajoutée</Text>
                       ) : (
                         mesFavoris(favorisTeach)
                         )}
@@ -99,7 +99,7 @@ export default function FavorisScreen({ navigation }) {
                 <View style={styles.scrollView}>
                   <ScrollView>
                     {favorisLearn.length === 0 ? (
-                      <Text style={styles.aucunFavoris}>Aucune demande en favoris</Text>
+                      <Text style={styles.aucunFavoris}>Aucune annonce liée à l'enseignement n'a été ajoutée</Text>
                     ) : (
                       mesFavoris(favorisLearn)
                     )}
@@ -154,7 +154,8 @@ const styles = StyleSheet.create({
 
   aucunFavoris: {
     textAlign: 'center',
-    marginTop: 250,
+    marginTop: 200,
+    paddingHorizontal:50,
     fontSize: 20,
     color:'gray'
   },

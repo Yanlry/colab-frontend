@@ -111,7 +111,7 @@ export default function ProfilScreen({ navigation }) {
                 <Text style={styles.label}>Votre bio</Text>
                 <TextInput style={styles.inputTextarea} multiline placeholder="Toucher pour écrire ( 3000. caractére max. )" onChangeText={handleBioChange} />
 
-                <Text style={styles.label}>Je peux aider</Text>
+                <Text style={styles.label}>Je veux apprendre : </Text>
                 <TextInput
                   style={styles.inputJP}
                   defaultValue={teach ? teach.join(', ') : ''}
