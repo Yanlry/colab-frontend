@@ -15,11 +15,13 @@
     "@fortawesome/free-solid-svg-icons": "6.6.0",
     "@fortawesome/react-fontawesome": "0.2.2",
     "@fortawesome/react-native-fontawesome": "0.3.2",
+    "@react-native-community/cli": "^15.0.0",
+    "@react-native-community/cli-server-api": "^15.0.0",
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/bottom-tabs": "6.6.1",
     "@react-navigation/native": "6.1.18",
     "@react-navigation/native-stack": "6.11.0",
-    "@reduxjs/toolkit": "2.2.7",
+    "@reduxjs/toolkit": "2.3.0",
     "expo": "~51.0.38",
     "expo-image-picker": "~15.0.7",
     "expo-status-bar": "~1.12.1",
@@ -36,19 +38,21 @@
     "react-native-screens": "3.31.1",
     "react-native-svg": "15.2.0",
     "react-native-uuid": "2.0.2",
-    "react-native-vector-icons": "10.1.0",
+    "react-native-vector-icons": "10.2.0",
     "react-native-virtualized-view": "^1.0.0",
     "react-redux": "9.1.2",
+    "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
-    "rimraf": "5.0.0",
+    "rimraf": "^6.0.1",
     "uid2": "^1.0.0",
     "use-debounce": "^10.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.25.9",
     "@types/react-native": "^0.73.0"
   },
- "private": true,
+  "private": true,
   "expo": {
     "ios": {
       "infoPlist": {

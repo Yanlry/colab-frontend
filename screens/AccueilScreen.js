@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, RefreshControl, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function AccueilScreen({ navigation }) {
 
@@ -32,6 +33,12 @@ export default function AccueilScreen({ navigation }) {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   const handleRefresh = () => {
     setRefreshing(true);
@@ -280,7 +287,7 @@ scroll:{
   },
   apercuImage: {
     borderWidth: 1,
-    borderColor:'#8F8F8F',
+    borderColor:'#287777',
     height: 150,
     paddingTop: 63,
     borderRadius: 12,

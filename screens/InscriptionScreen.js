@@ -79,7 +79,7 @@ export default function InscriptionScreen({ navigation }) {
                   onChangeText={(text) => setPassword(text)}
                 />
                 <TouchableOpacity onPress={() => passwordVisible()} style={styles.eyeIcone}>
-                  <FontAwesome name={voirPassword ? 'eye' : 'eye-slash'} size={25} color="gray" />
+                  <FontAwesome name={voirPassword ? 'eye' : 'eye-slash'} size={25} color="#287777" />
                 </TouchableOpacity>
               <TextInput
                 style={styles.saisie}
@@ -148,7 +148,7 @@ title: {
   },
   saisie: {
     height: 50,    
-    borderColor:'#8F8F8F',
+    borderColor:'#287777',
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,
@@ -159,7 +159,7 @@ title: {
     height: 50,
     width: 335,
     justifyContent: 'space-between',
-    borderColor:'#8F8F8F',
+    borderColor:'#287777',
     borderWidth: 1,
     borderRadius: 12,
     paddingHorizontal: 10,
@@ -169,7 +169,7 @@ title: {
     position:'absolute',
     marginTop:132,
     marginLeft:290,
-    height:30
+    height:30,
   },
 
 //----------------------- BOUTON INSCRIPTION  ---------------------------------

@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   },
   rechercheText: {
     borderWidth: 1,
-    borderColor: '#8F8F8F',
+    borderColor:'#287777',
     height: 40,
     fontSize: 15,
     paddingLeft: 30,

@@ -19,7 +19,6 @@ export default function UtilisateurScreen({ navigation }) {
     <SafeAreaView style={styles.safeAreaView}>
       <KeyboardAvoidingView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          
           <View style={styles.container}>
               {/* BOUTON RETOUR ARRIERE */}
               <View style={styles.header}>
@@ -30,7 +29,7 @@ export default function UtilisateurScreen({ navigation }) {
               </View>
 
             <View style={styles.menuContainer}>
-              <TouchableOpacity style={styles.mesMenu} onPress={() => navigation.navigate('ModifierProfil')}>
+              <TouchableOpacity style={styles.mesMenu} onPress={() => navigation.navigate('Profil')}>
                 <Text style={styles.mesMenuTitre}> Mon espace</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.mesMenu} onPress={() => navigation.navigate('MesAnnonces')}>
@@ -52,27 +51,27 @@ export default function UtilisateurScreen({ navigation }) {
                 <Text style={styles.mesMenuTitre}>Supprimer profil</Text>
               </TouchableOpacity> 
             </View>
-
-            {/* Boîte de dialogue de confirmation */}
-            {confirmerDeconnexion && (
-              <View style={styles.confirmation}>
-                <View style={styles.confirmationContainer}>
-                  <Text style={styles.confirmationTexte}>Êtes-vous sûr de vouloir vous déconnecter ?</Text>
-                  <View style={styles.confirmationBouttonContainer}>
-                    <TouchableOpacity style={[styles.confirmationBoutton, styles.confirmationBouttonOui]} onPress={() => seDeconnecter()}>
-                      <Text style={styles.confirmationButtonTexte}>Oui</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.confirmationBoutton, styles.confirmationBouttonAnnule]} onPress={() => setConfirmerDeconnexion(false)}>
-                      <Text style={styles.confirmationButtonTexte}>Annuler</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            )}
           </View>
-        </ TouchableWithoutFeedback>
-      </ KeyboardAvoidingView>
-    </ SafeAreaView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+
+      {/* Boîte de dialogue de confirmation */}
+      {confirmerDeconnexion && (
+        <View style={styles.confirmation}>
+          <View style={styles.confirmationContainer}>
+            <Text style={styles.confirmationTexte}>Êtes-vous sûr de vouloir vous déconnecter ?</Text>
+            <View style={styles.confirmationBouttonContainer}>
+              <TouchableOpacity style={[styles.confirmationBoutton, styles.confirmationBouttonOui]} onPress={() => seDeconnecter()}>
+                <Text style={styles.confirmationButtonTexte}>Oui</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.confirmationBoutton, styles.confirmationBouttonAnnule]} onPress={() => setConfirmerDeconnexion(false)}>
+                <Text style={styles.confirmationButtonTexte}>Annuler</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
+    </SafeAreaView>
   );
 }
 
@@ -84,26 +83,24 @@ const styles = StyleSheet.create({
     alignItems:'center'
   },
 
+  //-----------------------  NAVBAR  ---------------------------------
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop:20,
+    marginBottom: 10,
+  },
+  icon: {
+    marginLeft: '5%',
+    marginRight:'20%',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#236C6C'
+  },
 
- //-----------------------  NAVBAR  ---------------------------------
-
- header: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  marginTop:20,
-  marginBottom: 10,
-},
-icon: {
-  marginLeft: '5%',
-  marginRight:'20%',
-},
-title: {
-  fontSize: 24,
-  fontWeight: 'bold',
-  color: '#236C6C'
-},
-  // ------------------- MENU ---------------------
-
+  //------------------- MENU ---------------------
   menuContainer: {
     borderRadius: 12,
     height: 700,
@@ -135,11 +132,10 @@ title: {
     color: 'white',
   },
 
-  // -------------------  CONFIRMER LA DECONNECTION ---------------------
-
+  //-------------------  CONFIRMER LA DECONNECTION ---------------------
   confirmation: {
     position: 'absolute',
-    top: -120,
+    top: 0,
     bottom: 0,
     left: 0,
     right: 0,
@@ -160,8 +156,7 @@ title: {
     textAlign: 'center',
   },
 
-//-----------------------  BOUTTON CONFIRMER LA DECONNECTION ---------------------------------
-
+  //-----------------------  BOUTTON CONFIRMER LA DECONNECTION ---------------------------------
   confirmationBouttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -180,6 +175,7 @@ title: {
     backgroundColor: '#3CB371',
   },
   confirmationBouttonAnnule: {
+    width: 100,
     backgroundColor: '#E57373',
   },
   confirmationButtonTexte: {

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView  } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Modal, FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { teach } from '../reducers/utilisateur';
 import { learn } from '../reducers/utilisateur';
@@ -9,17 +8,17 @@ export default function ActiviteScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.utilisateur.value);
   const [selectedOffre, setSelectedOffre] = useState([]);
-  const [offreOuvert, setOffreOuvert] = useState(false);
   const [selectedDemande, setSelectedDemande] = useState([]);
-  const [demandeOuvert, setDemandeOuvert] = useState(false);
   const [activitesDisponibles, setActivitesDisponibles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const [validationMessageOffre, setValidationMessageOffre] = useState('');
   const [validationMessageDemande, setValidationMessageDemande] = useState('');
 
+  const [modalOffreVisible, setModalOffreVisible] = useState(false);
+  const [modalDemandeVisible, setModalDemandeVisible] = useState(false);
+
   useEffect(() => {
-    
     fetch('http://192.168.1.109:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
@@ -77,170 +76,259 @@ export default function ActiviteScreen({ navigation }) {
       console.error('Erreur lors de la résolution des requêtes fetch', error);
     }
   };
-  
+
+  const renderActiviteItem = ({ item, selectedItems, setSelectedItems }) => {
+    const isSelected = selectedItems.includes(item);
+    return (
+      <TouchableOpacity
+        style={[styles.activiteItem, isSelected && styles.activiteItemSelected]}
+        onPress={() => {
+          if (isSelected) {
+            setSelectedItems(selectedItems.filter(activite => activite !== item));
+          } else {
+            setSelectedItems([...selectedItems, item]);
+          }
+        }}
+      >
+        <Text style={[styles.activiteText, isSelected && styles.activiteTextSelected]}>{item}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderModal = (visible, setVisible, selectedItems, setSelectedItems) => (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={() => {
+        if (selectedItems.length > 0) {
+          setVisible(false);
+        } else {
+          alert('Veuillez sélectionner au moins une activité avant de fermer.');
+        }
+      }}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <FlatList
+            data={activitesDisponibles}
+            keyExtractor={(item) => item}
+            renderItem={({ item }) =>
+              renderActiviteItem({ item, selectedItems, setSelectedItems })
+            }
+          />
+          {selectedItems.length > 0 && (
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setVisible(false)}
+            >
+              <Text style={styles.modalCloseButtonText}>Valider</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    </Modal>
+  );
 
   return (
-<SafeAreaView style={styles.safeAreaView}>
-          <View style={styles.container}>
-            <View style={styles.contentContainer}>
-              <Text style={styles.confirmationCreation}>Profil crée avec succés !</Text>
-              <Text style={styles.welcomeText}>Sélectionnez <Text style={styles.boldText}>au moins une</Text> catégorie dans laquelle vous aspirez à acquérir de nouvelles connaissances, ainsi qu'une catégorie où vous désirez apporter votre aide à autrui.</Text>
+    <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.container}>
+        <View style={styles.contentContainer}>
+          <Text style={styles.confirmationCreation}>Profil crée avec succès !</Text>
+          <Text style={styles.welcomeText}>Sélectionnez <Text style={styles.boldText}>au moins une</Text> catégorie dans laquelle vous aspirez à acquérir de nouvelles connaissances, ainsi qu'une catégorie où vous désirez apporter votre aide aux autres.</Text>
 
-              {isLoading && <Text style={styles.loadingMsg}>Chargement des activités en cours...</Text>}
-              {!isLoading && (
-                <View>
-                  <View style={styles.offreContainer}>
-                    <Text style={styles.activityLabel}>Que pouvez-vous enseigner ?</Text>
-                    <DropDownPicker
-                      items={activitesDisponibles.map(activite => ({
-                        label: activite,
-                        value: activite,
-                      }))}
-                      open={offreOuvert}
-                      setOpen={(isOpen) => {
-                        setOffreOuvert(isOpen);
-                        setDemandeOuvert(false); 
-                      }}
-                      value={selectedOffre}
-                      setValue={(value) => setSelectedOffre(value)}
-                      placeholder="Sélectionnez votre activité"
-                      showTickIcon={true}
-                      multiple={true}
-                      min={1}
-                      mode='BADGE'
-                      badgeColors={['#50B200', '#3A3960', '#C23B3B', '#4E98C2']}
-                      badgeDotColors={['white']}
-                      badgeTextStyle={{ color: 'white' }}
-                    />
-                    <Text style={styles.validationMessageOffre}>{validationMessageOffre}</Text>
-                  </View>
+          {isLoading && <Text style={styles.loadingMsg}>Chargement des activités en cours...</Text>}
+          {!isLoading && (
+            <View>
+              <View style={styles.offreContainer}>
+                <Text style={styles.activityLabel}>Que pouvez-vous enseigner ?</Text>
+                <TouchableOpacity style={styles.modalButton} onPress={() => setModalOffreVisible(true)}>
+                  <Text style={styles.modalButtonText}>{selectedOffre.length > 0 ? `${selectedOffre.length} activité(s) sélectionnée(s)` : 'Sélectionnez votre activité'}</Text>
+                </TouchableOpacity>
+                <Text style={styles.validationMessageOffre}>{validationMessageOffre}</Text>
+              </View>
 
-                  <View style={styles.demandeContainer}>
-                    <Text style={styles.activityLabel}>Que voulez-vous apprendre ?</Text>
-                    <DropDownPicker
-                      items={activitesDisponibles && activitesDisponibles.map(activite => ({
-                        label: activite,
-                        value: activite,
-                      }))}
-                      open={demandeOuvert}
-                      setOpen={(isOpen) => {
-                        setDemandeOuvert(isOpen);
-                        setOffreOuvert(false); 
-                      }}
-                      value={selectedDemande}
-                      setValue={(value) => setSelectedDemande(value)}
-                      placeholder="Sélectionnez votre activité"
-                      showTickIcon={true}
-                      multiple={true}
-                      min={1}
-                      mode='BADGE'
-                      badgeColors={['#50B200', '#3A3960', '#C23B3B', '#4E98C2']}
-                      badgeDotColors={['white']}
-                      badgeTextStyle={{ color: 'white' }}
-                    />
-                    <Text style={styles.validationMessageOffre}>{validationMessageDemande}</Text>
-                  </View>
+              <View style={styles.demandeContainer}>
+                <Text style={styles.activityLabel}>Que voulez-vous apprendre ?</Text>
+                <TouchableOpacity style={styles.modalButton} onPress={() => setModalDemandeVisible(true)}>
+                  <Text style={styles.modalButtonText}>{selectedDemande.length > 0 ? `${selectedDemande.length} activité(s) sélectionnée(s)` : 'Sélectionnez votre activité'}</Text>
+                </TouchableOpacity>
+                <Text style={styles.validationMessageDemande}>{validationMessageDemande}</Text>
+              </View>
 
-                  <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                      style={styles.registerButton}
-                      onPress={() => handleEnregistrer()}
-                    >
-                      <Text style={styles.registerButtonText}>Valider mes choix</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              )}
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.registerButton}
+                  onPress={() => {
+                    if (selectedOffre.length === 0 && selectedDemande.length === 0) {
+                      alert('Choisissez d\'abord vos activités.');
+                    } else {
+                      handleEnregistrer();
+                    }
+                  }}
+                >
+                  <Text style={styles.registerButtonText}>Vérifier vos informations</Text>
+                </TouchableOpacity>
+              </View>
+
+              {renderModal(modalOffreVisible, setModalOffreVisible, selectedOffre, setSelectedOffre)}
+              {renderModal(modalDemandeVisible, setModalDemandeVisible, selectedDemande, setSelectedDemande)}
             </View>
-          </View>
-  </SafeAreaView>
+          )}
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor:'#fff'
+    backgroundColor: '#f5f5f5', // Couleur de fond légèrement grise pour une apparence douce
   },
-
-  //-----------------------  TITRE  ---------------------------------
-
-  confirmationCreation: {
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  contentContainer: {
+    flex: 1,
     justifyContent: 'center',
-    marginTop: 35,
+    alignItems: 'center', // Alignement centré pour une mise en page plus équilibrée
+  },
+  confirmationCreation: {
+    fontSize: 50, // Augmentation de la taille de la police pour une meilleure lisibilité
+    fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 45,
+    marginBottom: 55, // Un peu plus d'espace pour aérer la mise en page
+    color: '#287777', // Couleur de texte cohérente avec les boutons
   },
   welcomeText: {
-    textAlign:'center',
-    margin:15,
-    marginTop:45
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 60,
+    color: '#333', // Couleur de texte plus douce pour améliorer la lisibilité
   },
   boldText: {
     fontWeight: 'bold',
+    color: '#287777', // Couleur qui correspond aux éléments interactifs
   },
-
-  //-----------------------  MESSAGE DE CHARGEMENT  ---------------------------------
-
   loadingMsg: {
-    justifyContent: 'center',
-    marginTop: 45,
     textAlign: 'center',
-    fontSize: 22,
-    padding: 10,
-    position: 'relative',
-  },
-
-  //-----------------------  DROP DOWN PICKER  ---------------------------------
-
-  offreContainer: {
-    marginLeft: 12,
-    marginTop: 45,
-    width: 350,
-    zIndex: 100,
-  },
-  demandeContainer: {
-    marginLeft: 12,
-    marginTop: 45,
-    width: 350,
-    zIndex: 99,
-  },
-  activityLabel: {
-    justifyContent: 'center',
-    textAlign: 'center',
-    fontSize: 22,
-    padding: 10,
-    position: 'relative',
-  },
-
-  //-----------------------  BOUTTON VALIDER  ---------------------------------
- 
-  buttonContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    fontSize: 16,
+    color: '#287777',
     marginBottom: 20,
   },
-  registerButton: {
-    height: 55,
-    width: 200,
-    borderRadius: 12,
-    marginTop: 70,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#287777',
+  offreContainer: {
+    marginBottom: 20,
+    width: '100%', // Prendre toute la largeur pour un alignement plus propre
   },
-  registerButtonText: {
-    color: '#fff',
-    fontSize: 23,
+  demandeContainer: {
+    marginBottom: 20,
+    width: '100%',
   },
-  validationMessageOffre: {
-    color: 'red', 
-    fontSize: 15,   
-    marginHorizontal:15,
+  activityLabel: {
     textAlign:'center',
-    margin:5
+    fontSize: 18, // Texte légèrement plus grand pour attirer l'attention sur les labels
+    marginBottom: 10,
+    color:'#1F5C5C',
+    fontWeight: '600', // Meilleure emphase sur les labels
+  },
+  modalButton: {
+    backgroundColor: '#287777',
+    paddingVertical: 20, // Augmenter la hauteur
+    paddingHorizontal: 30, // Augmenter la largeur
+    borderRadius: 8, 
+    alignItems: 'center',
+    width: '100%', 
+    maxWidth: 350, // Largeur maximale augmentée
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  modalButtonText: {
+    color: 'white',
+    fontSize: 18, // Taille de la police augmentée
+    fontWeight: 'bold',
   },
   
+  validationMessageOffre: {
+    color: 'red',
+    marginTop: 5,
+    fontSize: 14, // Taille réduite pour les messages d'erreur
+  },
+  validationMessageDemande: {
+    color: 'red',
+    marginTop: 5,
+    fontSize: 14,
+  },
+  buttonContainer: {
+    marginTop: 30, // Espacement plus grand pour distinguer clairement le bouton des autres éléments
+    width: '100%',
+  },
+  registerButton: {
+    backgroundColor: '#3CB371',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  registerButtonText: {
+    color: 'white',
+    fontSize: 18, // Augmentation de la taille de police pour le bouton d'action principal
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Arrière-plan transparent pour le modal
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 20,
+    width: '80%',
+    maxHeight: '60%', // Réduire la hauteur max du modal pour un meilleur focus
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  modalCloseButton: {
+    marginTop: 20,
+    backgroundColor: '#287777',
+    padding: 12, // Padding légèrement augmenté pour plus de confort
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  modalCloseButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  activiteItem: {
+    padding: 15,
+    backgroundColor: 'white',
+    marginVertical: 8,
+    borderRadius: 8, // Coins plus arrondis pour un design plus moderne
+    borderWidth: 1,
+    borderColor: '#ddd', // Légère bordure pour mieux distinguer les éléments
+  },
+  activiteItemSelected: {
+    backgroundColor: '#287777',
+  },
+  activiteText: {
+    color: '#333',
+  },
+  activiteTextSelected: {
+    color: 'white',
+    fontWeight: 'bold', // Mettre en évidence le texte des éléments sélectionnés
+  },
 });
-

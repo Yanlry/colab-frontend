@@ -428,11 +428,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
+    color:'#1F5C5C'
   },
   titreDescription: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
+    color:'#1F5C5C'
   },
   saisieDescription: {
     borderWidth: 1,
