@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Refres
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from 'react-redux';
 import { setDestinataireToken } from '../reducers/utilisateur';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function ContactScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -11,6 +12,22 @@ export default function ContactScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [recherche, setRecherche] = useState('');
   const [contactsFiltres, setContactsFiltres] = useState([]);
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
+
+  useEffect(() => {
+    const contactsFiltres = contacts.filter(rechercherContact);
+    setContactsFiltres(contactsFiltres);
+  }, [contacts, recherche]);
+
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchContacts();
+    }, [])
+  );
 
   const fetchContacts = () => {
     const requestBody = {
@@ -74,15 +91,7 @@ export default function ContactScreen({ navigation }) {
     setRefreshing(false);
   };
 
-  useEffect(() => {
-    fetchContacts();
-  }, []);
-
-  useEffect(() => {
-    const contactsFiltres = contacts.filter(rechercherContact);
-    setContactsFiltres(contactsFiltres);
-  }, [contacts, recherche]);
-
+ 
 
   return (
     <View style={styles.container}>
@@ -96,35 +105,40 @@ export default function ContactScreen({ navigation }) {
         <FontAwesome name='search' size={22} color={'grey'} style={styles.searchIcon}/>
       </View>
       <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
-      >
-        <View style={styles.content}>
-          {contactsFiltres.map((contact, index) => (
-            <View key={index} style={styles.contactContainer}>
-              <TouchableOpacity style={styles.contactItem}>
-                <FontAwesome name='user' size={35} color={'#287777'} />
-                <View style={styles.contactInfo}>
-                  <Text style={styles.contactName}>{contact.username}</Text>
-                  <Text style={styles.contactNumber}>{contact.phone}</Text>
-                </View>
-              </TouchableOpacity>
-              <View style={styles.actionButtons}>
-                <TouchableOpacity style={styles.phoneButton} onPress={() => appelerNumero(contact.phone)}>
-                  <FontAwesome name='phone' size={35} color={'#287777'} style={styles.telIcon}/>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.messageButton} onPress={() => ouvrirConversation(contact)}>
-                  <FontAwesome name='comment' size={33} color={'#287777'} />
-                </TouchableOpacity>
-              </View>
+  refreshControl={
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+    />
+  }
+>
+  <View style={styles.content}>
+    {contactsFiltres.length === 0 ? (
+      <Text style={styles.noContactsText}>Aucune collaboration actuellement</Text>
+    ) : (
+      contactsFiltres.map((contact, index) => (
+        <View key={index} style={styles.contactContainer}>
+          <TouchableOpacity style={styles.contactItem}>
+            <FontAwesome name='user' size={35} color={'#287777'} />
+            <View style={styles.contactInfo}>
+              <Text style={styles.contactName}>{contact.username}</Text>
+              <Text style={styles.contactNumber}>{contact.phone}</Text>
             </View>
-          ))}
+          </TouchableOpacity>
+          <View style={styles.actionButtons}>
+            <TouchableOpacity style={styles.phoneButton} onPress={() => appelerNumero(contact.phone)}>
+              <FontAwesome name='phone' size={35} color={'#287777'} style={styles.telIcon}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.messageButton} onPress={() => ouvrirConversation(contact)}>
+              <FontAwesome name='comment' size={33} color={'#287777'} />
+            </TouchableOpacity>
+          </View>
         </View>
-      </ScrollView>
+      ))
+    )}
+  </View>
+</ScrollView>
+
     </View>
   );
 }
@@ -160,7 +174,13 @@ const styles = StyleSheet.create({
     top: 10,
   },
 
- 
+  noContactsText: {
+    marginTop: 20,
+    fontSize: 16,
+    color: 'gray',
+    textAlign: 'center',
+  },
+
   contactContainer: {
     width: '90%',
     borderBottomWidth: 1,

@@ -53,32 +53,7 @@ const NotificationScreen = ({ navigation }) => {
       }
   }, [lastAcceptedMessage]);
 
-  const handleAccept = (message) => {
-    const acceptUrl = 'http://192.168.1.109:3000/propositionCollabs/propositions/accept';
-    const requestBody = {
-      token: user.token,
-      message: message,
-    };
-  
-    fetch(acceptUrl, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.result) {
-          setDeletedNotifications(prevDeletedNotifications => [...prevDeletedNotifications, message]);
-          setLastAcceptedMessage(prevAcceptedMessages => [...prevAcceptedMessages, message]);
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-  
+ 
   
   const handleReject = (message) => {
 
@@ -137,56 +112,77 @@ const NotificationScreen = ({ navigation }) => {
     fetchNotifications();
   }, [activeTab]);
 
-  const renderNotificationItem = ({ item, index }) => (
-    <View style={styles.notificationItem}>
-      <Text style={styles.notificationText}>{item.message}</Text>
-      <View style={styles.buttonsContainer}>
-        {deletedNotifications.includes(item.message) ? (
-          <TouchableOpacity
-            style={[styles.button, styles.deleteButton]}
-            onPress={() => {
-              handleDelete(item);
-            }}
-          >
-            <Text style={styles.choix}>Supprimer</Text>
-          </TouchableOpacity>
-        ) : (
-          <>
-            {console.log('Index:', index)}
-            {console.log('Last Accepted Message:', lastAcceptedMessage)}
+  const handleAccept = (message) => {
+    const acceptUrl = 'http://192.168.1.109:3000/propositionCollabs/propositions/accept';
+    const requestBody = {
+      token: user.token,
+      message: message,
+    };
   
-            {lastAcceptedMessage && lastAcceptedMessage.includes(item.message) ? (
-              <Text style={styles.choix}>En cours de traitement...</Text>
-            ) : (
-              <>
-                <TouchableOpacity
-                  style={[styles.button, styles.acceptButton]}
-                  onPress={() => handleAccept(item.message)}
-                >
-                  <Text style={styles.choix}>Accepté</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.button, styles.rejectButton]}
-                  onPress={() => handleReject(item.message)}
-                >
-                  <Text style={styles.choix}>Refuser</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </>
-        )}
+    fetch(acceptUrl, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.result) {
+          // Ajouter le message dans les notifications supprimées pour actualiser l'affichage
+          setDeletedNotifications((prev) => [...prev, message]);
+          setLastAcceptedMessage((prev) => [...prev, message]);
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+  
+  const renderNotificationItem = ({ item }) => {
+    const isAccepted = lastAcceptedMessage && lastAcceptedMessage.includes(item.message);
+    const isDeleted = deletedNotifications && deletedNotifications.includes(item.message);
+  
+    return (
+      <View style={[styles.notificationItem, styles.receivedNotification]}>
+        <Text style={styles.notificationText}>{item.message}</Text>
+        <View style={styles.buttonsContainer}>
+          {isAccepted || isDeleted ? (
+            <TouchableOpacity
+              style={[styles.button, styles.deleteButton]}
+              onPress={() => handleDelete(item)}
+            >
+              <Text style={styles.choix}>Supprimer de la liste</Text>
+            </TouchableOpacity>
+          ) : (
+            <>
+              <TouchableOpacity
+                style={[styles.button, styles.acceptButton]}
+                onPress={() => handleAccept(item.message)}
+              >
+                <Text style={styles.choix}>Accepté</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.rejectButton]}
+                onPress={() => handleReject(item.message)}
+              >
+                <Text style={styles.choix}>Refuser</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
       </View>
-    </View>
-  );
-  
+    );
+  };
   
   
   const renderDemandeMessageItem = ({ item, index }) => (
-    <View style={styles.demandeMessageContainer}>
+    <View style={[styles.notificationItem, styles.sentNotification]}>
       <Text style={styles.demandeMessageText}>{item.message}</Text>
       <View style={styles.separator} />
     </View>
   );
+  
 
   return (
     <View style={styles.container}>
@@ -287,27 +283,33 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 
-  //-----------------------  NOTIFICATIONS  ---------------------------------
-
-  content: {
-    flex: 1,
-    padding: 16,
-  },
-  listContainer: {
-    flex: 1,
-  },
   notificationItem: {
     marginBottom: 16,
     padding: 16,
-    borderRadius:12,
-    backgroundColor: '#E9E9E9',
+    borderRadius: 12,
+    backgroundColor: '#F3F3F3',
+    borderColor: '#E0E0E0',
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+  },
+  receivedNotification: {
+    backgroundColor: '#E9F7EF', // Couleur de fond pour les messages reçus
+  },
+  sentNotification: {
+    backgroundColor: '#FFF3CD', // Couleur de fond pour les messages envoyés
   },
   notificationText: {
     fontSize: 16,
+    color: '#333',
+    marginBottom: 8,
   },
   buttonsContainer: {
     flexDirection: 'row',
-    marginTop: 8,
+    justifyContent: 'space-between',
+    marginTop: 10,
   },
   button: {
     flex: 1,
@@ -315,29 +317,53 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 10,
     borderRadius: 12,
+    marginHorizontal: 5,
   },
   acceptButton: {
-    backgroundColor: '#349013',
-    marginRight: 10,
+    backgroundColor: '#4CAF50', // Vert pour accepter
   },
   rejectButton: {
-    backgroundColor: '#EC4C4C',
-    marginLeft: 15,
+    backgroundColor: '#F44336', // Rouge pour refuser
   },
-  choix:{
-    color:'white',
-    fontSize:18
+  deleteButton: {
+    backgroundColor: '#757575', // Gris pour supprimer
   },
+  pendingText: {
+    fontSize: 16,
+    color: '#FF9800', // Orange pour le texte en cours
+  },
+  choix: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  //-----------------------  DEMANDES ENVOYÉES  ---------------------------------
+
   demandeMessageContainer: {
     marginBottom: 10,
   },
   demandeMessageText: {
     fontSize: 16,
+    color: '#333',
+    fontWeight: '600',
   },
   separator: {
     height: 1,
-    backgroundColor: '#E0E0E0',
+    backgroundColor: '#D3D3D3',
     marginVertical: 10,
+  },
+
+  //-----------------------  TAB HEADER  ---------------------------------
+
+  activeTabButton: {   
+    height: 50,
+    backgroundColor: '#287777'
+  },
+  activeTabText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 
