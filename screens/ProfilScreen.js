@@ -61,7 +61,6 @@ export default function ProfilScreen({ navigation }) {
       });
   }, []);
   
-
   const renderLearnModal = () => {
     const currentCategoriesHeight = Math.min(learn.length * 50, 200); // Calculer la hauteur en fonction du nombre d'éléments sélectionnés
     const availableCategoriesHeight = Math.min(
@@ -240,58 +239,56 @@ export default function ProfilScreen({ navigation }) {
       .catch(error => console.error('Erreur lors de la mise à jour des activités "teach":', error));
   };  
   
-const handleBioChange = (text) => {
-  setBio(text);
-};
- 
-const handleValider = () => {
-  if (!bio.trim()) {
-    Alert.alert('Erreur', 'Veuillez entrer une bio avant de continuer.');
-    return;
-  }
-
-  const requestBody = {
-    token: user.token,
-    username: username,
-    phone: phone,
-    bio: bio,
+  const handleBioChange = (text) => {
+    setBio(text);
   };
+  
+  const handleValider = () => {
+    if (!bio.trim()) {
+      Alert.alert('Erreur', 'Veuillez entrer une bio avant de continuer.');
+      return;
+    }
 
-  fetch('http://192.168.1.109:3000/users/updateProfile', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(requestBody),
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.result) {
-        Alert.alert(
-          'Profil mis à jour avec succès!',
-          'Votre profil a été mis à jour.',
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                navigation.navigate('TabNavigator', { screen: 'Accueil' });
-              }
-              
-            },
-          ],
-          {
-            cancelable: false,
-          }
-        );
-      } else {
-        Alert.alert('Erreur', data.error || 'Erreur lors de la mise à jour du profil');
-      }
+    const requestBody = {
+      token: user.token,
+      username: username,
+      phone: phone,
+      bio: bio,
+    };
+
+    fetch('http://192.168.1.109:3000/users/updateProfile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
     })
-    .catch(error => {
-      console.error('Erreur lors de la mise à jour du profil:', error);
-      Alert.alert('Erreur', 'Une erreur est survenue lors de la mise à jour du profil');
-    });
-};
-
-
+      .then(response => response.json())
+      .then(data => {
+        if (data.result) {
+          Alert.alert(
+            'Profil mis à jour avec succès!',
+            'Votre profil a été mis à jour.',
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  navigation.navigate('TabNavigator', { screen: 'Accueil' });
+                }
+                
+              },
+            ],
+            {
+              cancelable: false,
+            }
+          );
+        } else {
+          Alert.alert('Erreur', data.error || 'Erreur lors de la mise à jour du profil');
+        }
+      })
+      .catch(error => {
+        console.error('Erreur lors de la mise à jour du profil:', error);
+        Alert.alert('Erreur', 'Une erreur est survenue lors de la mise à jour du profil');
+      });
+  };
 
 return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -421,44 +418,36 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 8,
     padding: 12,
-    width: 350,
+    marginBottom:20,
+    width: 330,
   },
   inputPhone: {
     borderWidth: 1,
     height: 50,
     borderColor: '#ccc',
     borderRadius: 8,
-    marginBottom: 10,
+    marginBottom:20,
+    
     padding: 12,
-    width: 350,
-  },
-  inputJP: {
-    borderWidth: 1,
-    height: 50,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    marginBottom: 10,
-    padding: 12,
-    width: 350,
-    justifyContent: 'center',
   },
   inputTextarea: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
     padding: 12,
-    marginBottom: 10,
+    marginBottom:20,
+    
     height: 120,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 55,
+    marginTop: 25,
     height: 50,
     
   },
   button: {
-    backgroundColor: '#287777',
+    backgroundColor: '#3CB371',
     borderRadius: 10,
     justifyContent: 'center',
     width: 200,
@@ -499,7 +488,6 @@ const styles = StyleSheet.create({
   },
   
   listLearnTeach:{
-    marginTop:50
   },
   activitySelected:{
     color:'white',
@@ -510,9 +498,10 @@ const styles = StyleSheet.create({
   },
   buttonList: {
     backgroundColor: '#287777',
-    paddingVertical: 15,
+    paddingVertical: 10,
     paddingHorizontal: 30,
     marginTop:10,
+    marginBottom:20,
     borderRadius: 8,
   },
 });

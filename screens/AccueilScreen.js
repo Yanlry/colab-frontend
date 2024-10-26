@@ -269,7 +269,7 @@ scroll:{
   //-----------------------  VIGNETTE D'ANNONCE  ---------------------------------
   
   annonce: {
-    height: 190,
+    minHeight: 190, 
     width: '96%',
     flexDirection: 'row',
     borderRadius: 12,
@@ -280,8 +280,11 @@ scroll:{
     shadowRadius: 3.84,
     elevation: 5,
     shadowOffset: { width: 0, height: 5 },
-    paddingHorizontal:15
+    paddingHorizontal: 15,
+    flexGrow: 1, 
+    paddingBottom: 10, 
   },
+  
   imageAnnonce: {
     justifyContent: 'center',
   },

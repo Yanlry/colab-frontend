@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   boutonEnvoyer: {
-    backgroundColor: '#38A8A8',
+    backgroundColor: '#3CB371',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',

@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30, // Augmenter la largeur
     borderRadius: 8, 
     alignItems: 'center',
-    width: '100%', 
+    width: 300,
     maxWidth: 350, // Largeur maximale augmentée
     alignSelf: 'center',
     shadowColor: '#000',
@@ -282,6 +282,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18, // Augmentation de la taille de police pour le bouton d'action principal
     fontWeight: 'bold',
+    width:270,
+    textAlign:'center',
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 5,
   },
   modalContainer: {
     flex: 1,
