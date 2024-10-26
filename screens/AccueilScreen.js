@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, Refres
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
+import { Image } from 'react-native';
 
 export default function AccueilScreen({ navigation }) {
 
@@ -13,6 +14,25 @@ export default function AccueilScreen({ navigation }) {
   const [enseignerDate, setEnseignerDate] = useState([]);
   const [apprendreDate, setApprendreDate] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+
+  
+const logos = {
+  Informatique: require('../assets/Informatique.png'),
+  Arts: require('../assets/Arts.png'),
+  Bricolage: require('../assets/Bricolage.png'),
+  Cuisine: require('../assets/Cuisine.png'),
+  Education: require('../assets/Education.png'),
+  Environnement: require('../assets/Environnement.png'),
+  Humanites: require('../assets/Humanites.png'),
+  Ingenierie: require('../assets/Ingenierie.png'),
+  Jeux: require('../assets/Jeux.png'),
+  Langues: require('../assets/Langues.png'),
+  Sante: require('../assets/Sante.png'),
+  Sciences: require('../assets/Sciences.png'),
+  Sports: require('../assets/Sports.png'),
+  Voyages: require('../assets/Voyages.png'),
+
+};
 
   const fetchData = () => {
     fetch(`http://192.168.1.109:3000/annonces/enseigner/${utilisateur.token}`)
@@ -64,9 +84,15 @@ export default function AccueilScreen({ navigation }) {
 
   const learn = enseignerDate.filter(annonce => afficherEnseigner && rechercherAnnonce(annonce)).map(annonce => (
     <TouchableOpacity key={annonce.token} style={styles.annonce} onPress={() => navigation.navigate('Annonce', { annonce: annonce })}>
-      <View style={styles.imageAnnonce}>
-        <Text style={styles.apercuImage}>Image </Text>
-      </View>
+       <View style={styles.imageContainer}>
+       <Text style={styles.textImageContainer}>Catégorie :</Text>      
+      <Image
+        source={logos[annonce.secteurActivite]} // Affiche le logo par défaut si le secteur n'est pas trouvé
+        style={styles.logoImage}
+      />
+       <Text style={styles.textImageContainer}>{annonce.secteurActivite}</Text>      
+
+    </View>
         <View style={styles.mesCritere}>
       <View style={styles.apercuAnnonce}>
         <Text style={styles.apercuAnnonceTitre}>
@@ -101,8 +127,13 @@ export default function AccueilScreen({ navigation }) {
 
   const teach = apprendreDate.filter(annonce => !afficherEnseigner && rechercherAnnonce(annonce)).map(annonce => (
     <TouchableOpacity key={annonce.token} style={styles.annonce} onPress={() => navigation.navigate('Annonce', { annonce: annonce })}>
-      <View style={styles.imageAnnonce}>
-        <Text style={styles.apercuImage}>Image </Text>
+        <View style={styles.imageContainer}>
+       <Text style={styles.textImageContainer}>Catégorie :</Text>      
+      <Image
+        source={logos[annonce.secteurActivite]} // Affiche le logo par défaut si le secteur n'est pas trouvé
+        style={styles.logoImage}
+      />
+       <Text style={styles.textImageContainer}>{annonce.secteurActivite}</Text>      
       </View>
         <View style={styles.mesCritere}>
       <View style={styles.apercuAnnonce}>
@@ -280,63 +311,73 @@ scroll:{
     shadowRadius: 3.84,
     elevation: 5,
     shadowOffset: { width: 0, height: 5 },
-    paddingHorizontal: 15,
-    flexGrow: 1, 
-    paddingBottom: 10, 
+    paddingRight: 5,
+    paddingLeft:15,
+    flexGrow: 1,
+    paddingBottom: 10,
   },
-  
-  imageAnnonce: {
+  textImageContainer: {
+    fontWeight: 'bold',
+    color: '#1F5C5C',
+  },
+  mesCritere: {
+    paddingLeft: 15,
+    flex: 1, // Permet d'occuper tout l’espace vertical disponible
+    justifyContent: 'space-between', // Sépare le contenu principal et la date
+  },
+  imageContainer: {
     justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 15,
+    borderRightWidth: 1,
+    borderColor: '#ccc',
+    paddingRight: 10,
   },
-  apercuImage: {
-    borderWidth: 1,
-    borderColor:'#287777',
-    height: 150,
-    paddingTop: 63,
-    borderRadius: 12,
-    width: 99,
-    textAlign: 'center',
-    marginRight: 10,
+  logoImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 15,
+    resizeMode: 'contain',
   },
   apercuAnnonce: {
     width: '85%',
+    flex: 1, // Permet de remplir l'espace vertical
   },
   apercuAnnonceTitre: {
-    fontWeight:'bold',
-    paddingRight:5,
+    fontWeight: 'bold',
+    paddingRight: 10,
+    paddingTop: 10,
     fontSize: 18,
-    color:'#1F5C5C',
+    color: '#1F5C5C',
   },
   apercuAnnonceDescription: {
     fontSize: 13,
   },
   apercuAnnonceExperience: {
     fontSize: 12,
-    fontWeight:'bold',
-    color:'#1F5C5C',
-
+    fontWeight: 'bold',
+    color: '#1F5C5C',
   },
   apercuAnnonceTempsMax: {
     fontSize: 12,
     fontWeight: 'bold',
-    color:'#1F5C5C',
-
+    color: '#1F5C5C',
   },
   apercuAnnonceDate: {
     fontSize: 12,
-    marginTop:15,
-
+    marginTop: 15,
+    alignSelf: 'flex-start', // Aligne la date en bas de la vignette
   },
   containerCritere: {
-    flexDirection:'row'
+    flexDirection: 'row',
   },
-  critereText:{
-    fontSize:12,
+  critereText: {
+    fontSize: 12,
   },
- 
-  separator:{
-    marginBottom:50,
+  separator: {
+    marginBottom: 70,
   },
+  
 
   //-----------------------  AUTRE  ---------------------------------
   

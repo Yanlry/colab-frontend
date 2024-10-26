@@ -381,17 +381,20 @@ const renderTempsModal = () => (
               <View style={styles.separator}></View>
 
               <Modal
-                animationType="slide"
-                transparent={false}
+                animationType="fade"
+                transparent={true}
                 visible={afficherMessage}
                 onRequestClose={() => {}}>
-                <View style={styles.modalContainerRegister}>
-                  <Text style={styles.modalTextRegister}>Votre annonce a bien été enregistrée !</Text>
-                  <TouchableOpacity style={styles.modalButtonRegister} onPress={cacherMessage}>
-                    <Text style={styles.modalButtonTextRegister}>OK</Text>
-                  </TouchableOpacity>
+                <View style={styles.modalOverlay}>
+                  <View style={styles.modalContainerRegister}>
+                    <Text style={styles.modalTextRegister}>Votre annonce a bien été enregistrée !</Text>
+                    <TouchableOpacity style={styles.modalButtonRegister} onPress={cacherMessage}>
+                      <Text style={styles.modalButtonTextRegister}>OK</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </Modal>
+
             </View>
           </ScrollView>
         </TouchableWithoutFeedback>
@@ -516,26 +519,43 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 20,
   },
-  modalContainerRegister: {
+  modalOverlay: {
     flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fond semi-transparent
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',  // Couleur de fond du modal
+  },
+  modalContainerRegister: {
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
   modalTextRegister: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#333',
     marginBottom: 20,
   },
   modalButtonRegister: {
     backgroundColor: '#28A745',
-    padding: 15,
-    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    width: '50%',
+    alignItems: 'center',
   },
   modalButtonTextRegister: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   villeContainer: {
     flexDirection: 'row',
