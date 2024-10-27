@@ -11,7 +11,7 @@ import InscriptionScreen from './screens/InscriptionScreen';
 import AccueilScreen from './screens/AccueilScreen';
 import ContactScreen from './screens/ContactScreen';
 import PublierScreen from './screens/PublierScreen';
-import MessagerieScreen from './screens/MessagerieScreen';
+import MapScreen from './screens/MapScreen';
 import FavorisScreen from './screens/FavorisScreen';
 import NotificationScreen from './screens/NotificationScreen';
 import ProfilScreen from './screens/ProfilScreen'
@@ -21,6 +21,7 @@ import UtilisateurScreen from './screens/UtilisateurScreen'
 import MesAnnoncesScreen from './screens/MesAnnoncesScreen'
 import MonAnnonceScreen from './screens/MonAnnonceScreen';
 import ConversationScreen from './screens/ConversationScreen'
+import AnnonceMapScreen from './screens/AnnonceMapScreen';
 
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -68,8 +69,8 @@ const TabNavigator = ({ navigation }) => {
             iconName = 'address-book';
           } else if (route.name === 'Publier') {
             iconName = 'plus';
-          } else if (route.name === 'Messagerie') {
-            iconName = 'comments';
+          } else if (route.name === 'Map') {
+            iconName = 'map';
           } else if (route.name === 'Favoris') {
             iconName = 'heart';
           }
@@ -91,7 +92,7 @@ const TabNavigator = ({ navigation }) => {
       <Tab.Screen name="Accueil" component={AccueilScreen} />
       <Tab.Screen name="Contact" component={ContactScreen} />
       <Tab.Screen name="Publier" component={PublierScreen} />
-      <Tab.Screen name="Messagerie" component={MessagerieScreen} />
+      <Tab.Screen name="Map" component={MapScreen} />
       <Tab.Screen name="Favoris" component={FavorisScreen} />
     </Tab.Navigator>
   );
@@ -109,6 +110,7 @@ export default function App() {
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
           <Stack.Screen name="Accueil" component={AccueilScreen} />
           <Stack.Screen name="Annonce" component={AnnonceScreen} />
+          <Stack.Screen name="AnnonceMap" component={AnnonceMapScreen} />
           <Stack.Screen name="Notification" component={NotificationScreen} />
           <Stack.Screen name="Utilisateur" component={UtilisateurScreen} />
           <Stack.Screen name="Profil" component={ProfilScreen} />
