@@ -14,20 +14,20 @@ import PublierScreen from './screens/PublierScreen';
 import MapScreen from './screens/MapScreen';
 import FavorisScreen from './screens/FavorisScreen';
 import NotificationScreen from './screens/NotificationScreen';
-import ProfilScreen from './screens/ProfilScreen'
+import ProfilScreen from './screens/ProfilScreen';
 import ActiviteScreen from './screens/ActiviteScreen';
 import AnnonceScreen from './screens/AnnonceScreen';
-import UtilisateurScreen from './screens/UtilisateurScreen'
-import MesAnnoncesScreen from './screens/MesAnnoncesScreen'
+import UtilisateurScreen from './screens/UtilisateurScreen';
+import MesAnnoncesScreen from './screens/MesAnnoncesScreen';
 import MonAnnonceScreen from './screens/MonAnnonceScreen';
-import ConversationScreen from './screens/ConversationScreen'
+import ConversationScreen from './screens/ConversationScreen';
 import AnnonceMapScreen from './screens/AnnonceMapScreen';
 
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import utilisateur from './reducers/utilisateur';
 
-LogBox.ignoreLogs(['Warning: ...']); 
+LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
 
 const store = configureStore({
@@ -39,7 +39,6 @@ const Tab = createBottomTabNavigator();
 
 const CustomHeader = ({ navigation }) => {
   return (
-
     <View style={styles.navBar}>
       <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
         <FontAwesome style={styles.cloche} name="bell" size={28} color="#287777" />
@@ -58,10 +57,11 @@ const TabNavigator = ({ navigation }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        gestureEnabled: false, // Désactive le swipe back
         tabBarIcon: ({ focused }) => {
           let iconName = '';
-          let iconSize = focused ? 40 : 28; // Increase size when active
-          let backgroundColor = focused ? '#fff' : 'transparent'; // Background effect for active icon
+          let iconSize = focused ? 40 : 28;
+          let backgroundColor = focused ? '#fff' : 'transparent';
 
           if (route.name === 'Accueil') {
             iconName = 'home';
@@ -78,14 +78,14 @@ const TabNavigator = ({ navigation }) => {
           return (
             <View style={[
               styles.tabIconContainer,
-              focused && styles.activeTabContainer // Change style if focused
+              focused && styles.activeTabContainer
             ]}>
               <FontAwesome name={iconName} size={iconSize} color={focused ? '#287777' : '#FFFFFF'} />
             </View>
           );
         },
-        tabBarStyle: styles.tabBar, // Style for the tab bar
-        tabBarShowLabel: false, // Hide tab labels
+        tabBarStyle: styles.tabBar,
+        tabBarShowLabel: false,
         header: props => <CustomHeader {...props} navigation={navigation} />,
       })}
     >
@@ -98,12 +98,11 @@ const TabNavigator = ({ navigation }) => {
   );
 };
 
-
 export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
           <Stack.Screen name="Connexion" component={ConnexionScreen} />
           <Stack.Screen name="Inscription" component={InscriptionScreen} />
           <Stack.Screen name="Activite" component={ActiviteScreen} />
@@ -124,15 +123,14 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  // NavBar
   navBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 30,
-    paddingTop: 45,
+    paddingTop: 40,
     marginTop: 5,
     height: 95,
-    backgroundColor: '#fff',
+    backgroundColor: '#e5f6f6',
   },
   logo: {
     height: 48,
@@ -145,14 +143,12 @@ const styles = StyleSheet.create({
   iconeUser: {
     marginTop: 5
   },
-
-  // Tab Bar
   tabBar: {
     position: 'absolute',
     backgroundColor: '#287777',
-    paddingTop:20,
-    paddingRight:30,
-    paddingLeft:10,
+    paddingTop: 20,
+    paddingRight: 30,
+    paddingLeft: 10,
     height: 90,
     width: 400,
     shadowColor: '#000',
@@ -161,18 +157,16 @@ const styles = StyleSheet.create({
     shadowRadius: 3.5,
     elevation: 5,
   },
-
-  // Tab Icon
   tabIconContainer: {
     width: 70,
     height: 70,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 35,
-    backgroundColor: 'transparent', // Default background
+    backgroundColor: 'transparent',
   },
   activeTabContainer: {
-    backgroundColor: '#fff', // Active tab background color
+    backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.2,

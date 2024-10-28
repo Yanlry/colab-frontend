@@ -134,8 +134,8 @@ export default function ActiviteScreen({ navigation }) {
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
         <View style={styles.contentContainer}>
-          <Text style={styles.confirmationCreation}>Profil crée avec succès !</Text>
-          <Text style={styles.welcomeText}>Sélectionnez <Text style={styles.boldText}>au moins une</Text> catégorie dans laquelle vous aspirez à acquérir de nouvelles connaissances, ainsi qu'une catégorie où vous désirez apporter votre aide aux autres.</Text>
+          <Text style={styles.confirmationCreation}>On y est presque !</Text>
+          <Text style={styles.welcomeText}> Choisissez <Text style={styles.boldText}>au moins une</Text> compétence à apprendre et <Text style={styles.boldText}>au moins une</Text> autre à partager pour faire grandir la communauté !</Text>
 
           {isLoading && <Text style={styles.loadingMsg}>Chargement des activités en cours...</Text>}
           {!isLoading && (
@@ -167,7 +167,7 @@ export default function ActiviteScreen({ navigation }) {
                     }
                   }}
                 >
-                  <Text style={styles.registerButtonText}>Vérifier vos informations</Text>
+                  <Text style={styles.registerButtonText}>Valider mes choix</Text>
                 </TouchableOpacity>
               </View>
 
@@ -180,10 +180,11 @@ export default function ActiviteScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#f5f5f5', // Couleur de fond légèrement grise pour une apparence douce
+    backgroundColor: '#e5f6f6', // Couleur de fond légèrement grise pour une apparence douce
   },
   container: {
     flex: 1,
@@ -195,16 +196,16 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Alignement centré pour une mise en page plus équilibrée
   },
   confirmationCreation: {
-    fontSize: 50, // Augmentation de la taille de la police pour une meilleure lisibilité
+    fontSize: 60, // Augmentation de la taille de la police pour une meilleure lisibilité
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 55, // Un peu plus d'espace pour aérer la mise en page
+    marginBottom: 65, // Un peu plus d'espace pour aérer la mise en page
     color: '#287777', // Couleur de texte cohérente avec les boutons
   },
   welcomeText: {
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 60,
+    marginBottom: 40,
     color: '#333', // Couleur de texte plus douce pour améliorer la lisibilité
   },
   boldText: {
@@ -236,7 +237,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#287777',
     paddingVertical: 20, // Augmenter la hauteur
     paddingHorizontal: 30, // Augmenter la largeur
-    borderRadius: 8, 
+    borderRadius: 30, 
     alignItems: 'center',
     width: 300,
     maxWidth: 350, // Largeur maximale augmentée
@@ -264,19 +265,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   buttonContainer: {
-    marginTop: 30, // Espacement plus grand pour distinguer clairement le bouton des autres éléments
-    width: '100%',
+    marginTop: 20, 
+    alignItems:'center',
   },
   registerButton: {
     backgroundColor: '#3CB371',
+    marginTop:40,
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 30,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
     elevation: 5,
+    width:'80%'
   },
   registerButtonText: {
     color: 'white',
@@ -299,7 +302,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
-    borderRadius: 8,
+    borderRadius: 20,
     padding: 20,
     width: '80%',
     maxHeight: '60%', // Réduire la hauteur max du modal pour un meilleur focus
@@ -311,9 +314,9 @@ const styles = StyleSheet.create({
   },
   modalCloseButton: {
     marginTop: 20,
-    backgroundColor: '#287777',
+    backgroundColor: '#3CB371',
     padding: 12, // Padding légèrement augmenté pour plus de confort
-    borderRadius: 8,
+    borderRadius: 30,
     alignItems: 'center',
   },
   modalCloseButtonText: {
@@ -324,10 +327,11 @@ const styles = StyleSheet.create({
   activiteItem: {
     padding: 15,
     backgroundColor: 'white',
-    marginVertical: 8,
-    borderRadius: 8, // Coins plus arrondis pour un design plus moderne
+    marginVertical: 4,
+    borderRadius: 30, // Coins plus arrondis pour un design plus moderne
     borderWidth: 1,
-    borderColor: '#ddd', // Légère bordure pour mieux distinguer les éléments
+    borderColor: '#ccc', // Légère bordure pour mieux distinguer les éléments
+    alignItems:'center'
   },
   activiteItemSelected: {
     backgroundColor: '#287777',

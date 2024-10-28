@@ -57,15 +57,16 @@ export default function GeoAPIGouvAutocomplete({ onCitySelected }) {
 
 const styles = StyleSheet.create({
   saisie: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 30,
+    padding: 20,
     marginBottom: 10,
   },
   cityItem: {
-    padding: 10,
+    padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: 'black',
+    backgroundColor:'white'
+
   },
 });

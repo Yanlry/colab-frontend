@@ -146,7 +146,7 @@ export default function ContactScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#e5f6f6',
     alignItems: 'center',
   },
   content: {
@@ -158,24 +158,25 @@ const styles = StyleSheet.create({
   rechercher: {
     width: '90%', 
     justifyContent: 'center',
-    marginTop: 15,
+    marginTop: 10,
   },
   rechercheText: {
-    borderWidth: 1,
-    borderColor:'#287777',
-    height: 40,
+    backgroundColor:'white',
+    height: 50,
     fontSize: 15,
     paddingLeft: 30,
-    borderRadius: 12,
+    borderRadius: 30,
+    marginTop: 10,
+
   },
   searchIcon: {
     position: 'absolute',
-    right: 10,
-    top: 10,
+    right: 20,
+    top: 22,
   },
 
   noContactsText: {
-    marginTop: 20,
+    marginTop: 30,
     fontSize: 16,
     color: 'gray',
     textAlign: 'center',

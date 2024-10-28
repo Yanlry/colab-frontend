@@ -79,7 +79,7 @@ export default function UtilisateurScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor:'#fff',
+    backgroundColor:'#e5f6f6',
     alignItems:'center'
   },
 
@@ -91,18 +91,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   icon: {
-    marginLeft: '5%',
-    marginRight:'20%',
+    paddingLeft:20
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#236C6C'
+    color: '#236C6C',
+    paddingLeft:65
+
   },
 
   //------------------- MENU ---------------------
   menuContainer: {
-    borderRadius: 12,
     height: 700,
     width: 350,
     marginLeft:13,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     marginTop:50,
   },
   mesMenu: {
-    borderRadius: 12,
+    borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
     width: 250,
@@ -119,13 +119,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#287777'
   },
   menuSupprimer: {
-    borderRadius: 12,
+    borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
     width: 250,
     height: 60,
     margin:10,
-    backgroundColor: '#C14A44'
+    backgroundColor: '#FF6347'
   },
   mesMenuTitre: {
     fontSize:18,
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   confirmationBouttonAnnule: {
     width: 100,
-    backgroundColor: '#E57373',
+    backgroundColor: '#FF6347',
   },
   confirmationButtonTexte: {
     color: 'white',

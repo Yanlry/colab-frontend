@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, SafeAreaView, Modal, FlatList } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, SafeAreaView, Modal, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import GeoAPIGouvAutocomplete from './GeoAPIGouvAutocomplete';
@@ -28,6 +28,7 @@ export default function PublierScreen({ navigation }) {
   const [isTempsModalVisible, setIsTempsModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const scrollViewRef = useRef(null);
+  const [programme, setProgramme] = useState('');
 
   useEffect(() => {
     fetch('http://192.168.1.109:3000/profiles/activites')
@@ -117,6 +118,23 @@ const envoyerDonnee = () => {
     });
 };
 
+const confirmResetForm = () => {
+  Alert.alert(
+    "Confirmation",
+    "Voulez-vous effacer tous les champs ?",
+    [
+      {
+        text: "Annuler",
+        style: "cancel"
+      },
+      {
+        text: "Oui",
+        onPress: resetForm // Appelle resetForm si l'utilisateur confirme
+      }
+    ],
+    { cancelable: true }
+  );
+};
 const resetForm = () => {
   setType('');
   setTitle('');
@@ -147,7 +165,7 @@ const renderTypeModal = () => (
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <FlatList
-            data={[{ label: 'Apprendre', value: 'Apprendre' }, { label: 'Enseigner', value: 'Enseigner' }]}
+            data={[{ label: 'Je veux apprendre', value: 'Apprendre' }, { label: 'Je veux enseigner', value: 'Enseigner' }]}
             keyExtractor={(item) => item.value}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => { setType(item.value); setIsTypeModalVisible(false); }} style={styles.modalItem}>
@@ -283,25 +301,48 @@ const renderTempsModal = () => (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="height" keyboardVerticalOffset={90}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView ref={scrollViewRef} nestedScrollEnabled={true} contentContainerStyle={styles.scrollContent}>
-            <View style={styles.content}>
+            <View style={styles.content}>  
               
+              <View style={styles.titleContainer}>
+              <Text style={styles.titleText}>Publier une annonce</Text>
+            </View>
+
+            <Text style={styles.titreCritere}>Type d'annonce</Text>
+              <TouchableOpacity style={styles.saisie} onPress={() => setIsTypeModalVisible(true)}>
+                <Text style={type ? styles.selectedText : styles.placeholderText}>
+                  {type || "Souhaitez vous apprendre ou enseigner ?"}
+                </Text>
+              </TouchableOpacity>
+
+             
               <Text style={styles.titreCritere}>Titre</Text>
               <TextInput
                 style={styles.saisie}
-                placeholder="Titre de l'annonce"
+                placeholder="Pourquoi êtes vous ici ?"
                 placeholderTextColor="#8E8E93"
                 value={title}
                 onChangeText={(text) => setTitle(text)}
               />
-      
-              <Text style={styles.titreDescription}>Description</Text>
-              <TextInput
-                style={styles.saisieDescription}
-                placeholder="Description de l'annonce"
-                value={description}
-                onChangeText={(text) => setDescription(text)}
-                multiline
-               />
+              
+              <View style={styles.descriptionContainer}>
+                <Text style={styles.titreDescription}>Description</Text>
+                <TextInput
+                  style={styles.saisieDescription}
+                  placeholder="Votre objectif, vos attentes, votre expérience, etc..."
+                  value={description}
+                  onChangeText={(text) => setDescription(text)}
+                  multiline
+                />
+
+                <Text style={styles.titreProgramme}>Programme (optionnel)</Text>
+                <TextInput
+                  style={styles.saisieProgramme}
+                  placeholder="Détaillez le programme si vous le souhaitez"
+                  value={programme}
+                  onChangeText={(text) => setProgramme(text)}
+                  multiline
+                />
+              </View>
 
               <View style={{ marginBottom: 10 }}>
                 <Text style={styles.titreCritere}>Localisation</Text>
@@ -309,11 +350,13 @@ const renderTempsModal = () => (
                 {ville && (
                   <View style={styles.villeContainer}>
                     <Text style={styles.selectedCity}>
-                      Ville sélectionnée : <Text style={styles.selectedCity2}>{ville}</Text>
+                      <Text style={styles.selectedCity2}>{ville}</Text>
                     </Text>
+                    <View  style={styles.supprimerContainer}>
                     <TouchableOpacity onPress={supprimerVille}>
                       <Text style={styles.supprimerVille}>Supprimer</Text>
                     </TouchableOpacity>
+                    </View>
                   </View>
                 )}
                 {latitude && longitude && (
@@ -339,41 +382,37 @@ const renderTempsModal = () => (
                 )}
               </View>
 
-              <Text style={styles.titreCritere}>Type d'annonce</Text>
-              <TouchableOpacity style={styles.saisie} onPress={() => setIsTypeModalVisible(true)}>
-                <Text style={type ? styles.selectedText : styles.placeholderText}>
-                  {type || "Souhaitez apprendre ou enseigner ?"}
-                </Text>
-              </TouchableOpacity>
-
-              <Text style={styles.titreCritere}>Secteur d'activités</Text>
+              <Text style={styles.titreCritere}>Catégorie</Text>
                 <TouchableOpacity style={styles.saisie} onPress={() => setIsSecteurModalVisible(true)}>
                   <Text style={secteurActivite.length > 0 ? styles.selectedText : styles.placeholderText}>
-                    {secteurActivite.length > 0 ? secteurActivite[0] : "Sélectionnez votre activité"}
+                    {secteurActivite.length > 0 ? secteurActivite[0] : "Quel est le domaine concerné ?"}
                   </Text>
                 </TouchableOpacity>
               
               <Text style={styles.titreCritere}>Expérience</Text>
                 <TouchableOpacity style={styles.saisie} onPress={() => setIsExperienceModalVisible(true)}>
                   <Text style={experience ? styles.selectedText : styles.placeholderText}>
-                    {experience || "Sélectionnez votre niveau dans le domaine"}
+                    {experience || "Quel est votre niveau dans le domaine"}
                   </Text>
                 </TouchableOpacity>
 
               <Text style={styles.titreCritere}>Disponibilités</Text>
                 <TouchableOpacity style={styles.saisie} onPress={() => setIsDispoModalVisible(true)}>
                   <Text style={disponibilite.length > 0 ? styles.selectedText : styles.placeholderText}>
-                    {disponibilite.length > 0 ? disponibilite.join(', ') : "Choisissez entre : Semaine, Soir, ou Week-end"}
+                    {disponibilite.length > 0 ? disponibilite.join(', ') : "Quand êtes vous disponible ?"}
                   </Text>
                 </TouchableOpacity>
 
               <Text style={styles.titreCritere}>Temps moyen des séances</Text>
                 <TouchableOpacity style={styles.saisie} onPress={() => setIsTempsModalVisible(true)}>
                   <Text style={tempsMax ? styles.selectedText : styles.placeholderText}>
-                    {tempsMax || "Temps moyen des séances ?"}
+                    {tempsMax || "Choisissez le temps idéal pour vous"}
                   </Text>
                 </TouchableOpacity>
 
+                <TouchableOpacity style={styles.boutonVider} onPress={confirmResetForm}>
+                  <Text style={styles.textVider}>Vider les champs</Text>
+                </TouchableOpacity>
                 {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
               <TouchableOpacity style={styles.boutonEnvoyer} onPress={envoyerDonnee}>
                 <Text style={styles.textEnvoyer}>Publier l'annonce</Text>
@@ -411,41 +450,69 @@ const renderTempsModal = () => (
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#e5f6f6',
   },
   content: {
-    paddingVertical: 20,
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 50,
+
   },
   saisie: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
+    backgroundColor:'white',
+    borderRadius: 30,
+    padding: 20,
     marginBottom: 20,
   },
+  titleContainer: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  titleText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color:'#287777'
+  },
+
   titreCritere: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
-    color:'#1F5C5C'
+    color:'#1F5C5C',
+    textAlign:'center'
+  },
+  descriptionContainer: {
+    backgroundColor: 'white',
+    borderRadius: 30,
+    padding: 20,
+    marginBottom: 20,
   },
   titreDescription: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
-    color:'#1F5C5C'
+    color: '#1F5C5C',
+    textAlign: 'left',
   },
   saisieDescription: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
+    borderRadius: 10,
     padding: 10,
     height: 100,
-    marginBottom: 20,
+    marginBottom: 10,
+    textAlignVertical: 'top',
+  },
+  titreProgramme: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginTop: 10,
+    color: '#1F5C5C',
+    textAlign: 'left',
+  },
+  saisieProgramme: {
+    borderRadius: 10,
+    padding: 10,
+    height: 40,
     textAlignVertical: 'top',
   },
   boutonEnvoyer: {
@@ -487,7 +554,19 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 14,
   },
-  
+  boutonVider: {
+    backgroundColor: '#FF6347', // Couleur rouge/orange pour différencier du bouton "Publier"
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
+    marginTop:25,
+  },
+  textVider: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -496,7 +575,7 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: 'white',
     marginHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 30,
     padding: 20,
     width: '80%', // Réduit la largeur du modal
     maxHeight: '50%', // Réduit la hauteur maximale du modal
@@ -504,15 +583,18 @@ const styles = StyleSheet.create({
   },
   modalItem: {
     padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderWidth: 1,
+    marginVertical:2,
+    borderColor: '#ddd',
+    borderRadius:30,
+    alignItems:'center'
   },
   modalClose: {
     marginTop: 20,
     padding: 10,
     backgroundColor: '#28A745',
     alignItems: 'center',
-    borderRadius: 5,
+    borderRadius: 30,
   },
   map: {
     height: 300, // Hauteur de la carte
@@ -561,16 +643,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+    backgroundColor: 'white',
+    borderRadius: 30, // Bord arrondi
+  },
+  supprimerContainer: {
+    backgroundColor: '#FF6347', // Couleur de fond du bouton "Supprimer"
+    borderRadius: 15,           // Bord arrondi pour le bouton
+    paddingVertical: 5,         // Ajustez le padding selon la taille souhaitée
+    paddingHorizontal: 10,
+  },
+  supprimerVille: {
+    color: 'white', // Couleur du texte
+    fontWeight: 'bold', // Rendre le texte plus visible
+    textAlign: 'center',
   },
   selectedCity: {
+    padding:20,
     fontSize: 16,
     marginRight: 10,
   },
   selectedCity2: {
+    fontSize: 20,
     color: 'blue',
-  },
-  supprimerVille: {
-    color: 'red',
   },
   separator:{
     marginBottom:30,

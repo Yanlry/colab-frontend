@@ -127,7 +127,7 @@ export default function AnnonceScreen({ route, navigation }) {
                 <FontAwesome
                   name={enFavori ? "heart" : "heart-o"}
                   size={30}
-                  color={enFavori ? "#C70039" : "#287777"}
+                  color={enFavori ? "#FF6347" : "#287777"}
                 />
               </TouchableOpacity>
             </View>
@@ -248,7 +248,8 @@ export default function AnnonceScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#e5f6f6',
+
   },
   container: {
     flex: 1,
@@ -271,30 +272,35 @@ const styles = StyleSheet.create({
   annonceComplete: {
     flex: 1,
     marginTop: 15,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: '#e5f6f6',
+
   },
 
   // En Tete (Title and Favorite)
   annonceEnTete: {
     flexDirection: "row",
     paddingHorizontal: 20,
+    borderRadius: 20,
+    padding:20,
+    backgroundColor: "#fff",
+    marginHorizontal: 10,
   },
   annonceTitre: {
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: "bold",
     width: "90%",
-    marginTop: 5,
+   
   },
   annonceFavoris: {
     justifyContent: "center",
+    backgroundColor: "#fff",
+
   },
 
   // Annonce Type
   annonceType: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    padding: 15,
+    borderRadius: 20,
+    padding: 20,
     marginTop: 15,
     marginHorizontal: 10,
     backgroundColor: "#fff",
@@ -310,10 +316,8 @@ const styles = StyleSheet.create({
 
   // Annonce Description
   annonceDescription: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    padding: 15,
+    borderRadius: 20,
+    padding: 20,
     marginTop: 10,
     marginHorizontal: 10,
     backgroundColor: "#fff",
@@ -335,16 +339,13 @@ const styles = StyleSheet.create({
   // Criteria
   annonceCritere: {
     marginTop: 10,
-    paddingTop: 15,
-    paddingHorizontal: 15,
-    borderRadius: 10,
+    padding:20,
+    borderRadius: 20,
     backgroundColor: "#fff",
     marginHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
   },
   critereContainer: {
-    marginBottom: 10,
+    marginBottom: 15,
   },
   titreEtLogo: {
     flexDirection: "row",
@@ -375,7 +376,7 @@ const styles = StyleSheet.create({
   mapContainer: {
     marginTop: 10,
     marginHorizontal: 10,
-    borderRadius: 10,
+    borderRadius: 20,
     overflow: "hidden",
     height: 200,
   },
@@ -390,11 +391,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 10,
     marginHorizontal: 10,
-    padding: 15,
-    borderRadius: 10,
+    padding: 20,
+    borderRadius: 20,
     backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#ccc",
   },
   textUtilisateur: {
     fontSize: 18,
@@ -402,7 +401,7 @@ const styles = StyleSheet.create({
 
   // Report Button
   signalez: {
-    borderRadius: 10,
+    borderRadius: 30,
     marginHorizontal: 10,
     marginTop: 10,
     marginBottom: 10,

@@ -184,7 +184,8 @@ const NotificationScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f8f9fa" },
+  container: { flex: 1,     backgroundColor: '#e5f6f6',
+  },
   header: { flexDirection: "row", alignItems: "center", padding: 16, paddingLeft: 35, paddingTop: 60 },
   icon: { marginRight: 10 },
   title: { fontSize: 22, fontWeight: "bold", color: "#287777", marginLeft: 35 },
@@ -226,7 +227,7 @@ const styles = StyleSheet.create({
     gap:20
   },
   deleteButton: {
-    backgroundColor: "#dc3545",
+    backgroundColor: "#FF6347",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   acceptButton: { backgroundColor: "#28a745" },
-  rejectButton: { backgroundColor: "#dc3545" },
+  rejectButton: { backgroundColor: "#FF6347" },
   choix: { color: "white", fontWeight: "bold" },
 });
 
