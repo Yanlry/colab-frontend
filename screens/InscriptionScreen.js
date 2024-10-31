@@ -6,6 +6,9 @@ import { useDispatch } from 'react-redux';
 import { login } from '../reducers/utilisateur';
 
 export default function InscriptionScreen({ navigation }) {
+    
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +22,7 @@ export default function InscriptionScreen({ navigation }) {
   };
 
   const handleEnregistrer = () => {
-    fetch('http://192.168.1.109:3000/users/signup', {
+    fetch(`${apiUrl}/users/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, username, phone: phoneNumber }),

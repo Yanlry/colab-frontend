@@ -6,6 +6,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, TextInput, View, TouchableOpacity, Text, Image, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 
 export default function ConnexionScreen({ navigation }) {
+
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+  
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [motDePasse, setMotDePasse] = useState('');
@@ -15,7 +18,7 @@ export default function ConnexionScreen({ navigation }) {
   const passwordVisible = () => setVoirPassword(!voirPassword);
 
   const handleConnection = () => {
-    fetch('http://192.168.1.109:3000/users/signin', {
+    fetch(`${apiUrl}/users/signin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password: motDePasse }),

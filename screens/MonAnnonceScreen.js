@@ -5,6 +5,9 @@ import { useSelector } from 'react-redux';
 import { Alert } from 'react-native';
 
 export default function MonAnnonceScreen({ route, navigation }) {
+    
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+
 
   const { annonce } = route.params;
 
@@ -25,7 +28,7 @@ export default function MonAnnonceScreen({ route, navigation }) {
   const supprimerAnnonce = () => {
 
 
-    fetch(`http://192.168.1.109:3000/annonces/supprime/${utilisateur.token}`, {
+    fetch(`${apiUrl}/annonces/supprime/${utilisateur.token}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

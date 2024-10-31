@@ -1,20 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  Modal,
-  FlatList,
-  ScrollView,
-} from "react-native";
+import {StyleSheet, Text, View, TouchableOpacity,TextInput, Alert, KeyboardAvoidingView, SafeAreaView, Modal, FlatList, ScrollView, } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function ProfilScreen({ navigation }) {
+    
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+
   const user = useSelector((state) => state.utilisateur.value);
 
   const [bio, setBio] = useState("");
@@ -35,7 +26,7 @@ export default function ProfilScreen({ navigation }) {
 
   useEffect(() => {
     // Récupérer toutes les activités disponibles
-    fetch("http://192.168.1.109:3000/profiles/activites")
+    fetch(`${apiUrl}/profiles/activites`)
       .then((response) => response.json())
       .then((data) => {
         if (data && data.activites) {
@@ -44,7 +35,7 @@ export default function ProfilScreen({ navigation }) {
       });
 
     // Récupérer les informations de profil de l'utilisateur
-    fetch(`http://192.168.1.109:3000/users/profile/${user.token}`)
+    fetch(`${apiUrl}/users/profile/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -67,7 +58,7 @@ export default function ProfilScreen({ navigation }) {
       });
 
     // Récupérer les activités sélectionnées par l'utilisateur
-    fetch(`http://192.168.1.109:3000/annonces/activites/${user.token}`)
+    fetch(`${apiUrl}/profiles/activites/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -320,7 +311,7 @@ export default function ProfilScreen({ navigation }) {
     // Si l'utilisateur a sélectionné une catégorie, on continue le processus
     setErrorMessage(""); // Réinitialiser le message d'erreur si tout est correct
 
-    fetch(`http://192.168.1.109:3000/profiles/learn`, {
+    fetch(`${apiUrl}/profiles/learn`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: user.token, activites: learn }),
@@ -356,7 +347,7 @@ export default function ProfilScreen({ navigation }) {
     // Si l'utilisateur a sélectionné une catégorie, on continue le processus
     setErrorMessage(""); // Réinitialiser le message d'erreur si tout est correct
 
-    fetch(`http://192.168.1.109:3000/profiles/teach`, {
+    fetch(`${apiUrl}/profiles/teach`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: user.token, activites: teach }),
@@ -398,7 +389,7 @@ export default function ProfilScreen({ navigation }) {
       bio: bio,
     };
 
-    fetch("http://192.168.1.109:3000/users/updateProfile", {
+    fetch(`${apiUrl}/users/updateProfile`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestBody),

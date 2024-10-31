@@ -4,13 +4,16 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector } from 'react-redux';
 
 export default function MesAnnoncesScreen({ navigation }) {
+    
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+
 
   const utilisateur = useSelector(state => state.utilisateur.value);
 
   const [mesAnnonces, setMesAnnonces] = useState([]);
 
   useEffect(() => {
-    fetch(`http://192.168.1.109:3000/annonces/mesAnnonces/${utilisateur.token}`)
+    fetch(`${apiUrl}/annonces/mesAnnonces/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));

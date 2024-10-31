@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  View,
-  SafeAreaView,
-  Image,
-  Alert,
-} from "react-native";
+import {StyleSheet, Text, TouchableOpacity, ScrollView, View, SafeAreaView, Image, Alert, } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MapView, { Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import { ajouteFavoris, suprimeFavoris } from "../reducers/utilisateur";
 
 export default function AnnonceScreen({ route, navigation }) {
+    
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+
   const { annonce } = route.params;
   const dispatch = useDispatch();
   const favoris = useSelector((state) => state.utilisateur.favoris);
@@ -62,7 +56,7 @@ export default function AnnonceScreen({ route, navigation }) {
   const envoyerDemandeColab = () => {
     console.log("Envoyer Colab - Token:", annonce.token, "Cible:", annonce.username, "Initiateur:", utilisateur.username);
 
-    fetch("http://192.168.1.109:3000/propositionCollabs/propositions", {
+    fetch(`${apiUrl}/propositionCollabs/propositions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -73,6 +67,7 @@ export default function AnnonceScreen({ route, navigation }) {
     })
       .then((response) => response.json())
       .then(() => {
+        
         Alert.alert(
           "Félicitations !",
           "Votre demande de colab a été envoyée avec succès !",
@@ -116,7 +111,12 @@ export default function AnnonceScreen({ route, navigation }) {
         <ScrollView style={styles.annonceComplete}>
           {/* Title and Favorites */}
           <View style={styles.annonceEnTete}>
+            <View>
             <Text style={styles.annonceTitre}>{annonce.title}</Text>
+            <Text style={styles.descriptionDate}>
+              Publier le : {formatDate(annonce.date)}
+            </Text>
+            </View>
             <View style={styles.annonceFavoris}>
               <TouchableOpacity
                 onPress={() => {
@@ -133,66 +133,23 @@ export default function AnnonceScreen({ route, navigation }) {
             </View>
           </View>
 
-          {/* Type and Date */}
-          <View style={styles.annonceType}>
-            <Text style={styles.annonceTypeText}>
-              {annonce.username} est ici pour :
-            </Text>
-            <Text style={styles.annonceTypeDetails}>{annonce.type}</Text>
-          </View>
 
           {/* Description */}
           <View style={styles.annonceDescription}>
-            <Text style={styles.annonceDescriptionTitre}>Description :</Text>
-            <Text style={styles.annonceDescriptionText}>
-              {annonce.description}
-            </Text>
-            <View style={styles.separator}></View>
-            <Text style={styles.descriptionDate}>
-              Publier le : {formatDate(annonce.date)}
-            </Text>
+            <Text style={styles.annonceDescriptionTitre}>Description</Text>
+            <Text style={styles.annonceDescriptionText}>{annonce.description} </Text>
+
+         {annonce.programme && annonce.programme.trim() !== '' && (
+          <View>
+            <Text style={styles.annonceProgrammeTitre}>Programme</Text>
+            <Text style={styles.annonceProgrammeText}>{annonce.programme}</Text>
           </View>
+         )}        
 
-          {/* Criteria Section */}
-          <View style={styles.annonceCritere}>
-            <View style={styles.critereContainer}>
-              <View style={styles.titreEtLogo}>
-                <FontAwesome name="list" size={15} color="#287777" />
-                <Text style={styles.titre}>Domaine</Text>
-              </View>
-              <Text style={styles.critereReponse}>
-                {annonce.secteurActivite}
-              </Text>
-            </View>
-            <View style={styles.critereContainer}>
-              <View style={styles.titreEtLogo}>
-                <FontAwesome name="hourglass" size={15} color="#287777" />
-                <Text style={styles.titre}>Disponibilité</Text>
-              </View>
-              {/* Loop through the disponibilite array and display each item */}
-              {annonce.disponibilite.map((dispo, index) => (
-                <View key={index} style={styles.bulletItem}>
-                  <Text style={styles.critereReponse}>• {dispo}</Text>
-                </View>
-              ))}
-            </View>
-
-            <View style={styles.critereContainer}>
-              <View style={styles.titreEtLogo}>
-                <FontAwesome name="briefcase" size={15} color="#287777" />
-                <Text style={styles.titre}>Expérience</Text>
-              </View>
-              <Text style={styles.critereReponse}>{annonce.experience}</Text>
-            </View>
-            <View style={styles.critereContainer}>
-              <View style={styles.titreEtLogo}>
-                <FontAwesome name="users" size={15} color="#287777" />
-                <Text style={styles.titre}>Durée</Text>
-              </View>
-              <Text style={styles.critereReponse}>{annonce.tempsMax}</Text>
-            </View>
+          <View style={styles.separator}></View>
+            
           </View>
-
+             
           {/* Map */}
           <View style={styles.mapContainer}>
             <MapView
@@ -212,18 +169,68 @@ export default function AnnonceScreen({ route, navigation }) {
             </MapView>
           </View>
 
+         
+          
+          {/* Criteria Section */}
+          <View style={styles.annonceCritere}>
+             {/* Type and Date */}
+          <View style={styles.annonceType}>
+            <Text style={styles.annonceTypeText}>{annonce.username} est ici pour {annonce.type.toLowerCase()}</Text>
+            
+          </View>
+
+            <View style={styles.critereContainer}>
+              <View style={styles.titreEtLogo}>
+                <FontAwesome name="list" size={15} color="#287777" />
+                <Text style={styles.titre}>Domaine</Text>
+              </View>
+              <Text style={styles.critereReponse}>
+                {annonce.secteurActivite}
+              </Text>
+            </View>
+            <View style={styles.critereContainer}>
+              <View style={styles.titreEtLogo}>
+                <FontAwesome name="hourglass" size={15} color="#194D4D" />
+                <Text style={styles.titre}>Disponibilité</Text>
+              </View>
+              {/* Loop through the disponibilite array and display each item */}
+              {annonce.disponibilite.map((dispo, index) => (
+                <View key={index} style={styles.bulletItem}>
+                  <Text style={styles.critereReponse}>• {dispo}</Text>
+                </View>
+              ))}
+            </View>
+
+            <View style={styles.critereContainer}>
+              <View style={styles.titreEtLogo}>
+                <FontAwesome name="briefcase" size={15} color="#194D4D" />
+                <Text style={styles.titre}>Expérience</Text>
+              </View>
+              <Text style={styles.critereReponse}>{annonce.experience}</Text>
+            </View>
+            <View style={styles.critereContainer}>
+              <View style={styles.titreEtLogo}>
+                <FontAwesome name="users" size={15} color="#194D4D" />
+                <Text style={styles.titre}>Durée</Text>
+              </View>
+              <Text style={styles.critereReponse}>{annonce.tempsMax}</Text>
+            </View>
+          </View>
+
           {/* User Information */}
           <TouchableOpacity
             style={styles.utilisateur}
             onPress={() => navigation.navigate("Profil")}
           >
             <View style={styles.utilisateurGauche}>
-              <FontAwesome name="user" size={50} color="#287777" />
+              <FontAwesome name="user" size={50} color="#194D4D" />
             </View>
-            <Text style={styles.textUtilisateur}>
-              Nom d'utilisateur : {annonce.username}
-            </Text>
-            <FontAwesome name="chevron-right" size={30} color={"#287777"} />
+            <View style={styles.userInfo}>
+              <Text style={styles.usernameText}>{annonce.username} <Text style={styles.inscriptionText}>- inscrit depuis 2 ans</Text></Text>
+              <Text style={styles.ratingStars}>⭐⭐⭐⭐⭐ (96)</Text>
+            </View>
+
+            <FontAwesome name="chevron-right" size={30} color={"#194D4D"} />
           </TouchableOpacity>
 
           {/* Report Button */}
@@ -279,39 +286,46 @@ const styles = StyleSheet.create({
   // En Tete (Title and Favorite)
   annonceEnTete: {
     flexDirection: "row",
-    paddingHorizontal: 20,
     borderRadius: 20,
-    padding:20,
     backgroundColor: "#fff",
-    marginHorizontal: 10,
+    paddingLeft:20,
+    marginHorizontal:10,
+    paddingTop:10,
+    paddingBottom:10
   },
   annonceTitre: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
-    width: "90%",
-   
+    width: 270,
+    paddingTop:6,
+    paddingRight:5,
+    color:'#194D4D',
+
   },
   annonceFavoris: {
+    position:'absolute',
+    right:20,
+    bottom:35,
     justifyContent: "center",
     backgroundColor: "#fff",
-
+    
   },
 
   // Annonce Type
   annonceType: {
     borderRadius: 20,
-    padding: 20,
-    marginTop: 15,
-    marginHorizontal: 10,
+    marginBottom:25,
     backgroundColor: "#fff",
   },
   annonceTypeText: {
     fontSize: 18,
     fontWeight: "bold",
+    color:'#194D4D'
   },
   annonceTypeDetails: {
     fontSize: 16,
     marginTop: 5,
+    marginLeft:5
   },
 
   // Annonce Description
@@ -325,13 +339,28 @@ const styles = StyleSheet.create({
   annonceDescriptionTitre: {
     fontSize: 18,
     fontWeight: "bold",
+    color:'#194D4D'
+
   },
   annonceDescriptionText: {
     fontSize: 16,
-    marginTop: 5,
+    marginTop: 10,
+    marginLeft:5
+  }
+  ,annonceProgrammeTitre: {
+    marginTop:10,
+    fontSize: 18,
+    fontWeight: "bold",
+    color:'#194D4D'
+  },
+  annonceProgrammeText:{
+    fontSize: 16,
+    marginTop: 10,
+    marginLeft:5
   },
   descriptionDate: {
     marginTop: 10,
+    marginBottom:10,
     fontSize: 14,
     color: "#888",
   },
@@ -356,6 +385,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     paddingLeft: 10,
+    color:'#194D4D'
+
   },
   critereReponse: {
     paddingLeft: 25,
@@ -372,6 +403,29 @@ const styles = StyleSheet.create({
     color: "#287777", // Optional color for bullet point
   },
 
+  userInfo: {
+    alignItems: 'center',
+  },
+  usernameText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  ratingStars: {
+    marginTop:10,
+    fontSize: 16,
+    marginLeft: 8,
+    color: '#FFD700', // Couleur or pour les étoiles
+  },
+  reviewCount: {
+    fontSize: 16,
+    color: '#666',
+    marginLeft: 4,
+  },
+  inscriptionText:{
+    fontSize:14,
+    color:'#ccc'
+  },
   // Map Container
   mapContainer: {
     marginTop: 10,

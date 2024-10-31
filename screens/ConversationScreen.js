@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setDestinataireToken } from '../reducers/utilisateur';
 
 export default function ConversationScreen({ navigation, route }) {
-
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
   const dispatch = useDispatch();
   const utilisateurDestinataireToken = useSelector(state => state.utilisateur.destinataireToken);
   const senderToken = useSelector(state => state.utilisateur.value.token);
@@ -16,7 +16,7 @@ export default function ConversationScreen({ navigation, route }) {
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   const fetchMessages = () => {
-    const url = `http://192.168.1.109:3000/messages/${utilisateurDestinataireToken}/${senderToken}`;
+    const url = `${apiUrl}/messages/${utilisateurDestinataireToken}/${senderToken}`;
     
     fetch(url)
       .then(response => response.json())
@@ -31,11 +31,36 @@ export default function ConversationScreen({ navigation, route }) {
         console.error('Erreur lors de la récupération des messages:', error);
       });
   };
-  
+
+  const markMessagesAsRead = () => {
+    fetch(`${apiUrl}/messages/read/${utilisateurDestinataireToken}/${senderToken}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.result) {
+          console.log("Messages marqués comme lus");
+          fetchMessages(); // Recharge les messages pour mettre à jour leur statut localement
+        } else {
+          console.log('Erreur lors de la mise à jour des messages:', data.error);
+        }
+      })
+      .catch(error => console.error('Erreur lors de la mise à jour des messages comme lus:', error));
+  };
+
   useEffect(() => {
     fetchMessages();
+    markMessagesAsRead(); // Marque les messages comme lus au chargement
+    // Mise en place du polling toutes les 3 secondes
+    const intervalId = setInterval(fetchMessages, 1000);
+
+    // Nettoie l'intervalle lorsque le composant est démonté
+    return () => clearInterval(intervalId);
   }, [utilisateurDestinataireToken]);
-  
+
   useEffect(() => {
     const { contactToken, contactUsername } = route.params;
     dispatch(setDestinataireToken(contactToken));
@@ -48,29 +73,10 @@ export default function ConversationScreen({ navigation, route }) {
         text: inputText.trim(),
         senderToken: senderToken,
         recipientToken: utilisateurDestinataireToken,
+        conversationId: `${senderToken}${utilisateurDestinataireToken}`, // Génération d'un ID unique pour chaque conversation
       };
-  
-      const existingConversationIndex = messages.findIndex(msg =>
-        msg.conversation &&
-        msg.conversation.participants &&
-        msg.conversation.participants.includes(senderToken) &&
-        msg.conversation.participants.includes(utilisateurDestinataireToken)
-      );
-  
-      if (existingConversationIndex !== -1) {
-        const existingConversation = messages[existingConversationIndex];
-        existingConversation.lastMessage = messageData.text;
-        // Ajoutez une logique pour mettre à jour d'autres détails de la conversation si nécessaire
-      } else {
-        const newConversation = {
-          id: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          participants: [senderToken, utilisateurDestinataireToken],
-          lastMessage: messageData.text,
-        };
-        messages.push(newConversation);
-      }
 
-      fetch('http://192.168.1.109:3000/messages', {
+      fetch(`${apiUrl}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,11 +86,12 @@ export default function ConversationScreen({ navigation, route }) {
         .then(response => response.json())
         .then(data => {
           if (data && data.success) {
-            // Gérez le succès si nécessaire
+            console.log('Message envoyé');
+            // Ajoute immédiatement le message dans la liste locale
+            setMessages(prevMessages => [{ ...data.savedMessage, isUser: true }, ...prevMessages]);
           } else {
-            console.log('Erreur lors de l\'envoi du message au serveur:', data.error || 'Erreur inconnue');
+            console.log('Erreur lors de l\'envoi du message:', data.error || 'Erreur inconnue');
           }
-          fetchMessages();
           setInputText('');
         })
         .catch(error => {
@@ -95,43 +102,43 @@ export default function ConversationScreen({ navigation, route }) {
   
   return (
     <SafeAreaView style={styles.safeAreaView}>
-  <View style={styles.container}>
-    <View style={styles.headerMessage}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
-        <FontAwesome name='chevron-left' size={28} color={'#287777'} />
-      </TouchableOpacity>
-      <View style={styles.nomContact}>
-        <Text style={styles.headerText}>{contactUsername}</Text>
-      </View>
-      <TouchableOpacity>
-        <FontAwesome name='user' size={35} color={'#287777'} style={styles.headerIcon} />
-      </TouchableOpacity>
-    </View>
+      <View style={styles.container}>
+        <View style={styles.headerMessage}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
+            <FontAwesome name='chevron-left' size={28} color={'#287777'} />
+          </TouchableOpacity>
+          <View style={styles.nomContact}>
+            <Text style={styles.headerText}>{contactUsername}</Text>
+          </View>
+          <TouchableOpacity>
+            <FontAwesome name='user' size={35} color={'#287777'} style={styles.headerIcon} />
+          </TouchableOpacity>
+        </View>
 
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : null}
-      style={styles.keyboardAvoidingView}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <FlatList
-          data={messages}
-          renderItem={({ item, index }) => (
-            <View key={index} style={[styles.messageContainer, item.isUser ? styles.userMessageContainer : styles.otherMessageContainer]}>
-              <View style={[styles.messageBubble, item.isUser ? styles.userMessageBubble : styles.otherMessageBubble]}>
-                <Text style={[styles.messageText, item.isUser ? styles.userMessageText : styles.otherMessageText]}>{item.text}</Text>
-              </View>
-            </View>
-          )}
-          inverted
-          onScrollBeginDrag={() => Keyboard.dismiss()}
-          keyboardShouldPersistTaps='handled'
-          keyboardDismissMode='on-drag'
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={styles.messageList}
-        />
-      </TouchableWithoutFeedback>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
+          style={styles.keyboardAvoidingView}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <FlatList
+              data={messages}
+              renderItem={({ item, index }) => (
+                <View key={index} style={[styles.messageContainer, item.isUser ? styles.userMessageContainer : styles.otherMessageContainer]}>
+                  <View style={[styles.messageBubble, item.isUser ? styles.userMessageBubble : styles.otherMessageBubble]}>
+                    <Text style={[styles.messageText, item.isUser ? styles.userMessageText : styles.otherMessageText]}>{item.text}</Text>
+                  </View>
+                </View>
+              )}
+              inverted
+              onScrollBeginDrag={() => Keyboard.dismiss()}
+              keyboardShouldPersistTaps='handled'
+              keyboardDismissMode='on-drag'
+              keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={styles.messageList}
+            />
+          </TouchableWithoutFeedback>
 
-      <View style={styles.inputContainer}>
+          <View style={styles.inputContainer}>
             <TextInput
               placeholder='Votre message'
               style={[styles.textInput, isInputFocused ? { marginBottom: 50 } : null ]}
@@ -141,14 +148,13 @@ export default function ConversationScreen({ navigation, route }) {
               onFocus={() => setIsInputFocused(true)}
               onBlur={() => setIsInputFocused(false)}
             />
-        <TouchableOpacity onPress={() => addMessage()}>
-          <FontAwesome name='send' size={20} color={'#007BFF'} style={[styles.sendIcon,  isInputFocused ? { marginBottom: 50 } : null]} />
-        </TouchableOpacity>
+            <TouchableOpacity onPress={() => addMessage()}>
+              <FontAwesome name='send' size={20} color={'#007BFF'} style={[styles.sendIcon,  isInputFocused ? { marginBottom: 50 } : null]} />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
       </View>
-    </KeyboardAvoidingView>
-  </View>
-</SafeAreaView>
-
+    </SafeAreaView>
   );
 }
 

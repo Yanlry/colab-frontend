@@ -6,10 +6,13 @@ import { useFocusEffect } from '@react-navigation/native';
 import { ajouteFavoris, suprimeFavoris } from '../reducers/utilisateur';
 
 export default function AccueilScreen({ navigation }) {
+
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+
   const utilisateur = useSelector(state => state.utilisateur.value);
   const favoris = useSelector(state => state.utilisateur.favoris);
   const dispatch = useDispatch();
-
+  
   const [afficherEnseigner, setAfficherEnseigner] = useState(true);
   const [recherche, setRecherche] = useState('');
   const [enseignerDate, setEnseignerDate] = useState([]);
@@ -35,14 +38,14 @@ export default function AccueilScreen({ navigation }) {
   };
 
   const fetchData = () => {
-    fetch(`http://192.168.1.109:3000/annonces/apprendre/${utilisateur.token}`)
+    fetch(`${apiUrl}/annonces/apprendre/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
         setEnseignerDate(trierDateAnnonce);
       });
 
-    fetch(`http://192.168.1.109:3000/annonces/enseigner/${utilisateur.token}`)
+    fetch(`${apiUrl}/annonces/enseigner/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -70,7 +73,8 @@ export default function AccueilScreen({ navigation }) {
     const rechercheMinuscules = recherche.toLowerCase();
     return (
       annonce.title.toLowerCase().includes(rechercheMinuscules) ||
-      annonce.description.toLowerCase().includes(rechercheMinuscules)
+      annonce.description.toLowerCase().includes(rechercheMinuscules)||
+      annonce.programme.toLowerCase().includes(rechercheMinuscules)
     );
   };
 
@@ -112,16 +116,25 @@ export default function AccueilScreen({ navigation }) {
           <Text style={styles.apercuAnnonceDescription}>
             {annonce.description.length > 85 ? `${annonce.description.substring(0, 84)}...` : annonce.description}
           </Text>
+          {annonce.programme && annonce.programme.trim() !== '' && (
+            <Text style={styles.apercuAnnonceProgramme}>
+              <Text style={styles.critereTextTitre}>Programme : </Text> 
+              <Text style={styles.critereText}>
+                {annonce.programme.length > 60 ? `${annonce.programme.substring(0, 59)}...` : annonce.programme}
+              </Text>
+            </Text>
+          )}
+
           <View style={styles.containerCritere}>
-            <Text style={styles.apercuAnnonceExperience}>Expérience :</Text>
-            <Text style={styles.critereText}> {annonce.experience}</Text>
+            <Text style={styles.critereTextTitre}>Expérience : </Text>
+            <Text style={styles.critereText}>{annonce.experience}</Text>
           </View>
           <View style={styles.containerCritere}>
-            <Text style={styles.apercuAnnonceTempsMax}>Fréquence :</Text>
-            <Text style={styles.critereText}> {annonce.tempsMax}</Text>
+            <Text style={styles.critereTextTitre}>Fréquence : </Text>
+            <Text style={styles.critereText}>{annonce.tempsMax}</Text>
           </View>
           <View style={styles.containerCritere}>
-            <Text style={styles.apercuAnnonceTempsMax}>Disponibilité :</Text>
+            <Text style={styles.critereTextTitre}>Disponibilité : </Text>
             <Text style={styles.critereText}>
               {Array.isArray(annonce.disponibilite) ? annonce.disponibilite.join(', ') : annonce.disponibilite}
             </Text>
@@ -284,7 +297,6 @@ scroll:{
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 15,
     borderRightWidth: 1,
     borderColor: '#ccc',
     paddingRight: 10,
@@ -292,7 +304,8 @@ scroll:{
   logoImage: {
     width: 100,
     height: 100,
-    marginBottom: 15,
+    marginVertical: 15,
+
     resizeMode: 'contain',
   },
   apercuAnnonce: {
@@ -311,16 +324,13 @@ scroll:{
     fontSize: 13,
     marginVertical:10
   },
-  apercuAnnonceExperience: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#1F5C5C',
+  apercuAnnonceProgramme: {
+    fontSize: 13,
+    fontWeight:'bold',
+    color:'#14A3A1',
+    marginVertical:10
   },
-  apercuAnnonceTempsMax: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#1F5C5C',
-  },
+
   apercuAnnonceDate: {
     fontSize: 12,
     marginTop: 15,
@@ -329,11 +339,16 @@ scroll:{
   containerCritere: {
     flexDirection: 'row',
     paddingVertical:3,
-
+  },
+  critereTextTitre: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#1F5C5C',
   },
   critereText: {
     fontSize: 12,
   },
+  
   separator: {
     marginBottom: 70,
   },

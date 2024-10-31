@@ -5,6 +5,9 @@ import { teach } from '../reducers/utilisateur';
 import { learn } from '../reducers/utilisateur';
 
 export default function ActiviteScreen({ navigation }) {
+    
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.utilisateur.value);
   const [selectedOffre, setSelectedOffre] = useState([]);
@@ -19,7 +22,7 @@ export default function ActiviteScreen({ navigation }) {
   const [modalDemandeVisible, setModalDemandeVisible] = useState(false);
 
   useEffect(() => {
-    fetch('http://192.168.1.109:3000/profiles/activites')
+    fetch('http://192.168.1.4:3000/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -53,7 +56,7 @@ export default function ActiviteScreen({ navigation }) {
     };
   
     try {
-      const responseOffre = await fetch(`http://192.168.1.109:3000/profiles/teach`, {
+      const responseOffre = await fetch(`http://192.168.1.4:3000/profiles/teach`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBodyOffre),
@@ -62,7 +65,7 @@ export default function ActiviteScreen({ navigation }) {
       console.log('Réponse teach:', dataOffre);
       dispatch(teach(dataOffre.user));
   
-      const responseDemande = await fetch(`http://192.168.1.109:3000/profiles/learn`, {
+      const responseDemande = await fetch(`http://192.168.1.4:3000/profiles/learn`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBodyDemande),

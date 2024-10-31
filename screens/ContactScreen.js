@@ -6,15 +6,41 @@ import { setDestinataireToken } from '../reducers/utilisateur';
 import { useFocusEffect } from '@react-navigation/native';
 
 export default function ContactScreen({ navigation }) {
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
   const dispatch = useDispatch();
   const user = useSelector(state => state.utilisateur.value);
   const [contacts, setContacts] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [recherche, setRecherche] = useState('');
   const [contactsFiltres, setContactsFiltres] = useState([]);
+  const [unreadConversations, setUnreadConversations] = useState([]);
+
+  const checkUnreadConversations = () => {
+    fetch(`${apiUrl}/messages/conversations/unread/${user.token}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+  
+        if (data.result && data.unreadConversations.length > 0) {
+          setUnreadConversations(data.unreadConversations);
+        } else {
+          setUnreadConversations([]); // Réinitialiser si aucune conversation non lue
+        }
+      })
+      .catch(error => {
+        console.error('Erreur lors de la vérification des conversations non lues:', error);
+      });      
+  };
+  
+  
 
   useEffect(() => {
     fetchContacts();
+    checkUnreadConversations();
   }, []);
 
   useEffect(() => {
@@ -22,36 +48,35 @@ export default function ContactScreen({ navigation }) {
     setContactsFiltres(contactsFiltres);
   }, [contacts, recherche]);
 
-  
   useFocusEffect(
     React.useCallback(() => {
       fetchContacts();
+      checkUnreadConversations();
     }, [])
   );
 
   const fetchContacts = () => {
-    const requestBody = {
-      token: user.token,
-    };
-    fetch('http://192.168.1.109:3000/propositionCollabs/collaboration/contact', {
+    const requestBody = { token: user.token };
+    fetch(`${apiUrl}/propositionCollabs/collaboration/contact`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody),
     })
       .then(response => response.json())
       .then(data => {
         if (data.result) {
-          setContacts(data.contacts);
+          const contactsWithConversationId = data.contacts.map(contact => ({
+            ...contact,
+            conversationId: [user.token, contact.token].sort().join('') // Génération du `conversationId`
+          }));
+          setContacts(contactsWithConversationId);
         } else {
           console.log('Erreur lors de la récupération des contacts:', data.error);
         }
       })
-      .catch(error => {
-        console.error('Erreur de connexion:', error);
-      });
+      .catch(error => console.error('Erreur de connexion:', error));
   };
+  
 
   const appelerNumero = (numero) => {
     const numeroFormate = `tel:${numero}`;
@@ -61,8 +86,6 @@ export default function ContactScreen({ navigation }) {
   const ouvrirConversation = (contact) => {
     if (contact && contact.token) {
       dispatch(setDestinataireToken(contact.token));
-  
-      // Naviguez vers la page de conversation
       navigation.navigate('Conversation', {
         contactToken: contact.token,
         contactId: contact.id,
@@ -73,7 +96,6 @@ export default function ContactScreen({ navigation }) {
     }
   };
   
-
   const rechercherContact = (contact) => {
     const rechercheMinuscules = recherche.toLowerCase();
     const numeroMinuscules = contact.phone.toLowerCase();
@@ -88,10 +110,9 @@ export default function ContactScreen({ navigation }) {
   const onRefresh = () => {
     setRefreshing(true);
     fetchContacts();
+    checkUnreadConversations();
     setRefreshing(false);
   };
-
- 
 
   return (
     <View style={styles.container}>
@@ -104,41 +125,43 @@ export default function ContactScreen({ navigation }) {
         />
         <FontAwesome name='search' size={22} color={'grey'} style={styles.searchIcon}/>
       </View>
-      <ScrollView
-  refreshControl={
-    <RefreshControl
-      refreshing={refreshing}
-      onRefresh={onRefresh}
-    />
-  }
->
-  <View style={styles.content}>
-    {contactsFiltres.length === 0 ? (
-      <Text style={styles.noContactsText}>Aucune collaboration actuellement</Text>
-    ) : (
-      contactsFiltres.map((contact, index) => (
-        <View key={index} style={styles.contactContainer}>
-          <TouchableOpacity style={styles.contactItem}>
-            <FontAwesome name='user' size={35} color={'#287777'} />
-            <View style={styles.contactInfo}>
-              <Text style={styles.contactName}>{contact.username}</Text>
-              <Text style={styles.contactNumber}>{contact.phone}</Text>
-            </View>
-          </TouchableOpacity>
-          <View style={styles.actionButtons}>
-            <TouchableOpacity style={styles.phoneButton} onPress={() => appelerNumero(contact.phone)}>
-              <FontAwesome name='phone' size={35} color={'#287777'} style={styles.telIcon}/>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.messageButton} onPress={() => ouvrirConversation(contact)}>
-              <FontAwesome name='comment' size={33} color={'#287777'} />
-            </TouchableOpacity>
+      <View style={styles.content}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} style={styles.scrollview} />
+          }
+        >
+          <View>
+            {contactsFiltres.length === 0 ? (
+              <Text style={styles.noContactsText}>Aucune collaboration actuellement</Text>
+            ) : (
+              contactsFiltres.map((contact, index) => {
+                const hasUnreadMessages = unreadConversations.includes(contact.conversationId);
+                
+                return (
+                  <View key={index} style={styles.contactContainer}>
+                  <TouchableOpacity style={styles.contactItem}>
+                    <FontAwesome name='user' size={35} color={'#287777'} />
+                    <View style={styles.contactInfo}>
+                      <Text style={styles.contactName}>{contact.username}</Text>
+                      <Text style={styles.contactNumber}>{contact.phone}</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={styles.actionButtons}>
+                    <TouchableOpacity style={styles.phoneButton} onPress={() => appelerNumero(contact.phone)}>
+                      <FontAwesome name='phone' size={35} color={'#287777'} style={styles.telIcon}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.messageButton} onPress={() => ouvrirConversation(contact)}>
+                      <FontAwesome name='comment' size={33} color={hasUnreadMessages ? '#F36F68' : '#287777'} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                );
+              })
+            )}
           </View>
-        </View>
-      ))
-    )}
-  </View>
-</ScrollView>
-
+        </ScrollView>
+      </View>
     </View>
   );
 }
@@ -148,53 +171,65 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#e5f6f6',
     alignItems: 'center',
+    
   },
-  content: {
-    width: '100%', 
+  content: { 
+    backgroundColor: '#fff',
     alignItems: 'center',
+    marginTop: 10,
+    width:'90%',
+    flex:1,
+    paddingBottom:100,
+    borderRadius: 30,
   },
-
-  
+  scrollview: {
+    width:'90%',
+    alignItems: 'center',
+    
+  },
   rechercher: {
     width: '90%', 
     justifyContent: 'center',
     marginTop: 10,
   },
   rechercheText: {
-    backgroundColor:'white',
+    backgroundColor: 'white',
     height: 50,
     fontSize: 15,
     paddingLeft: 30,
     borderRadius: 30,
     marginTop: 10,
-
   },
   searchIcon: {
     position: 'absolute',
     right: 20,
     top: 22,
   },
-
   noContactsText: {
     marginTop: 30,
     fontSize: 16,
     color: 'gray',
     textAlign: 'center',
   },
-
   contactContainer: {
-    width: '90%',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    paddingBottom: 10,
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingBottom: 15,
+    paddingTop: 15, // Pour créer un espace supérieur
+    borderBottomWidth: 1, // Ajout de la bordure en bas
+    borderBottomColor: '#ccc', // Couleur de la bordure
+    paddingLeft: 35,
+    paddingHorizontal:20,
+    borderRadius: 30,
+
   },
   contactItem: {
-    marginTop:25,
     flexDirection: 'row',
     alignItems: 'center',
+marginVertical:10,
+
   },
   contactInfo: {
     marginLeft: 20,
@@ -205,18 +240,16 @@ const styles = StyleSheet.create({
   },
   contactNumber: {
     fontSize: 14,
-    
   },
   actionButtons: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   phoneButton: {
+    marginTop:6,
     marginRight: 20,
-    marginTop:25,
   },
   messageButton: {
     marginRight: 10,
-    marginTop:20,
   },
 });

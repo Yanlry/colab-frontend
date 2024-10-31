@@ -6,6 +6,9 @@ import GeoAPIGouvAutocomplete from './GeoAPIGouvAutocomplete';
 import MapView, { Marker } from 'react-native-maps';
 
 export default function PublierScreen({ navigation }) {
+    
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+
 
   const utilisateur = useSelector(state => state.utilisateur.value);
 
@@ -29,9 +32,10 @@ export default function PublierScreen({ navigation }) {
   const [errorMessage, setErrorMessage] = useState('');
   const scrollViewRef = useRef(null);
   const [programme, setProgramme] = useState('');
+  const [inputHeight, setInputHeight] = useState(40); // Valeur initiale de la hauteur
 
   useEffect(() => {
-    fetch('http://192.168.1.109:3000/profiles/activites')
+    fetch(`${apiUrl}/profiles/activites`)
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -84,6 +88,7 @@ const envoyerDonnee = () => {
     type,
     title,
     description,
+    programme,
     secteurActivite,
     tempsMax,
     experience,
@@ -94,7 +99,7 @@ const envoyerDonnee = () => {
     date: new Date(),
   };
 
-  fetch(`http://192.168.1.109:3000/annonces/publier/${utilisateur.token}`, {
+  fetch(`${apiUrl}/annonces/publier/${utilisateur.token}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -135,6 +140,7 @@ const confirmResetForm = () => {
     { cancelable: true }
   );
 };
+
 const resetForm = () => {
   setType('');
   setTitle('');
@@ -143,6 +149,7 @@ const resetForm = () => {
   setExperience('');
   setSecteurActivite([]);
   setDisponibilite('');
+  setProgramme('');
   setVille('');
   setLatitude(null);
   setLongitude(null);
@@ -325,13 +332,17 @@ const renderTempsModal = () => (
               />
               
               <View style={styles.descriptionContainer}>
-                <Text style={styles.titreDescription}>Description</Text>
+              <Text style={styles.titreDescription}>Description</Text>
                 <TextInput
-                  style={styles.saisieDescription}
-                  placeholder="Votre objectif, vos attentes, votre expérience, etc..."
-                  value={description}
-                  onChangeText={(text) => setDescription(text)}
-                  multiline
+                    style={[styles.saisieDescription, { height: inputHeight }]} // Ajuste la hauteur
+                    placeholder="Votre objectif, vos attentes, votre expérience, etc..."
+                    value={description}
+                    onChangeText={(text) => setDescription(text)}
+                    multiline
+                    onContentSizeChange={(event) =>
+                        setInputHeight(event.nativeEvent.contentSize.height)
+                    } // Ajuste la hauteur dynamiquement
+                    scrollEnabled={false}
                 />
 
                 <Text style={styles.titreProgramme}>Programme (optionnel)</Text>
@@ -410,13 +421,14 @@ const renderTempsModal = () => (
                   </Text>
                 </TouchableOpacity>
 
+              <TouchableOpacity style={styles.boutonEnvoyer} onPress={envoyerDonnee}>
+                <Text style={styles.textEnvoyer}>Publier l'annonce</Text>
+              </TouchableOpacity>
                 <TouchableOpacity style={styles.boutonVider} onPress={confirmResetForm}>
                   <Text style={styles.textVider}>Vider les champs</Text>
                 </TouchableOpacity>
                 {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-              <TouchableOpacity style={styles.boutonEnvoyer} onPress={envoyerDonnee}>
-                <Text style={styles.textEnvoyer}>Publier l'annonce</Text>
-              </TouchableOpacity>
+             
               <View style={styles.separator}></View>
 
               <Modal
@@ -498,9 +510,9 @@ const styles = StyleSheet.create({
   saisieDescription: {
     borderRadius: 10,
     padding: 10,
-    height: 100,
+    height: 40,
     marginBottom: 10,
-    textAlignVertical: 'top',
+     textAlignVertical: 'top',
   },
   titreProgramme: {
     fontSize: 14,
@@ -518,8 +530,10 @@ const styles = StyleSheet.create({
   boutonEnvoyer: {
     backgroundColor: '#3CB371',
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 30,
     alignItems: 'center',
+    marginTop:25,
+    marginBottom: 10,
   },
   textEnvoyer: {
     color: '#fff',
@@ -557,10 +571,10 @@ const styles = StyleSheet.create({
   boutonVider: {
     backgroundColor: '#FF6347', // Couleur rouge/orange pour différencier du bouton "Publier"
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 30,
     alignItems: 'center',
-    marginBottom: 10,
-    marginTop:25,
+   
+   
   },
   textVider: {
     color: '#fff',
@@ -597,9 +611,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   map: {
-    height: 300, // Hauteur de la carte
+    height: 200, // Hauteur de la carte
     width: '100%',
     marginBottom: 20,
+    borderRadius:30
   },
   modalOverlay: {
     flex: 1,

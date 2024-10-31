@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useDispatch } from 'react-redux';
-
 import { logout } from '../reducers/utilisateur';
 
 export default function UtilisateurScreen({ navigation }) {
+    
   const dispatch = useDispatch();
 
   const [confirmerDeconnexion, setConfirmerDeconnexion] = useState(false);

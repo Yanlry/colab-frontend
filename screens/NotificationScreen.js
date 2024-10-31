@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  StatusBar,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import {View, Text, FlatList, TouchableOpacity, StyleSheet, StatusBar, Alert, ActivityIndicator, } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 
 const NotificationScreen = ({ navigation }) => {
+    
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+
   const user = useSelector((state) => state.utilisateur.value);
   const [activeTab, setActiveTab] = useState("demandes");
   const [notifications, setNotifications] = useState([]);
@@ -26,8 +20,8 @@ const NotificationScreen = ({ navigation }) => {
     setIsLoading(true);
     const url =
       activeTab === "demandes"
-        ? "http://192.168.1.109:3000/propositionCollabs/propositions/initiateur"
-        : "http://192.168.1.109:3000/propositionCollabs/propositions/cible";
+        ? `${apiUrl}/propositionCollabs/propositions/initiateur`
+        : `${apiUrl}/propositionCollabs/propositions/cible`;
 
     fetch(url, {
       method: "POST",
@@ -45,7 +39,7 @@ const NotificationScreen = ({ navigation }) => {
   };
 
   const handleAction = (messageId, action) => {
-    const actionUrl = `http://192.168.1.109:3000/propositionCollabs/propositions/${action}`;
+    const actionUrl = `${apiUrl}/propositionCollabs/propositions/${action}`;
     fetch(actionUrl, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -72,7 +66,7 @@ const NotificationScreen = ({ navigation }) => {
   };
 
   const handleDelete = (itemId) => {
-    const deleteUrl = "http://192.168.1.109:3000/propositionCollabs/collaboration/delete";
+    const deleteUrl = `${apiUrl}/propositionCollabs/collaboration/delete`;
     fetch(deleteUrl, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },

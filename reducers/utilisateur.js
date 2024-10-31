@@ -6,7 +6,8 @@ const initialState = {
   learn: [],
   favoris: [],
   collaborations: [],
-  destinataireToken: null, 
+  destinataireToken: null,  
+  nouveauMessage: false, // Initialisez le champ ici si nécessaire
 };
 
 export const userSlice = createSlice({
@@ -43,8 +44,11 @@ export const userSlice = createSlice({
     setDestinataireToken: (state, action) => {
       state.destinataireToken = action.payload;
     },
+    setNouveauMessage: (state, action) => {
+      state.nouveauMessage = action.payload;
+    },
   },
 });
 
-export const { login, logout, teach, learn, ajouteFavoris, suprimeFavoris, updateCollaborations, setDestinataireToken } = userSlice.actions;
+export const { login, logout, teach, learn, ajouteFavoris, suprimeFavoris, updateCollaborations, setDestinataireToken,setNouveauMessage } = userSlice.actions;
 export default userSlice.reducer;
