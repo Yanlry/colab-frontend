@@ -152,7 +152,7 @@ export default function ContactScreen({ navigation }) {
                       <FontAwesome name='phone' size={35} color={'#287777'} style={styles.telIcon}/>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.messageButton} onPress={() => ouvrirConversation(contact)}>
-                      <FontAwesome name='comment' size={33} color={hasUnreadMessages ? '#F36F68' : '#287777'} />
+                      <FontAwesome name='envelope' size={33} color={hasUnreadMessages ? '#F36F68' : '#287777'} />
                     </TouchableOpacity>
                   </View>
                 </View>

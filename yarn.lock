@@ -3450,7 +3450,7 @@ domutils@^3.0.1:
 
 dot@^1.1.3:
   version "1.1.3"
-  resolved "https://registry.yarnpkg.com/dot/-/dot-1.1.3.tgz#351360e00a748bce9a1f8f27c00c394a7e4e1e9f"
+  resolved "https://registry.npmjs.org/dot/-/dot-1.1.3.tgz"
   integrity sha512-/nt74Rm+PcfnirXGEdhZleTwGC2LMnuKTeeTIlI82xb5loBBoXNYzr2ezCroPSMtilK8EZIfcNZwOcHN+ib1Lg==
 
 dotenv-expand@~11.0.6:
@@ -3524,7 +3524,7 @@ env-paths@^2.2.1:
 
 env@^0.0.2:
   version "0.0.2"
-  resolved "https://registry.yarnpkg.com/env/-/env-0.0.2.tgz#50c19f307b129a45845b6b686df5b39dd40d1cf0"
+  resolved "https://registry.npmjs.org/env/-/env-0.0.2.tgz"
   integrity sha512-yP8LfjO4ughSHD/3HgLPinWzexmaOGvRfs2TFx0SZhOm7j1xPi9evjuGcLiNVHIGLmcsgMak4eDbBzlYqGIVxw==
 
 envinfo@^7.10.0, envinfo@^7.13.0:
@@ -3774,7 +3774,7 @@ expo-keep-awake@~13.0.2:
 
 expo-linear-gradient@~13.0.2:
   version "13.0.2"
-  resolved "https://registry.yarnpkg.com/expo-linear-gradient/-/expo-linear-gradient-13.0.2.tgz#21bd7bc7c71ef4f7c089521daa16db729d2aec5f"
+  resolved "https://registry.npmjs.org/expo-linear-gradient/-/expo-linear-gradient-13.0.2.tgz"
   integrity sha512-EDcILUjRKu4P1rtWcwciN6CSyGtH7Bq4ll3oTRV7h3h8oSzSilH1g6z7kTAMlacPBKvMnkkWOGzW6KtgMKEiTg==
 
 expo-modules-autolinking@1.11.3:
@@ -3804,7 +3804,7 @@ expo-status-bar@~1.12.1:
 
 expo@^51.0.38:
   version "51.0.38"
-  resolved "https://registry.npmjs.org/expo/-/expo-51.0.38.tgz"
+  resolved "https://registry.yarnpkg.com/expo/-/expo-51.0.38.tgz#e4127b230454a34a507cfb9f1a2e4b3855cb0579"
   integrity sha512-/B9npFkOPmv6WMIhdjQXEY0Z9k/67UZIVkodW8JxGIXwKUZAGHL+z1R5hTtWimpIrvVhyHUFU3f8uhfEKYhHNQ==
   dependencies:
     "@babel/runtime" "^7.20.0"
@@ -6194,7 +6194,7 @@ react-is@^17.0.1:
 
 react-native-dotenv@^3.4.11:
   version "3.4.11"
-  resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.11.tgz#2e6c4eabd55d5f1bf109b3dd9141dadf9c55cdd4"
+  resolved "https://registry.npmjs.org/react-native-dotenv/-/react-native-dotenv-3.4.11.tgz"
   integrity sha512-6vnIE+WHABSeHCaYP6l3O1BOEhWxKH6nHAdV7n/wKn/sciZ64zPPp2NUdEUf1m7g4uuzlLbjgr+6uDt89q2DOg==
   dependencies:
     dotenv "^16.4.5"
@@ -6281,7 +6281,7 @@ react-native-uuid@2.0.2:
   resolved "https://registry.npmjs.org/react-native-uuid/-/react-native-uuid-2.0.2.tgz"
   integrity sha512-5ypj/hV58P+6VREdjkW0EudSibsH3WdqDERoHKnD9syFWjF+NfRWWrJb2sa3LIwI5zpzMvUiabs+DX40WHpEMw==
 
-react-native-vector-icons@10.2.0:
+react-native-vector-icons@^10.2.0:
   version "10.2.0"
   resolved "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-10.2.0.tgz"
   integrity sha512-n5HGcxUuVaTf9QJPs/W22xQpC2Z9u0nb0KgLPnVltP8vdUvOp6+R26gF55kilP/fV4eL4vsAHUqUjewppJMBOQ==

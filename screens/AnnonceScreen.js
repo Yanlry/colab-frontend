@@ -91,7 +91,7 @@ export default function AnnonceScreen({ route, navigation }) {
         <View style={styles.navBar}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <FontAwesome
-              name="chevron-left"
+              name="reply-all"
               size={28}
               style={styles.goBack}
               color={"#287777"}
@@ -220,7 +220,7 @@ export default function AnnonceScreen({ route, navigation }) {
           {/* User Information */}
           <TouchableOpacity
             style={styles.utilisateur}
-            onPress={() => navigation.navigate("Profil")}
+            onPress={() => navigation.navigate("UserProfile", { username: annonce.username })}
           >
             <View style={styles.utilisateurGauche}>
               <FontAwesome name="user" size={50} color="#194D4D" />
@@ -232,6 +232,7 @@ export default function AnnonceScreen({ route, navigation }) {
 
             <FontAwesome name="chevron-right" size={30} color={"#194D4D"} />
           </TouchableOpacity>
+
 
           {/* Report Button */}
           <TouchableOpacity style={styles.signalez}>
