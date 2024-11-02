@@ -8,15 +8,10 @@ export default function ProfilScreen({ navigation }) {
 
   const user = useSelector((state) => state.utilisateur.value);
 
-  const [bio, setBio] = useState("");
   const [isLearnModalVisible, setIsLearnModalVisible] = useState(false);
   const [isTeachModalVisible, setIsTeachModalVisible] = useState(false);
-  const [activitesDisponibles, setActivitesDisponibles] = useState([
-    "Mathématiques",
-    "Physique",
-    "Programmation",
-    "Musique",
-  ]);
+  const [activitesDisponibles, setActivitesDisponibles] = useState([]);
+  const [bio, setBio] = useState("");
   const [username, setUsername] = useState(user.username);
   const [phone, setPhone] = useState(user.phone);
   const [learn, setLearn] = useState([]);

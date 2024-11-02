@@ -139,7 +139,7 @@ const NotificationScreen = ({ navigation }) => {
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
-          <FontAwesome name="chevron-left" size={28} color={"#287777"} />
+          <FontAwesome name="reply-all" size={28} color={"#287777"} />
         </TouchableOpacity>
         <Text style={styles.title}>Mes collaborations</Text>
       </View>

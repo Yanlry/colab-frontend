@@ -114,7 +114,7 @@ export default function AccueilScreen({ navigation }) {
             {annonce.title.length > 46 ? `${annonce.title.substring(0, 45)}...` : annonce.title}
           </Text>
           <Text style={styles.apercuAnnonceDescription}>
-            {annonce.description.length > 85 ? `${annonce.description.substring(0, 84)}...` : annonce.description}
+            {annonce.description.length > 105 ? `${annonce.description.substring(0, 104)}...` : annonce.description}
           </Text>
           {annonce.programme && annonce.programme.trim() !== '' && (
             <Text style={styles.apercuAnnonceProgramme}>
@@ -332,7 +332,7 @@ scroll:{
   },
 
   apercuAnnonceDate: {
-    fontSize: 12,
+    fontSize: 11,
     marginTop: 15,
     alignSelf: 'flex-start', // Aligne la date en bas de la vignette
   },

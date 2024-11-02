@@ -76,7 +76,7 @@ export default function MesAnnoncesScreen({ navigation }) {
       
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
-          <FontAwesome name='chevron-left' size={28} color={'#3A3960'} />
+          <FontAwesome name='reply-all' size={28} color={'#3A3960'} />
         </TouchableOpacity>
         <Text style={styles.title}>Mes annonces</Text>
       </View>

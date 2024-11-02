@@ -5,7 +5,7 @@ import MapView, { Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import { ajouteFavoris, suprimeFavoris } from "../reducers/utilisateur";
 
-export default function AnnonceScreen({ route, navigation }) {
+export default function AnnonceUserScreen({ route, navigation }) {
     
   const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
 
@@ -214,13 +214,6 @@ export default function AnnonceScreen({ route, navigation }) {
                 <Text style={styles.titre}>Durée</Text>
               </View>
               <Text style={styles.critereReponse}>{annonce.tempsMax}</Text>
-            </View>
-            <View style={styles.critereContainer}>
-              <View style={styles.titreEtLogo}>
-                <FontAwesome name="map-pin" size={15} color="#194D4D" />
-                <Text style={styles.titre}>Lieu</Text>
-              </View>
-              <Text style={styles.critereReponse}>{annonce.mode}</Text>
             </View>
           </View>
 

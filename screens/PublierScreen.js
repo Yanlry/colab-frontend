@@ -18,6 +18,7 @@ export default function PublierScreen({ navigation }) {
   const [description, setDescription] = useState('');
   const [tempsMax, setTempsMax] = useState('');
   const [experience, setExperience] = useState('');
+  const [mode, setMode] = useState('');
   const [secteurActivite, setSecteurActivite] = useState([]);
   const [disponibilite, setDisponibilite] = useState([]);
   const [ville, setVille] = useState('');
@@ -28,6 +29,7 @@ export default function PublierScreen({ navigation }) {
   const [isSecteurModalVisible, setIsSecteurModalVisible] = useState(false);
   const [isDispoModalVisible, setIsDispoModalVisible] = useState(false);
   const [isExperienceModalVisible, setIsExperienceModalVisible] = useState(false);
+  const [isModeModalVisible, setIsModeModalVisible] = useState(false);
   const [isTempsModalVisible, setIsTempsModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const scrollViewRef = useRef(null);
@@ -76,7 +78,7 @@ const fetchCoordinates = (ville) => {
 };
 
 const envoyerDonnee = () => {
-  if (!type || !title || secteurActivite.length === 0 || !description || !tempsMax || !experience || !disponibilite || !ville || !latitude || !longitude) {
+  if (!type || !title || secteurActivite.length === 0 || !description || !tempsMax || !experience || !disponibilite || !ville || !latitude || !longitude || !mode) {
     setErrorMessage("Veuillez remplir tous les champs obligatoires.");
     return;
   }
@@ -86,10 +88,11 @@ const envoyerDonnee = () => {
 
   const annonceData = {
     type,
-    title,
-    description,
-    programme,
+    title:title.trim(),
+    description:description.trim(),
+    programme:programme.trim(),
     secteurActivite,
+    mode,
     tempsMax,
     experience,
     disponibilite,
@@ -153,6 +156,7 @@ const resetForm = () => {
   setVille('');
   setLatitude(null);
   setLongitude(null);
+  setMode('')
 };
 
 const cacherMessage = () => {
@@ -267,6 +271,30 @@ const renderExperienceModal = () => (
           )}
         />
         <TouchableOpacity onPress={() => setIsExperienceModalVisible(false)} style={styles.modalClose}>
+          <Text style={{ color: 'white' }}>Fermer</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </Modal>
+);
+
+const renderModeModal = () => (
+  <Modal visible={isModeModalVisible} animationType="slide" transparent={true}>
+    <View style={styles.modalContainer}>
+      <View style={styles.modalContent}>
+        <FlatList
+          data={[
+            { label: 'À distance', value: 'À distance' },
+            { label: 'Rencontre réelle', value: 'Rencontre réelle' },
+          ]}
+          keyExtractor={(item) => item.value}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => { setMode(item.value); setIsModeModalVisible(false); }} style={styles.modalItem}>
+              <Text>{item.label}</Text>
+            </TouchableOpacity>
+          )}
+        />
+        <TouchableOpacity onPress={() => setIsModeModalVisible(false)} style={styles.modalClose}>
           <Text style={{ color: 'white' }}>Fermer</Text>
         </TouchableOpacity>
       </View>
@@ -407,6 +435,13 @@ const renderTempsModal = () => (
                   </Text>
                 </TouchableOpacity>
 
+                <Text style={styles.titreCritere}>Lieu</Text>
+                <TouchableOpacity style={styles.saisie} onPress={() => setIsModeModalVisible(true)}>
+                  <Text style={mode ? styles.selectedText : styles.placeholderText}>
+                    {mode || "Quel mode d'apprentissage souhaitez vous ? "}
+                  </Text>
+                </TouchableOpacity>
+
               <Text style={styles.titreCritere}>Disponibilités</Text>
                 <TouchableOpacity style={styles.saisie} onPress={() => setIsDispoModalVisible(true)}>
                   <Text style={disponibilite.length > 0 ? styles.selectedText : styles.placeholderText}>
@@ -455,6 +490,7 @@ const renderTempsModal = () => (
       {renderDispoModal()}        
       {renderTypeModal()}
       {renderSecteurModal()}
+      {renderModeModal()}
     </SafeAreaView>
   );
 }

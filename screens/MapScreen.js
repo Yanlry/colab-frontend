@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, SafeAreaView, Modal, Text, View, Button, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, SafeAreaView, Modal, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 export default function MapScreen({ navigation }) {
@@ -22,8 +22,6 @@ export default function MapScreen({ navigation }) {
       }
     };
     
-    
-
     fetchAnnonces();
   }, []);
 
@@ -37,40 +35,38 @@ export default function MapScreen({ navigation }) {
   };
 
   const handleAnnoncePress = (annonce) => {
-    console.log("Annonce sélectionnée :", annonce); // Vérifie les données de l'annonce
     setModalVisible(false);
-    navigation.navigate('AnnonceMap', { annonce }); // Redirige vers AnnonceMapScreen avec les détails de l'annonce
+    navigation.navigate('AnnonceMap', { annonce });
   };
   
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <MapView
-  style={styles.map}
-  initialRegion={{
-    latitude: 46.603354,
-    longitude: 1.888334,
-    latitudeDelta: 8.5,
-    longitudeDelta: 8.5,
-  }}
->
-  {annonces.map((annonce, index) => (
-    annonce.latitude && annonce.longitude ? (
-      <Marker
-        key={index}
-        coordinate={{
-          latitude: annonce.latitude,
-          longitude: annonce.longitude,
+        style={styles.map}
+        initialRegion={{
+          latitude: 46.603354,
+          longitude: 1.888334,
+          latitudeDelta: 8.5,
+          longitudeDelta: 8.5,
         }}
-        onPress={() => handleMarkerPress(annonce.latitude, annonce.longitude, annonce.ville)}
-      />
-    ) : null
-  ))}
-</MapView>
-
+      >
+        {annonces.map((annonce, index) => (
+          annonce.latitude && annonce.longitude ? (
+            <Marker
+              key={index}
+              coordinate={{
+                latitude: annonce.latitude,
+                longitude: annonce.longitude,
+              }}
+              onPress={() => handleMarkerPress(annonce.latitude, annonce.longitude, annonce.ville)}
+            />
+          ) : null
+        ))}
+      </MapView>
 
       <Modal
         visible={modalVisible}
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         onRequestClose={() => setModalVisible(false)}
       >
@@ -85,14 +81,16 @@ export default function MapScreen({ navigation }) {
                   <Text style={styles.modalText}>{item.title}</Text>
                   <TouchableOpacity
                     style={styles.viewButton}
-                    onPress={() => handleAnnoncePress(item)} // Appelle handleAnnoncePress avec l'annonce sélectionnée
+                    onPress={() => handleAnnoncePress(item)}
                   >
-                    <Text style={styles.buttonText}>Voir l'annonce</Text>
+                    <Text style={styles.buttonText}>VOIR</Text>
                   </TouchableOpacity>
                 </View>
               )}
             />
-            <Button title="Fermer" onPress={() => setModalVisible(false)} />
+            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+              <Text style={styles.closeButtonText}>Fermer</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -115,33 +113,61 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: 300,
+    width: '95%',
     padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 25,
     fontWeight: 'bold',
-    marginBottom: 10,
+    color: '#333',
+    marginBottom: 15,
+    textAlign: 'center',
   },
   annonceItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
   modalText: {
     fontSize: 16,
+    paddingRight:5,
+    textAlign:'center',
     flex: 1,
+    color: '#333',
   },
   viewButton: {
-    backgroundColor: '#007BFF',
-    padding: 5,
-    borderRadius: 5,
+    backgroundColor: '#2874A6',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
   },
   buttonText: {
     color: 'white',
+    fontWeight:'bold',
     fontSize: 14,
+  },
+  closeButton: {
+    marginTop: 15,
+    backgroundColor: '#d9534f',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    alignSelf: 'center',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '500',
+    fontWeight:'bold'
   },
 });

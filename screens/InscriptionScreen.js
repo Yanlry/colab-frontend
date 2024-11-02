@@ -53,7 +53,7 @@ export default function InscriptionScreen({ navigation }) {
             <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
               <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.navigate('Connexion')} style={styles.icone}>
-                  <FontAwesome name='chevron-left' size={28} color={'#287777'} />
+                  <FontAwesome name='reply-all' size={28} color={'#287777'} />
                 </TouchableOpacity>
                 <Text style={styles.title}>Création du profil</Text>
               </View>

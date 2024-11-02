@@ -22,7 +22,8 @@ import MesAnnoncesScreen from './screens/MesAnnoncesScreen';
 import MonAnnonceScreen from './screens/MonAnnonceScreen';
 import ConversationScreen from './screens/ConversationScreen';
 import AnnonceMapScreen from './screens/AnnonceMapScreen';
-import UserProfile from './screens/UserProfile';
+import UserProfileScreen from './screens/UserProfileScreen';
+import AnnonceUserScreen from './screens/AnnonceUserScreen'
 
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -117,7 +118,8 @@ export default function App() {
           <Stack.Screen name="MesAnnonces" component={MesAnnoncesScreen} />
           <Stack.Screen name="MonAnnonce" component={MonAnnonceScreen} />
           <Stack.Screen name="Conversation" component={ConversationScreen} />
-          <Stack.Screen name="UserProfile" component={UserProfile} />
+          <Stack.Screen name="UserProfile" component={UserProfileScreen} />
+          <Stack.Screen name="AnnonceUser" component={AnnonceUserScreen} />
 
         </Stack.Navigator>
       </NavigationContainer>

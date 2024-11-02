@@ -68,7 +68,7 @@ export default function MonAnnonceScreen({ route, navigation }) {
       <View style={styles.navBar}>
         {/* BOUTON RETOUR ARRIERE */}
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome name='chevron-left' size={28} style={styles.goBack} color={'#287777'} />
+          <FontAwesome name='reply-all' size={28} style={styles.goBack} color={'#287777'} />
         </TouchableOpacity>
 
         <Image resizeMode="contain" source={require('../assets/logo.png')} style={styles.logo} />

@@ -77,8 +77,16 @@ export default function FavorisScreen({ navigation }) {
               {annonce.title.length > 46 ? annonce.title.substring(0, 45) + "..." : annonce.title}
             </Text>
             <Text style={styles.apercuAnnonceDescription}>
-              {annonce.description.length > 85 ? annonce.description.substring(0, 84) + "..." : annonce.description}
+              {annonce.description.length > 105 ? annonce.description.substring(0, 104) + "..." : annonce.description}
             </Text>
+            {annonce.programme && annonce.programme.trim() !== '' && (
+            <Text style={styles.apercuAnnonceProgramme}>
+              <Text style={styles.critereTextTitre}>Programme : </Text> 
+              <Text style={styles.critereText}>
+                {annonce.programme.length > 60 ? `${annonce.programme.substring(0, 59)}...` : annonce.programme}
+              </Text>
+            </Text>
+          )}
             <View style={styles.containerCritere}>
               <Text style={styles.apercuAnnonceExperience}>Expérience :</Text>
               <Text style={styles.critereText}> {annonce.experience}</Text>
@@ -248,6 +256,11 @@ scroll:{
     fontWeight: 'bold',
     color: '#1F5C5C',
   },
+  critereTextTitre: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#1F5C5C',
+  },
   mesCritere: {
     paddingLeft: 15,
     flex: 1, // Permet d'occuper tout l’espace vertical disponible
@@ -278,6 +291,12 @@ scroll:{
     paddingTop: 10,
     fontSize: 18,
     color: '#1F5C5C',
+  },
+  apercuAnnonceProgramme: {
+    fontSize: 13,
+    fontWeight:'bold',
+    color:'#14A3A1',
+    marginVertical:10
   },
   apercuAnnonceDescription: {
     fontSize: 13,
