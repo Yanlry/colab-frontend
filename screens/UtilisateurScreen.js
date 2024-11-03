@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback,Alert } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../reducers/utilisateur';
 
 export default function UtilisateurScreen({ navigation }) {
     
   const dispatch = useDispatch();
+  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+  const utilisateur = useSelector((state) => state.utilisateur.value);
 
   const [confirmerDeconnexion, setConfirmerDeconnexion] = useState(false);
 
@@ -14,6 +16,50 @@ export default function UtilisateurScreen({ navigation }) {
     dispatch(logout());
     navigation.navigate('Connexion');
   };
+
+ // Fonction pour confirmer la suppression
+ const confirmerSuppression = () => {
+  Alert.alert(
+    "Confirmation",
+    "Êtes-vous sûr de vouloir supprimer votre profil ? Cette action est irréversible.",
+    [
+      {
+        text: "Annuler",
+        style: "cancel"
+      },
+      {
+        text: "Supprimer",
+        onPress: supprimerProfil,
+        style: "destructive"
+      }
+    ],
+    { cancelable: true }
+  );
+};
+
+// Fonction pour supprimer le profil
+const supprimerProfil = () => {
+  fetch(`${apiUrl}/users/deleteProfile/${utilisateur.token}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.result) {
+        Alert.alert("Succès", "Votre profil a été supprimé avec succès.");
+        // Naviguer vers la page de connexion ou d'accueil
+        navigation.navigate("Connexion");
+      } else {
+        Alert.alert("Erreur", data.error || "Une erreur est survenue lors de la suppression du profil.");
+      }
+    })
+    .catch(error => {
+      console.error("Erreur lors de la suppression du profil:", error);
+      Alert.alert("Erreur", "Une erreur est survenue lors de la connexion au serveur.");
+    });
+};
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -35,19 +81,13 @@ export default function UtilisateurScreen({ navigation }) {
               <TouchableOpacity style={styles.mesMenu} onPress={() => navigation.navigate('MesAnnonces')}>
                 <Text style={styles.mesMenuTitre}>Mes annonces</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.mesMenu} >
+              <TouchableOpacity style={styles.mesMenu}  onPress={() => navigation.navigate('Notification')} >
                 <Text style={styles.mesMenuTitre}>Notifications</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.mesMenu} >
-                <Text style={styles.mesMenuTitre}>F.A.Q</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.mesMenu} >
-                <Text style={styles.mesMenuTitre}>Préférence de l'application</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.mesMenu} onPress={() => setConfirmerDeconnexion(true)}>
                 <Text style={styles.mesMenuTitre}>Se déconnecter</Text>
               </TouchableOpacity> 
-              <TouchableOpacity style={styles.menuSupprimer} >
+              <TouchableOpacity style={styles.menuSupprimer} onPress={confirmerSuppression}>
                 <Text style={styles.mesMenuTitre}>Supprimer profil</Text>
               </TouchableOpacity> 
             </View>
@@ -114,7 +154,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: 250,
-    height: 60,
+    height: 100,
     margin:10,
     backgroundColor: '#287777'
   },
@@ -130,6 +170,7 @@ const styles = StyleSheet.create({
   mesMenuTitre: {
     fontSize:18,
     color: 'white',
+    fontWeight:'bold'
   },
 
   //-------------------  CONFIRMER LA DECONNECTION ---------------------

@@ -24,6 +24,7 @@ import ConversationScreen from './screens/ConversationScreen';
 import AnnonceMapScreen from './screens/AnnonceMapScreen';
 import UserProfileScreen from './screens/UserProfileScreen';
 import AnnonceUserScreen from './screens/AnnonceUserScreen'
+import ModifierAnnonceScreen from './screens/ModifierAnnonceScreen'
 
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -120,6 +121,7 @@ export default function App() {
           <Stack.Screen name="Conversation" component={ConversationScreen} />
           <Stack.Screen name="UserProfile" component={UserProfileScreen} />
           <Stack.Screen name="AnnonceUser" component={AnnonceUserScreen} />
+          <Stack.Screen name="ModifierAnnonce" component={ModifierAnnonceScreen} />
 
         </Stack.Navigator>
       </NavigationContainer>

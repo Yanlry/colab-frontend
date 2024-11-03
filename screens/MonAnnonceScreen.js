@@ -8,14 +8,13 @@ export default function MonAnnonceScreen({ route, navigation }) {
     
   const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
 
-
   const { annonce } = route.params;
 
   const utilisateur = useSelector((state) => state.utilisateur.value);
 
-  const coordinates = {
-    latitude: 48.8566,
-    longitude: 2.3522,
+  const coordonnee = {
+    latitude: annonce.latitude || 0,
+    longitude: annonce.longitude || 0,
   };
 
   const formatDate = (dateString) => {
@@ -62,295 +61,400 @@ export default function MonAnnonceScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-
     <View style={styles.container}>
-
+      {/* Navbar */}
       <View style={styles.navBar}>
-        {/* BOUTON RETOUR ARRIERE */}
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome name='reply-all' size={28} style={styles.goBack} color={'#287777'} />
-        </TouchableOpacity>
-
-        <Image resizeMode="contain" source={require('../assets/logo.png')} style={styles.logo} />
-
-        {/* BOUTON PROFIL */}
-        <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
-          <FontAwesome name='user' size={30} color="#287777" />
+          <FontAwesome
+            name="reply-all"
+            size={28}
+            style={styles.goBack}
+            color={"#287777"}
+          />
         </TouchableOpacity>
       </View>
 
+      {/* Scrollable Content */}
       <ScrollView style={styles.annonceComplete}>
-        <View style={styles.annonceHeader}>
-          {/* TITRE */}
-          <Text style={styles.annonceTitre}>
-            {annonce.title}
+        {/* Title and Favorites */}
+        <View style={styles.annonceEnTete}>
+          <View>
+          <Text style={styles.annonceTitre}>{annonce.title}</Text>
+          <Text style={styles.descriptionDate}>
+            Publier le : {formatDate(annonce.date)}
           </Text>
+          </View>
         </View>
 
-        {/* TYPE ET DATE DE PUBLICATION */}
-        <View style={styles.annonceTypeEtDate}>
-          <Text>Type : {annonce.type}</Text>
-          <Text>Publier le : {formatDate(annonce.date)}</Text>
-        </View>
 
-        {/* DESCRIPTION */}
+        {/* Description */}
         <View style={styles.annonceDescription}>
-          <Text style={styles.annonceDescriptionText}>Description :{"\n"}</Text>
-          <Text>{annonce.description}</Text>
+          <Text style={styles.annonceDescriptionTitre}>Description</Text>
+          <Text style={styles.annonceDescriptionText}>{annonce.description} </Text>
+
+       {annonce.programme && annonce.programme.trim() !== '' && (
+        <View>
+          <Text style={styles.annonceProgrammeTitre}>Programme</Text>
+          <Text style={styles.annonceProgrammeText}>{annonce.programme}</Text>
         </View>
+       )}        
 
-        {/* CRITÉRE */}
-        <View style={styles.annonceCritere}>
-
-          {/* CRITERE COLONNE 1 */}
-          <View style={styles.critereColonne1}>
-
-            {/* SECTEUR D'ACTIVITE */}
-            <View style={styles.titreEtLogo}>
-              <FontAwesome name='list' size={15} color="#287777" />
-              <Text style={styles.titre}>Secteur d'activité</Text>
-            </View>
-            <Text style={styles.critereReponse}> {annonce.secteurActivite} </Text>
-
-            {/*  DISPONIBILITÉ */}
-            <View style={styles.titreEtLogo}>
-              <FontAwesome name='hourglass' size={15} color="#287777" />
-              <Text style={styles.titre}>Disponibilité</Text>
-            </View>
-            <Text style={styles.critereReponse}>{annonce.experience}</Text>
-          </View>
-
-          {/* CRITÉRE COLONNE 2 */}
-          <View style={styles.critereColonne2}>
-
-            {/* EXPÉRIENCE */}
-            <View style={styles.titreEtLogo}>
-              <FontAwesome name='briefcase' size={15} color="#287777" />
-              <Text style={styles.titre} >Mon expérience</Text>
-            </View>
-            <Text style={styles.critereReponse}>{annonce.experience} ans</Text>
-
-            {/* TEMPS MAX */}
-            <View style={styles.titreEtLogo}>
-              <FontAwesome name='users' size={15} color="#287777" />
-              <Text style={styles.titre}>Temps max</Text>
-            </View>
-            <Text style={styles.critereReponse}>{annonce.tempsMax} heure / semaine </Text>
-          </View>
+        <View style={styles.separator}></View>
+          
         </View>
-
-        {/* MAP LOCALISATION */}
+           
+        {/* Map */}
         <View style={styles.mapContainer}>
-          <MapView style={styles.map} region={{ ...coordinates, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}>
-            <Marker coordinate={coordinates} />
+          <MapView
+            style={styles.map}
+            region={{
+              ...coordonnee,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+            scrollEnabled={false}
+            zoomEnabled={false}
+            pitchEnabled={false}
+            rotateEnabled={false}
+            pointerEvents="none"
+          >
+            <Marker coordinate={coordonnee} />
           </MapView>
         </View>
 
-        {/* INFORMATIONS UTILISATEUR DE L'ANNONCE */}
-        <TouchableOpacity style={styles.utilisateur} onPress={() => navigation.navigate('Profil')}>
-          {/* ICONE PROFIL */}
-          <View style={styles.utilisateurGauche}>
-            <TouchableOpacity onPress={() => navigation.navigate('Profil')}>
-              <FontAwesome name="user" size={50} color="#287777" />
-            </TouchableOpacity>
+       
+        
+        {/* Criteria Section */}
+        <View style={styles.annonceCritere}>
+           {/* Type and Date */}
+        <View style={styles.annonceType}>
+          <Text style={styles.annonceTypeText}>{annonce.username} est ici pour {annonce.type.toLowerCase()}</Text>
+          
+        </View>
+
+          <View style={styles.critereContainer}>
+            <View style={styles.titreEtLogo}>
+              <FontAwesome name="list" size={15} color="#287777" />
+              <Text style={styles.titre}>Domaine</Text>
+            </View>
+            <Text style={styles.critereReponse}>
+              {annonce.secteurActivite}
+            </Text>
+          </View>
+          <View style={styles.critereContainer}>
+            <View style={styles.titreEtLogo}>
+              <FontAwesome name="hourglass" size={15} color="#194D4D" />
+              <Text style={styles.titre}>Disponibilité</Text>
+            </View>
+            {/* Loop through the disponibilite array and display each item */}
+            {annonce.disponibilite.map((dispo, index) => (
+              <View key={index} style={styles.bulletItem}>
+                <Text style={styles.critereReponse}>• {dispo}</Text>
+              </View>
+            ))}
           </View>
 
-          {/* NOM D'UTILISATEUR */}
-          <Text style={styles.textUtilisateur}>Nom d'utilisateur : {utilisateur.username} </Text>
-          <FontAwesome name='chevron-right' size={30} color={'#287777'} />
-        </TouchableOpacity>
+          <View style={styles.critereContainer}>
+            <View style={styles.titreEtLogo}>
+              <FontAwesome name="briefcase" size={15} color="#194D4D" />
+              <Text style={styles.titre}>Expérience</Text>
+            </View>
+            <Text style={styles.critereReponse}>{annonce.experience}</Text>
+          </View>
+          <View style={styles.critereContainer}>
+            <View style={styles.titreEtLogo}>
+              <FontAwesome name="users" size={15} color="#194D4D" />
+              <Text style={styles.titre}>Durée</Text>
+            </View>
+            <Text style={styles.critereReponse}>{annonce.tempsMax}</Text>
+          </View>
+          <View style={styles.critereContainer}>
+              <View style={styles.titreEtLogo}>
+                <FontAwesome name="map-pin" size={15} color="#194D4D" />
+                <Text style={styles.titre}>Lieu</Text>
+              </View>
+              <Text style={styles.critereReponse}>{annonce.mode}</Text>
+            </View>
+        </View>
 
-        {/*  SIGNALEZ ANNONCE  */}
-        <TouchableOpacity style={styles.signalez}>
-          <Text  style={styles.textSignalez}>S i g n a l e z    l ' a n n o n c e</Text>
-        </TouchableOpacity>
+        {/* User Information */}
+        <TouchableOpacity
+          style={styles.utilisateur}
+          onPress={() => navigation.navigate("UserProfile", { username: annonce.username })}
+        >
+          <View style={styles.utilisateurGauche}>
+            <FontAwesome name="user" size={50} color="#194D4D" />
+          </View>
+          <View style={styles.userInfo}>
+            <Text style={styles.usernameText}>{annonce.username} <Text style={styles.inscriptionText}>- inscrit depuis 2 ans</Text></Text>
+            <Text style={styles.ratingStars}>⭐⭐⭐⭐⭐ (96)</Text>
+          </View>
 
+          <FontAwesome name="chevron-right" size={30} color={"#194D4D"} />
+        </TouchableOpacity>
       </ScrollView>
 
-
-      {/* BARRE DE MODIFICATION */}
-      <View style={styles.suprimerAnnonce}>
-        <TouchableOpacity style={styles.modifierBoutton} onPress={() => afficherConfirmation()}>
-          <Text style={styles.modifierTexte}>SUPPRIMER ANNONCE</Text>
-        </TouchableOpacity>
+      {/* Colab Button */}
+      <View style={styles.changeBar}>
+          <TouchableOpacity onPress={() => navigation.navigate('ModifierAnnonce', { annonce })} style={styles.boutonModifier}>
+            <Text style={styles.colabText}>Modifier</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={afficherConfirmation} style={styles.boutonSupprimer}>
+            <Text style={styles.colabText}>Supprimer</Text>
+          </TouchableOpacity>
       </View>
-
     </View>
-    </SafeAreaView>
-
+  </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor:'#fff'
+    backgroundColor: '#e5f6f6',
+
   },
   container: {
-    flex:1
+    flex: 1,
   },
 
-  // ------------------- NAVBAR ---------------------
-
+  // Navbar
   navBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems:'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 30,
-    marginTop:15
+    marginTop: 15,
   },
   logo: {
     height: 38,
     width: 130,
-    marginRight: 5
   },
-  // ------------------- ANNONCE ENTIERE : SCROLLVIEW ---------------------
+
+  // Annonce Complete
   annonceComplete: {
     flex: 1,
-    paddingTop: 30,
-    backgroundColor: '#fff6',
+    marginTop: 15,
+    backgroundColor: '#e5f6f6',
+
   },
-  annonceHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-  },
-  annonceDate: {
-    paddingLeft: 20,
-    paddingTop: 5
+
+  // En Tete (Title and Favorite)
+  annonceEnTete: {
+    flexDirection: "row",
+    borderRadius: 20,
+    backgroundColor: "#fff",
+    paddingLeft:20,
+    marginHorizontal:10,
+    paddingTop:10,
+    paddingBottom:10
   },
   annonceTitre: {
-    fontSize: 29,
-    width: 335,
+    fontSize: 18,
+    fontWeight: "bold",
+    width: 270,
+    paddingTop:6,
+    paddingRight:5,
+    color:'#194D4D',
+
   },
   annonceFavoris: {
-    paddingRight: 5
-  },
-  annonceTypeEtDate: {
-    flexDirection:'row',
-    justifyContent:'space-between',
-    paddingHorizontal: 20,
-    marginTop:18
+    position:'absolute',
+    right:20,
+    bottom:35,
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    
   },
 
-  // ------------------- DESCRIPTION ---------------------
+  // Annonce Type
+  annonceType: {
+    borderRadius: 20,
+    marginBottom:25,
+    backgroundColor: "#fff",
+  },
+  annonceTypeText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color:'#194D4D'
+  },
+  annonceTypeDetails: {
+    fontSize: 16,
+    marginTop: 5,
+    marginLeft:5
+  },
+
+  // Annonce Description
   annonceDescription: {
+    borderRadius: 20,
+    padding: 20,
     marginTop: 10,
-    padding: 10,
-    borderWidth: 1,
-    borderColor:'grey',
-    borderRadius: 12,
-    marginVertical: 5,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    backgroundColor: "#fff",
+  },
+  annonceDescriptionTitre: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color:'#194D4D'
+
   },
   annonceDescriptionText: {
-    fontWeight: 'bold'
+    fontSize: 16,
+    marginTop: 10,
+    marginLeft:5
+  }
+  ,annonceProgrammeTitre: {
+    marginTop:10,
+    fontSize: 18,
+    fontWeight: "bold",
+    color:'#194D4D'
+  },
+  annonceProgrammeText:{
+    fontSize: 16,
+    marginTop: 10,
+    marginLeft:5
+  },
+  descriptionDate: {
+    marginTop: 10,
+    marginBottom:10,
+    fontSize: 14,
+    color: "#888",
   },
 
-  // ------------------- CRITÉRE ---------------------
-
+  // Criteria
   annonceCritere: {
-    borderWidth: 1,
-    borderColor:'grey',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 15,
-    borderRadius: 12,
-    marginVertical: 5,
-    marginHorizontal: 10
+    marginTop: 10,
+    padding:20,
+    borderRadius: 20,
+    backgroundColor: "#fff",
+    marginHorizontal: 10,
   },
-  critereColonne1: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  critereColonne2: {
-    justifyContent: 'center',
-    alignItems: 'center',
+  critereContainer: {
+    marginBottom: 15,
   },
   titreEtLogo: {
-    flexDirection: 'row',
-    alignItems: 'center'
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
   },
   titre: {
-    fontWeight: 'bold',
-    padding: 10
+    fontWeight: "bold",
+    fontSize: 18,
+    paddingLeft: 10,
+    color:'#194D4D'
+
   },
   critereReponse: {
-    padding: 7
+    paddingLeft: 25,
+    paddingBottom: 2,
+    fontSize: 14,
+    color: "#555",
+  },
+  bulletItem: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  bulletPoint: {
+    fontSize: 16,
+    color: "#287777", // Optional color for bullet point
   },
 
-
-
-  // ------------------- MAP ---------------------
+  userInfo: {
+    alignItems: 'center',
+  },
+  usernameText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  ratingStars: {
+    marginTop:10,
+    fontSize: 16,
+    marginLeft: 8,
+    color: '#FFD700', // Couleur or pour les étoiles
+  },
+  reviewCount: {
+    fontSize: 16,
+    color: '#666',
+    marginLeft: 4,
+  },
+  inscriptionText:{
+    fontSize:14,
+    color:'#ccc'
+  },
+  // Map Container
   mapContainer: {
+    marginTop: 10,
+    marginHorizontal: 10,
+    borderRadius: 20,
+    overflow: "hidden",
     height: 200,
   },
   map: {
-    borderRadius: 50,
     ...StyleSheet.absoluteFillObject,
   },
 
-  // ------------------- UTILISATEUR BOUTON ---------------------
+  // User Information
   utilisateur: {
-    borderWidth: 1,
-    borderColor:'grey',
-    borderRadius: 12,
-    height: 90,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 10,
+    marginHorizontal: 10,
     padding: 20,
-    marginVertical: 5,
-    marginHorizontal: 10
+    borderRadius: 20,
+    backgroundColor: "#fff",
   },
   textUtilisateur: {
-    fontSize: 23
-  },
-  utilisateurGauche: {
-    justifyContent: 'center'
+    fontSize: 18,
   },
 
-  // ------------------- SIGNALEZ ANNONCE BOUTON ---------------------
-
+  // Report Button
   signalez: {
-    borderWidth: 1,
-    borderColor:'#FF1F1F',
-    borderRadius: 12,
-    height: 30,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 5,
+    borderRadius: 30,
     marginHorizontal: 10,
-    marginBottom: 37,
-    backgroundColor: '#fff',
-    fontWeight:'bold'
+    marginTop: 10,
+    marginBottom: 10,
+    backgroundColor: "#FF7070",
+    height: 20,
+    justifyContent: "center", // Centre le contenu verticalement
+    alignItems: "center", // Centre le contenu horizontalement
   },
   textSignalez: {
-    color:'#FF1F1F'
+    color: "#fff",
+    textAlign: "center",
   },
 
-  // ------------------- BARRE DE MODIFICATION ---------------------
-
-  suprimerAnnonce: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 85,
-    flexDirection: 'row',
-    paddingBottom: 15
+  // Colab Button
+  changeBar: {
+    flexDirection:'row',
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 15,
+    marginBottom: 20,
+    gap:50
   },
-  modifierBoutton: {
-    width: 250,
+  boutonModifier: {
+    width: 150,
     height: 50,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#CE5A5A'
+    borderRadius: 100,
+    backgroundColor: "#287777",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  modifierTexte: {
-    fontSize: 15,
-    textAlign: 'center',
-    color: 'white'
+  boutonSupprimer: {
+    width: 150,
+    height: 50,
+    borderRadius: 100,
+    backgroundColor: "#FF6347",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  colabText: {
+    fontSize: 20,
+    color: "#fff",
   },
 });
+
 
