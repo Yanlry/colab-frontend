@@ -18,7 +18,7 @@ export default function ConnexionScreen({ navigation }) {
   const passwordVisible = () => setVoirPassword(!voirPassword);
 
   const handleConnection = () => {
-    fetch(`http://colab-backend-iota.vercel.app:3000/users/signin`, {
+    fetch(`https://colab-backend-iota.vercel.app/users/signin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password: motDePasse }),

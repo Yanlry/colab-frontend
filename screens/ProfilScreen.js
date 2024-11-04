@@ -19,7 +19,7 @@ export default function ProfilScreen({ navigation }) {
 
   useEffect(() => {
     // Récupérer toutes les activités disponibles
-    fetch(`http://colab-backend-iota.vercel.app/profiles/activites`)
+    fetch(`https://colab-backend-iota.vercel.app/profiles/activites`)
       .then((response) => response.json())
       .then((data) => {
         if (data && data.activites) {
@@ -28,7 +28,7 @@ export default function ProfilScreen({ navigation }) {
       });
 
     // Récupérer les informations de profil de l'utilisateur
-    fetch(`http://colab-backend-iota.vercel.app/users/profile/${user.token}`)
+    fetch(`https://colab-backend-iota.vercel.app/users/profile/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -51,7 +51,7 @@ export default function ProfilScreen({ navigation }) {
       });
 
     // Récupérer les activités sélectionnées par l'utilisateur
-    fetch(`http://colab-backend-iota.vercel.app/profiles/activites/${user.token}`)
+    fetch(`https://colab-backend-iota.vercel.app/profiles/activites/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -304,7 +304,7 @@ export default function ProfilScreen({ navigation }) {
     // Si l'utilisateur a sélectionné une catégorie, on continue le processus
     setErrorMessage(""); // Réinitialiser le message d'erreur si tout est correct
 
-    fetch(`http://colab-backend-iota.vercel.app/profiles/learn`, {
+    fetch(`https://colab-backend-iota.vercel.app/profiles/learn`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: user.token, activites: learn }),
@@ -340,7 +340,7 @@ export default function ProfilScreen({ navigation }) {
     // Si l'utilisateur a sélectionné une catégorie, on continue le processus
     setErrorMessage(""); // Réinitialiser le message d'erreur si tout est correct
 
-    fetch(`http://colab-backend-iota.vercel.app/profiles/teach`, {
+    fetch(`https://colab-backend-iota.vercel.app/profiles/teach`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: user.token, activites: teach }),
@@ -382,7 +382,7 @@ export default function ProfilScreen({ navigation }) {
       bio: bio,
     };
 
-    fetch(`http://colab-backend-iota.vercel.app/users/updateProfile`, {
+    fetch(`https://colab-backend-iota.vercel.app/users/updateProfile`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestBody),

@@ -36,7 +36,7 @@ export default function ModifierAnnonceScreen({ route, navigation }) {
   const [inputHeight, setInputHeight] = useState(40);
 
   useEffect(() => {
-    fetch(`http://colab-backend-iota.vercel.app/profiles/activites`)
+    fetch(`https://colab-backend-iota.vercel.app/profiles/activites`)
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -109,7 +109,7 @@ export default function ModifierAnnonceScreen({ route, navigation }) {
       longitude,
     };
 
-    fetch(`http://colab-backend-iota.vercel.app/annonces/modifier/${utilisateur.token}`, {
+    fetch(`https://colab-backend-iota.vercel.app/annonces/modifier/${utilisateur.token}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

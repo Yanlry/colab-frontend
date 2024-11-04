@@ -54,7 +54,7 @@ export default function AnnonceScreen({ route, navigation }) {
   const envoyerDemandeColab = () => {
     console.log("Envoyer Colab - Token:", annonce.token, "Cible:", annonce.username, "Initiateur:", utilisateur.username);
 
-    fetch(`http://colab-backend-iota.vercel.app/propositionCollabs/propositions`, {
+    fetch(`https://colab-backend-iota.vercel.app/propositionCollabs/propositions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

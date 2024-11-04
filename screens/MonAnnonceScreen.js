@@ -25,7 +25,7 @@ export default function MonAnnonceScreen({ route, navigation }) {
   const supprimerAnnonce = () => {
 
 
-    fetch(`http://colab-backend-iota.vercel.app/annonces/supprime/${utilisateur.token}`, {
+    fetch(`https://colab-backend-iota.vercel.app/annonces/supprime/${utilisateur.token}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

@@ -39,7 +39,7 @@ export default function UtilisateurScreen({ navigation }) {
 
 // Fonction pour supprimer le profil
 const supprimerProfil = () => {
-  fetch(`http://colab-backend-iota.vercel.app/users/deleteProfile/${utilisateur.token}`, {
+  fetch(`https://colab-backend-iota.vercel.app/users/deleteProfile/${utilisateur.token}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',

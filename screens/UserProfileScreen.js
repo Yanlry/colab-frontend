@@ -36,7 +36,7 @@ export default function UserProfile({ route, navigation }) {
 
   useEffect(() => {
     // Récupérer les informations de profil de l'utilisateur via le username
-    fetch(`http://colab-backend-iota.vercel.app/profiles/users/${username}`)
+    fetch(`https://colab-backend-iota.vercel.app/profiles/users/${username}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -61,7 +61,7 @@ export default function UserProfile({ route, navigation }) {
   }, []);
 
   const fetchUserAds = () => {
-    fetch(`http://colab-backend-iota.vercel.app/profiles/users/${username}`)
+    fetch(`https://colab-backend-iota.vercel.app/profiles/users/${username}`)
       .then(response => response.json())
       .then(data => {
         if (data.result) {

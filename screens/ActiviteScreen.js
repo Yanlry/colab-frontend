@@ -21,7 +21,7 @@ export default function ActiviteScreen({ navigation }) {
   const [modalDemandeVisible, setModalDemandeVisible] = useState(false);
 
   useEffect(() => {
-    fetch('http://colab-backend-iota.vercel.app/profiles/activites')
+    fetch('https://colab-backend-iota.vercel.app/profiles/activites')
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -55,7 +55,7 @@ export default function ActiviteScreen({ navigation }) {
     };
   
     try {
-      const responseOffre = await fetch(`http://colab-backend-iota.vercel.app/profiles/teach`, {
+      const responseOffre = await fetch(`https://colab-backend-iota.vercel.app/profiles/teach`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBodyOffre),
@@ -64,7 +64,7 @@ export default function ActiviteScreen({ navigation }) {
       console.log('Réponse teach:', dataOffre);
       dispatch(teach(dataOffre.user));
   
-      const responseDemande = await fetch(`http://colab-backend-iota.vercel.app/profiles/learn`, {
+      const responseDemande = await fetch(`https://colab-backend-iota.vercel.app/profiles/learn`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBodyDemande),

@@ -33,7 +33,7 @@ export default function MesAnnoncesScreen({ navigation }) {
   };
 
   const fetchData = () => {
-    fetch(`http://colab-backend-iota.vercel.app/annonces/mesAnnonces/${utilisateur.token}`)
+    fetch(`https://colab-backend-iota.vercel.app/annonces/mesAnnonces/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));

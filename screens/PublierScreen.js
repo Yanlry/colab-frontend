@@ -34,7 +34,7 @@ export default function PublierScreen({ navigation }) {
   const [inputHeight, setInputHeight] = useState(40); // Valeur initiale de la hauteur
 
   useEffect(() => {
-    fetch(`http://colab-backend-iota.vercel.app/profiles/activites`)
+    fetch(`https://colab-backend-iota.vercel.app/profiles/activites`)
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
