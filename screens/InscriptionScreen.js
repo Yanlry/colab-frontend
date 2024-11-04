@@ -7,8 +7,6 @@ import { login } from '../reducers/utilisateur';
 
 export default function InscriptionScreen({ navigation }) {
     
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
-
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

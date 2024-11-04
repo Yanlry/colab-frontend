@@ -157,7 +157,6 @@ export default function MesAnnoncesScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  // Style similaire à AccueilScreen pour uniformité
   safeAreaView: {
     backgroundColor: '#e5f6f6',
     height: '100%',
@@ -188,7 +187,6 @@ const styles = StyleSheet.create({
     marginTop:15,
     height: '80%',
   },
-    
   annonce: {
     minHeight: 190, 
     width: '95%',
@@ -212,8 +210,8 @@ const styles = StyleSheet.create({
   },
   mesCritere: {
     paddingLeft: 15,
-    flex: 1, // Permet d'occuper tout l’espace vertical disponible
-    justifyContent: 'space-between', // Sépare le contenu principal et la date
+    flex: 1, 
+    justifyContent: 'space-between',
   },
   imageContainer: {
     justifyContent: 'center',
@@ -231,7 +229,7 @@ const styles = StyleSheet.create({
   },
   apercuAnnonce: {
     width: '85%',
-    flex: 1, // Permet de remplir l'espace vertical
+    flex: 1, 
   },
   apercuAnnonceTitre: {
     paddingVertical:10,
@@ -251,11 +249,10 @@ const styles = StyleSheet.create({
     color:'#14A3A1',
     marginVertical:10
   },
-
   apercuAnnonceDate: {
     fontSize: 11,
     marginTop: 15,
-    alignSelf: 'flex-start', // Aligne la date en bas de la vignette
+    alignSelf: 'flex-start', 
   },
   containerCritere: {
     flexDirection: 'row',
@@ -269,11 +266,9 @@ const styles = StyleSheet.create({
   critereText: {
     fontSize: 12,
   },
-  
   separator: {
     marginBottom: 70,
   },
-  
   favorisIconContainer: {
     position: 'absolute',
     top: 10,

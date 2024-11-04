@@ -10,7 +10,6 @@ export default function ModifierAnnonceScreen({ route, navigation }) {
   
   const utilisateur = useSelector(state => state.utilisateur.value);
 
-  // États pour chaque champ de l'annonce avec valeurs initiales basées sur l'annonce actuelle
   const [activitesDisponibles, setActivitesDisponibles] = useState([]);
   const [type, setType] = useState(annonce.type);
   const [title, setTitle] = useState(annonce.title);
@@ -77,7 +76,6 @@ export default function ModifierAnnonceScreen({ route, navigation }) {
   };
 
   const toggleDisponibilite = (value) => {
-    // Si l'élément est déjà sélectionné, on le retire. Sinon, on l'ajoute.
     if (disponibilite.includes(value)) {
       setDisponibilite(disponibilite.filter(item => item !== value));
     } else {
@@ -341,14 +339,12 @@ export default function ModifierAnnonceScreen({ route, navigation }) {
             <View style={styles.descriptionContainer}>
             <Text style={styles.titreDescription}>Description</Text>
               <TextInput
-                  style={[styles.saisieDescription, { height: inputHeight }]} // Ajuste la hauteur
+                  style={[styles.saisieDescription, { height: inputHeight }]} 
                   placeholder="Votre objectif, vos attentes, votre expérience, etc..."
                   value={description}
                   onChangeText={(text) => setDescription(text)}
                   multiline
-                  onContentSizeChange={(event) =>
-                      setInputHeight(event.nativeEvent.contentSize.height)
-                  } // Ajuste la hauteur dynamiquement
+                  onContentSizeChange={(event) => setInputHeight(event.nativeEvent.contentSize.height)} 
                   scrollEnabled={false}
               />
 
@@ -435,7 +431,6 @@ export default function ModifierAnnonceScreen({ route, navigation }) {
                 </Text>
               </TouchableOpacity>
 
-              {/* Additional fields like title, description, localisation, etc. */}
               <TouchableOpacity style={styles.boutonEnvoyer} onPress={modifierAnnonce}>
                 <Text style={styles.textEnvoyer}>Modifier l'annonce</Text>
               </TouchableOpacity>
@@ -444,7 +439,6 @@ export default function ModifierAnnonceScreen({ route, navigation }) {
               </TouchableOpacity>
               {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
 
-              {/* Confirmation Modal */}
               <Modal
                 animationType="fade"
                 transparent={true}
@@ -582,7 +576,7 @@ const styles = StyleSheet.create({
       fontSize: 16,
     },
     placeholderText: {
-      color: '#8E8E93', // Gris clair
+      color: '#8E8E93', 
     },
     errorText: {
       color: 'red',
@@ -591,7 +585,7 @@ const styles = StyleSheet.create({
       fontSize: 14,
     },
     boutonVider: {
-      backgroundColor: '#FF6347', // Couleur rouge/orange pour différencier du bouton "Publier"
+      backgroundColor: '#FF6347',
       padding: 15,
       borderRadius: 30,
       alignItems: 'center',
@@ -613,9 +607,9 @@ const styles = StyleSheet.create({
       marginHorizontal: 20,
       borderRadius: 30,
       padding: 20,
-      width: '80%', // Réduit la largeur du modal
-      maxHeight: '50%', // Réduit la hauteur maximale du modal
-      alignSelf: 'center', // Centre le modal sur l'écran,
+      width: '80%', 
+      maxHeight: '50%', 
+      alignSelf: 'center', 
     },
     modalItem: {
       padding: 15,
@@ -633,14 +627,14 @@ const styles = StyleSheet.create({
       borderRadius: 30,
     },
     map: {
-      height: 200, // Hauteur de la carte
+      height: 200, 
       width: '100%',
       marginBottom: 20,
       borderRadius:30
     },
     modalOverlay: {
       flex: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fond semi-transparent
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', 
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -681,17 +675,17 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       marginBottom: 20,
       backgroundColor: 'white',
-      borderRadius: 30, // Bord arrondi
+      borderRadius: 30, 
     },
     supprimerContainer: {
-      backgroundColor: '#FF6347', // Couleur de fond du bouton "Supprimer"
-      borderRadius: 15,           // Bord arrondi pour le bouton
-      paddingVertical: 5,         // Ajustez le padding selon la taille souhaitée
+      backgroundColor: '#FF6347', 
+      borderRadius: 15, 
+      paddingVertical: 5,
       paddingHorizontal: 10,
     },
     supprimerVille: {
-      color: 'white', // Couleur du texte
-      fontWeight: 'bold', // Rendre le texte plus visible
+      color: 'white', 
+      fontWeight: 'bold', 
       textAlign: 'center',
     },
     selectedCity: {

@@ -8,7 +8,7 @@ export default function GeoAPIGouvAutocomplete({ onCitySelected }) {
   const [debouncedQuery] = useDebounce(query, 300);
 
   useEffect(() => {
-    // Assurez-vous que la recherche est déclenchée seulement si la requête a au moins 3 caractères
+    
     if (debouncedQuery.length >= 3) {
       const fetchCities = async () => {
         try {
@@ -23,7 +23,6 @@ export default function GeoAPIGouvAutocomplete({ onCitySelected }) {
 
       fetchCities();
     } else {
-      // Si la requête est moins de 3 caractères, vider la liste de villes
       setCities([]);
     }
   }, [debouncedQuery]);

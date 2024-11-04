@@ -17,7 +17,6 @@ export default function UtilisateurScreen({ navigation }) {
     navigation.navigate('Connexion');
   };
 
- // Fonction pour confirmer la suppression
  const confirmerSuppression = () => {
   Alert.alert(
     "Confirmation",
@@ -37,7 +36,6 @@ export default function UtilisateurScreen({ navigation }) {
   );
 };
 
-// Fonction pour supprimer le profil
 const supprimerProfil = () => {
   fetch(`https://colab-backend-iota.vercel.app/users/deleteProfile/${utilisateur.token}`, {
     method: 'DELETE',
@@ -49,7 +47,6 @@ const supprimerProfil = () => {
     .then(data => {
       if (data.result) {
         Alert.alert("Succès", "Votre profil a été supprimé avec succès.");
-        // Naviguer vers la page de connexion ou d'accueil
         navigation.navigate("Connexion");
       } else {
         Alert.alert("Erreur", data.error || "Une erreur est survenue lors de la suppression du profil.");
@@ -66,7 +63,6 @@ const supprimerProfil = () => {
       <KeyboardAvoidingView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.container}>
-              {/* BOUTON RETOUR ARRIERE */}
               <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
                   <FontAwesome name='reply-all' size={28} color={'#287777'} />
@@ -95,7 +91,6 @@ const supprimerProfil = () => {
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
 
-      {/* Boîte de dialogue de confirmation */}
       {confirmerDeconnexion && (
         <View style={styles.confirmation}>
           <View style={styles.confirmationContainer}>
@@ -122,8 +117,6 @@ const styles = StyleSheet.create({
     backgroundColor:'#e5f6f6',
     alignItems:'center'
   },
-
-  //-----------------------  NAVBAR  ---------------------------------
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -138,10 +131,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#236C6C',
     paddingLeft:65
-
   },
-
-  //------------------- MENU ---------------------
   menuContainer: {
     height: 700,
     width: 350,
@@ -172,8 +162,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight:'bold'
   },
-
-  //-------------------  CONFIRMER LA DECONNECTION ---------------------
   confirmation: {
     position: 'absolute',
     top: 0,
@@ -196,8 +184,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
-
-  //-----------------------  BOUTTON CONFIRMER LA DECONNECTION ---------------------------------
   confirmationBouttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

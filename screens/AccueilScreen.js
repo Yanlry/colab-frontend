@@ -111,12 +111,11 @@ export default function AccueilScreen({ navigation }) {
       <Text style={styles.textImageContainer}>{annonce.secteurActivite}</Text>
     </View>
     
-    {/* Icône de favoris en haut à droite */}
     <TouchableOpacity style={styles.favorisIconContainer} onPress={() => toggleFavori(annonce)}>
       <FontAwesome
         name="heart"
         size={25}
-        color={favoris.some(fav => fav.token === annonce.token) ? '#FF6347' : '#ccc'} // Rouge si favori, gris sinon
+        color={favoris.some(fav => fav.token === annonce.token) ? '#FF6347' : '#ccc'} 
       />
     </TouchableOpacity>
 
@@ -169,28 +168,30 @@ export default function AccueilScreen({ navigation }) {
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           
-          {/* Titre de la section Disponibilité */}
           <Text style={styles.modalTitle}>Disponibilité</Text>
           <TouchableOpacity onPress={() => { setFiltreDisponibilite("Soir"); setModalVisible(false); }}>
             <Text style={[styles.modalOption, filtreDisponibilite === "Soir" && styles.selectedOption]}>Soir</Text>
           </TouchableOpacity>
+          
           <TouchableOpacity onPress={() => { setFiltreDisponibilite("Semaine"); setModalVisible(false); }}>
             <Text style={[styles.modalOption, filtreDisponibilite === "Semaine" && styles.selectedOption]}>Semaine</Text>
           </TouchableOpacity>
+          
           <TouchableOpacity onPress={() => { setFiltreDisponibilite("Week-end"); setModalVisible(false); }}>
             <Text style={[styles.modalOption, filtreDisponibilite === "Week-end" && styles.selectedOption]}>Week-end</Text>
           </TouchableOpacity>
           
           <View style={styles.divider} />
   
-          {/* Titre de la section Expérience */}
           <Text style={styles.modalTitle}>Expérience</Text>
           <TouchableOpacity onPress={() => { setFiltreExperience("Débutant"); setModalVisible(false); }}>
             <Text style={[styles.modalOption, filtreExperience === "Débutant" && styles.selectedOption]}>Débutant</Text>
           </TouchableOpacity>
+
           <TouchableOpacity onPress={() => { setFiltreExperience("Intermédiaire"); setModalVisible(false); }}>
             <Text style={[styles.modalOption, filtreExperience === "Intermédiaire" && styles.selectedOption]}>Intermédiaire</Text>
           </TouchableOpacity>
+
           <TouchableOpacity onPress={() => { setFiltreExperience("Confirmé"); setModalVisible(false); }}>
             <Text style={[styles.modalOption, filtreExperience === "Confirmé" && styles.selectedOption]}>Confirmé</Text>
           </TouchableOpacity>
@@ -265,10 +266,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#e5f6f6',
     height: '100%'
   },
- 
- //-----------------------  BOUTON OFFRE ET DEMANDE  ---------------------------------
-
-  offreEtDemande: {
+ offreEtDemande: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop:20,
@@ -295,9 +293,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
-
-  //-----------------------  BARRE DE RECHERCHE  ---------------------------------
-
   rechercher: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -311,19 +306,13 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     borderRadius: 30,
     backgroundColor:'white'
-  },
-
-  //-----------------------  ICONE FILTRE  ---------------------------------
-
-  filtreAnnonce: {
+  }, 
+   filtreAnnonce: {
     padding: 10,
   },
   filtreIcone: {
     color: '#194D4D',
   },
-
-  //-----------------------  MODAL FILTRE  ---------------------------------
-
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -388,17 +377,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd',
     marginVertical: 15,
   },
-
-  //-----------------------   SCROLLVIEW  ---------------------------------
-
   scroll:{
     height: '80%',
     paddingBottom: 20,
 
   },
-  //-----------------------  VIGNETTE D'ANNONCE  ---------------------------------
-  
-  annonce: {
+   annonce: {
     minHeight: 190, 
     width: '95%',
     flexDirection: 'row',
@@ -426,8 +410,8 @@ const styles = StyleSheet.create({
   },
   mesCritere: {
     paddingLeft: 15,
-    flex: 1, // Permet d'occuper tout l’espace vertical disponible
-    justifyContent: 'space-between', // Sépare le contenu principal et la date
+    flex: 1, 
+    justifyContent: 'space-between', 
   },
   imageContainer: {
     justifyContent: 'center',
@@ -445,7 +429,7 @@ const styles = StyleSheet.create({
   },
   apercuAnnonce: {
     width: '85%',
-    flex: 1, // Permet de remplir l'espace vertical
+    flex: 1, 
   },
   apercuAnnonceTitre: {
     paddingVertical:10,
@@ -479,7 +463,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginTop: 15,
     color:'#555',
-    alignSelf: 'flex-start', // Aligne la date en bas de la vignette
+    alignSelf: 'flex-start', 
   },
   containerCritere: {
     flexDirection: 'row',
@@ -499,9 +483,6 @@ const styles = StyleSheet.create({
     right: 10,
     zIndex: 1,
   },
-  
-  //-----------------------  AUTRE  ---------------------------------
-  
   messageAucuneOffre: {
     textAlign: 'center',
     marginTop: 20,

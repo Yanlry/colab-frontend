@@ -186,7 +186,7 @@ export default function ActiviteScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#e5f6f6', // Couleur de fond légèrement grise pour une apparence douce
+    backgroundColor: '#e5f6f6', 
   },
   container: {
     flex: 1,
@@ -195,24 +195,24 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center', // Alignement centré pour une mise en page plus équilibrée
+    alignItems: 'center',
   },
   confirmationCreation: {
-    fontSize: 60, // Augmentation de la taille de la police pour une meilleure lisibilité
+    fontSize: 60, 
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 65, // Un peu plus d'espace pour aérer la mise en page
-    color: '#287777', // Couleur de texte cohérente avec les boutons
+    marginBottom: 65,
+    color: '#287777',
   },
   welcomeText: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 40,
-    color: '#333', // Couleur de texte plus douce pour améliorer la lisibilité
+    color: '#333', 
   },
   boldText: {
     fontWeight: 'bold',
-    color: '#287777', // Couleur qui correspond aux éléments interactifs
+    color: '#287777', 
   },
   loadingMsg: {
     textAlign: 'center',
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
   offreContainer: {
     marginBottom: 20,
-    width: '100%', // Prendre toute la largeur pour un alignement plus propre
+    width: '100%', 
   },
   demandeContainer: {
     marginBottom: 20,
@@ -230,19 +230,19 @@ const styles = StyleSheet.create({
   },
   activityLabel: {
     textAlign:'center',
-    fontSize: 18, // Texte légèrement plus grand pour attirer l'attention sur les labels
+    fontSize: 18, 
     marginBottom: 10,
     color:'#1F5C5C',
-    fontWeight: '600', // Meilleure emphase sur les labels
+    fontWeight: '600', 
   },
   modalButton: {
     backgroundColor: '#287777',
-    paddingVertical: 20, // Augmenter la hauteur
-    paddingHorizontal: 30, // Augmenter la largeur
+    paddingVertical: 20, 
+    paddingHorizontal: 30, 
     borderRadius: 30, 
     alignItems: 'center',
     width: 300,
-    maxWidth: 350, // Largeur maximale augmentée
+    maxWidth: 350,
     alignSelf: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -252,14 +252,14 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     color: 'white',
-    fontSize: 18, // Taille de la police augmentée
+    fontSize: 18, 
     fontWeight: 'bold',
   },
   
   validationMessageOffre: {
     color: 'red',
     marginTop: 5,
-    fontSize: 14, // Taille réduite pour les messages d'erreur
+    fontSize: 14, 
   },
   validationMessageDemande: {
     color: 'red',
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   },
   registerButtonText: {
     color: 'white',
-    fontSize: 18, // Augmentation de la taille de police pour le bouton d'action principal
+    fontSize: 18, 
     fontWeight: 'bold',
     width:270,
     textAlign:'center',
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Arrière-plan transparent pour le modal
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     width: '80%',
-    maxHeight: '60%', // Réduire la hauteur max du modal pour un meilleur focus
+    maxHeight: '60%', 
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   modalCloseButton: {
     marginTop: 20,
     backgroundColor: '#3CB371',
-    padding: 12, // Padding légèrement augmenté pour plus de confort
+    padding: 12, 
     borderRadius: 30,
     alignItems: 'center',
   },
@@ -330,9 +330,9 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: 'white',
     marginVertical: 4,
-    borderRadius: 30, // Coins plus arrondis pour un design plus moderne
+    borderRadius: 30, 
     borderWidth: 1,
-    borderColor: '#ccc', // Légère bordure pour mieux distinguer les éléments
+    borderColor: '#ccc', 
     alignItems:'center'
   },
   activiteItemSelected: {
@@ -343,6 +343,6 @@ const styles = StyleSheet.create({
   },
   activiteTextSelected: {
     color: 'white',
-    fontWeight: 'bold', // Mettre en évidence le texte des éléments sélectionnés
+    fontWeight: 'bold', 
   },
 });

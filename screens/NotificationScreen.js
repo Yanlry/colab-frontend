@@ -176,11 +176,26 @@ const NotificationScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1,     backgroundColor: '#e5f6f6',
+  container: { 
+    flex: 1,     
+    backgroundColor: '#e5f6f6',
   },
-  header: { flexDirection: "row", alignItems: "center", padding: 16, paddingLeft: 35, paddingTop: 60 },
-  icon: { marginRight: 10 },
-  title: { fontSize: 22, fontWeight: "bold", color: "#287777", marginLeft: 35 },
+  header: { 
+    flexDirection: "row", 
+    alignItems: "center", 
+    padding: 16, 
+    paddingLeft: 35, 
+    paddingTop: 60 
+  },
+  icon: { 
+    marginRight: 10 
+  },
+  title: { 
+    fontSize: 22, 
+    fontWeight: "bold", 
+    color: "#287777", 
+    marginLeft: 35 
+  },
   tabContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -189,14 +204,25 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     gap: 150,
   },
-  tabButton: { padding: 12 },
+  tabButton: { 
+    padding: 12 
+  },
   activeTabButton: {
     borderBottomWidth: 2,
     borderBottomColor: "#287777",
   },
-  tabText: { fontSize: 16, color: "#666" },
-  activeTabText: { color: "#287777", fontWeight: "bold" },
-  listContainer: { paddingHorizontal: 16, paddingBottom: 16 },
+  tabText: { 
+    fontSize: 16, 
+    color: "#666" 
+  },
+  activeTabText: { 
+    color: "#287777", 
+    fontWeight: "bold" 
+  },
+  listContainer: { 
+    paddingHorizontal: 16, 
+    paddingBottom: 16
+  },
   notificationItem: {
     padding: 16,
     marginVertical: 8,
@@ -213,8 +239,8 @@ const styles = StyleSheet.create({
   notificationText: { fontSize: 16, color: "#333" },
   buttonsContainer: {
     flexDirection: "row",
-    justifyContent: "center", // Centre les boutons horizontalement
-    alignItems: "center", // Centre les boutons verticalement
+    justifyContent: "center",
+    alignItems: "center", 
     marginTop: 12,
     gap:20
   },
@@ -224,7 +250,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 8,
     width:250,
-    alignItems: "center", // Centre le texte du bouton
+    alignItems: "center",
   },
   button: {
     paddingVertical: 10,
@@ -233,9 +259,17 @@ const styles = StyleSheet.create({
     minWidth: "45%",
     alignItems: "center",
   },
-  acceptButton: { backgroundColor: "#28a745" },
-  rejectButton: { backgroundColor: "#FF6347" },
-  choix: { color: "white", fontWeight: "bold" },
+  acceptButton: { 
+    backgroundColor: "#28a745" 
+  },
+  rejectButton: { 
+    backgroundColor: "#FF6347" 
+  },
+  choix: { 
+    color: "white", 
+    fontWeight: "bold" 
+    ,
+  }
 });
 
 export default NotificationScreen;

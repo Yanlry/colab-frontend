@@ -7,8 +7,6 @@ import { StyleSheet, TextInput, View, TouchableOpacity, Text, Image, KeyboardAvo
 
 export default function ConnexionScreen({ navigation }) {
 
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
-  
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [motDePasse, setMotDePasse] = useState('');

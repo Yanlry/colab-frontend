@@ -35,19 +35,17 @@ export default function UserProfile({ route, navigation }) {
   };
 
   useEffect(() => {
-    // Récupérer les informations de profil de l'utilisateur via le username
     fetch(`https://colab-backend-iota.vercel.app/profiles/users/${username}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          // Mettre à jour l'état avec les données récupérées
           setBio(data.user.bio || '');
-          setTeach(data.user.teach || []); // Activités que l'utilisateur enseigne
-          setLearn(data.user.learn || []); // Activités que l'utilisateur apprend
+          setTeach(data.user.teach || []);
+          setLearn(data.user.learn || []);
         } else {
           console.error('Erreur lors de la récupération des informations de profil:', data.error);
         }
-        setIsLoading(false); // Arrêter le chargement une fois les données récupérées
+        setIsLoading(false); 
       })
       .catch((error) => {
         console.error('Erreur lors de la récupération des informations de profil:', error);
@@ -252,7 +250,6 @@ export default function UserProfile({ route, navigation }) {
       marginVertical: 15,
       resizeMode: 'contain',
     },
-    
     apercuAnnonce: {
       width: '85%',
       flex: 1,
@@ -274,7 +271,6 @@ export default function UserProfile({ route, navigation }) {
       color:'#14A3A1',
       marginVertical:10
     },
-  
     apercuAnnonceDate: {
       fontSize: 12,
       marginTop: 15,
@@ -302,7 +298,6 @@ export default function UserProfile({ route, navigation }) {
       right: 10,
       zIndex: 1,
     },
-  
     header: {
       fontSize: 28,
       fontWeight: 'bold',
@@ -315,7 +310,6 @@ export default function UserProfile({ route, navigation }) {
       borderRadius: 30,
       gap: 10,
     },
-
     sectionContainer: {
       marginBottom: 20,
     },
@@ -340,49 +334,49 @@ export default function UserProfile({ route, navigation }) {
       paddingLeft:30
     },
     username: {
-      fontSize: 26, // Correction de la propriété
-      fontWeight: 'bold', // Correction de la propriété
+      fontSize: 26, 
+      fontWeight: 'bold',
       color: '#1f5c5c',
-      textAlign: 'center', // Correction de la propriété
+      textAlign: 'center',
     },
     stars: {
-      fontSize: 18, // Correction de la propriété
+      fontSize: 18,
       color: '#ffd700',
-      marginTop: 5, // Correction de la propriété
+      marginTop: 5,
     },
     description:{
       backgroundColor: 'white',
       borderRadius:30,
     },
     bio: {
-      fontSize: 18, // Correction de la propriété
-      fontWeight: 'bold', // Correction de la propriété
+      fontSize: 18,
+      fontWeight: 'bold',
       color: '#1f5c5c',
-      textAlign: 'center', // Correction de la propriété
-      marginVertical: 15, // Correction de la propriété
+      textAlign: 'center',
+      marginVertical: 15,
     },
     sectiontitle: {
-      fontSize: 18, // Correction de la propriété
-      fontWeight: 'bold', // Correction de la propriété
+      fontSize: 18,
+      fontWeight: 'bold',
       color: '#1f5c5c',
-      marginTop: 15, // Correction de la propriété
+      marginTop: 15,
       marginBottom:20,
-      textAlign: 'center', // Correction de la propriété
+      textAlign: 'center',
     },
     secteurs: {
-      fontSize: 16, // Correction de la propriété
+      fontSize: 16,
       color: '#333333',
-      textAlign: 'center', // Correction de la propriété
+      textAlign: 'center',
       paddingHorizontal:10,
     },
 
     sectionAnnonce: {
-      fontSize: 18, // Correction de la propriété
-      fontWeight: 'bold', // Correction de la propriété
+      fontSize: 18,
+      fontWeight: 'bold',
       color: '#1f5c5c',
-      marginTop: 35, // Correction de la propriété
+      marginTop: 35,
       marginBottom:15,
-      textAlign: 'center', // Correction de la propriété
+      textAlign: 'center',
     },
   });
   

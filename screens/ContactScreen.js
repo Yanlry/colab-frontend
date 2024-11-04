@@ -36,8 +36,6 @@ export default function ContactScreen({ navigation }) {
       });      
   };
   
-  
-
   useEffect(() => {
     fetchContacts();
     checkUnreadConversations();
@@ -217,9 +215,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingBottom: 15,
-    paddingTop: 15, // Pour créer un espace supérieur
-    borderBottomWidth: 1, // Ajout de la bordure en bas
-    borderBottomColor: '#ccc', // Couleur de la bordure
+    paddingTop: 15,
+    borderBottomWidth: 1, 
+    borderBottomColor: '#ccc', 
     paddingLeft: 35,
     paddingHorizontal:20,
     borderRadius: 30,

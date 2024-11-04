@@ -41,8 +41,7 @@ export default function ConversationScreen({ navigation, route }) {
       .then(response => response.json())
       .then(data => {
         if (data.result) {
-          console.log("Messages marqués comme lus");
-          fetchMessages(); // Recharge les messages pour mettre à jour leur statut localement
+          fetchMessages(); 
         } else {
           console.log('Erreur lors de la mise à jour des messages:', data.error);
         }
@@ -52,11 +51,9 @@ export default function ConversationScreen({ navigation, route }) {
 
   useEffect(() => {
     fetchMessages();
-    markMessagesAsRead(); // Marque les messages comme lus au chargement
-    // Mise en place du polling toutes les 3 secondes
+    markMessagesAsRead(); 
     const intervalId = setInterval(fetchMessages, 1000);
 
-    // Nettoie l'intervalle lorsque le composant est démonté
     return () => clearInterval(intervalId);
   }, [utilisateurDestinataireToken]);
 
@@ -72,7 +69,7 @@ export default function ConversationScreen({ navigation, route }) {
         text: inputText.trim(),
         senderToken: senderToken,
         recipientToken: utilisateurDestinataireToken,
-        conversationId: `${senderToken}${utilisateurDestinataireToken}`, // Génération d'un ID unique pour chaque conversation
+        conversationId: `${senderToken}${utilisateurDestinataireToken}`,
       };
 
       fetch(`https://colab-backend-iota.vercel.app/messages`, {
@@ -85,8 +82,6 @@ export default function ConversationScreen({ navigation, route }) {
         .then(response => response.json())
         .then(data => {
           if (data && data.success) {
-            console.log('Message envoyé');
-            // Ajoute immédiatement le message dans la liste locale
             setMessages(prevMessages => [{ ...data.savedMessage, isUser: true }, ...prevMessages]);
           } else {
             console.log('Erreur lors de l\'envoi du message:', data.error || 'Erreur inconnue');
@@ -109,7 +104,7 @@ export default function ConversationScreen({ navigation, route }) {
           <View style={styles.nomContact}>
             <Text style={styles.headerText}>{contactUsername}</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Utilisateur")}>
             <FontAwesome name='user' size={35} color={'#287777'} style={styles.headerIcon} />
           </TouchableOpacity>
         </View>

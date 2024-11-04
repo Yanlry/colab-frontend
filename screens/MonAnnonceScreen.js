@@ -23,8 +23,6 @@ export default function MonAnnonceScreen({ route, navigation }) {
 
 
   const supprimerAnnonce = () => {
-
-
     fetch(`https://colab-backend-iota.vercel.app/annonces/supprime/${utilisateur.token}`, {
       method: 'DELETE',
       headers: {
@@ -52,15 +50,12 @@ export default function MonAnnonceScreen({ route, navigation }) {
 
       ],
       { cancelable: true }
-
     );
-
   };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
     <View style={styles.container}>
-      {/* Navbar */}
       <View style={styles.navBar}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesome
@@ -72,9 +67,7 @@ export default function MonAnnonceScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* Scrollable Content */}
       <ScrollView style={styles.annonceComplete}>
-        {/* Title and Favorites */}
         <View style={styles.annonceEnTete}>
           <View>
           <Text style={styles.annonceTitre}>{annonce.title}</Text>
@@ -84,8 +77,6 @@ export default function MonAnnonceScreen({ route, navigation }) {
           </View>
         </View>
 
-
-        {/* Description */}
         <View style={styles.annonceDescription}>
           <Text style={styles.annonceDescriptionTitre}>Description</Text>
           <Text style={styles.annonceDescriptionText}>{annonce.description} </Text>
@@ -101,7 +92,6 @@ export default function MonAnnonceScreen({ route, navigation }) {
           
         </View>
            
-        {/* Map */}
         <View style={styles.mapContainer}>
           <MapView
             style={styles.map}
@@ -120,11 +110,7 @@ export default function MonAnnonceScreen({ route, navigation }) {
           </MapView>
         </View>
 
-       
-        
-        {/* Criteria Section */}
         <View style={styles.annonceCritere}>
-           {/* Type and Date */}
         <View style={styles.annonceType}>
           <Text style={styles.annonceTypeText}>{annonce.username} est ici pour {annonce.type.toLowerCase()}</Text>
           
@@ -144,7 +130,6 @@ export default function MonAnnonceScreen({ route, navigation }) {
               <FontAwesome name="hourglass" size={15} color="#194D4D" />
               <Text style={styles.titre}>Disponibilité</Text>
             </View>
-            {/* Loop through the disponibilite array and display each item */}
             {annonce.disponibilite.map((dispo, index) => (
               <View key={index} style={styles.bulletItem}>
                 <Text style={styles.critereReponse}>• {dispo}</Text>
@@ -175,7 +160,6 @@ export default function MonAnnonceScreen({ route, navigation }) {
             </View>
         </View>
 
-        {/* User Information */}
         <TouchableOpacity
           style={styles.utilisateur}
           onPress={() => navigation.navigate("UserProfile", { username: annonce.username })}
@@ -192,7 +176,6 @@ export default function MonAnnonceScreen({ route, navigation }) {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Colab Button */}
       <View style={styles.changeBar}>
           <TouchableOpacity onPress={() => navigation.navigate('ModifierAnnonce', { annonce })} style={styles.boutonModifier}>
             <Text style={styles.colabText}>Modifier</Text>
@@ -216,8 +199,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
-  // Navbar
   navBar: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -229,16 +210,11 @@ const styles = StyleSheet.create({
     height: 38,
     width: 130,
   },
-
-  // Annonce Complete
   annonceComplete: {
     flex: 1,
     marginTop: 15,
     backgroundColor: '#e5f6f6',
-
   },
-
-  // En Tete (Title and Favorite)
   annonceEnTete: {
     flexDirection: "row",
     borderRadius: 20,
@@ -255,7 +231,6 @@ const styles = StyleSheet.create({
     paddingTop:6,
     paddingRight:5,
     color:'#194D4D',
-
   },
   annonceFavoris: {
     position:'absolute',
@@ -263,10 +238,7 @@ const styles = StyleSheet.create({
     bottom:35,
     justifyContent: "center",
     backgroundColor: "#fff",
-    
   },
-
-  // Annonce Type
   annonceType: {
     borderRadius: 20,
     marginBottom:25,
@@ -282,8 +254,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginLeft:5
   },
-
-  // Annonce Description
   annonceDescription: {
     borderRadius: 20,
     padding: 20,
@@ -295,7 +265,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color:'#194D4D'
-
   },
   annonceDescriptionText: {
     fontSize: 16,
@@ -319,8 +288,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#888",
   },
-
-  // Criteria
   annonceCritere: {
     marginTop: 10,
     padding:20,
@@ -341,7 +308,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingLeft: 10,
     color:'#194D4D'
-
   },
   critereReponse: {
     paddingLeft: 25,
@@ -355,9 +321,8 @@ const styles = StyleSheet.create({
   },
   bulletPoint: {
     fontSize: 16,
-    color: "#287777", // Optional color for bullet point
+    color: "#287777", 
   },
-
   userInfo: {
     alignItems: 'center',
   },
@@ -370,7 +335,7 @@ const styles = StyleSheet.create({
     marginTop:10,
     fontSize: 16,
     marginLeft: 8,
-    color: '#FFD700', // Couleur or pour les étoiles
+    color: '#FFD700', 
   },
   reviewCount: {
     fontSize: 16,
@@ -381,7 +346,6 @@ const styles = StyleSheet.create({
     fontSize:14,
     color:'#ccc'
   },
-  // Map Container
   mapContainer: {
     marginTop: 10,
     marginHorizontal: 10,
@@ -392,8 +356,6 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-
-  // User Information
   utilisateur: {
     flexDirection: "row",
     alignItems: "center",
@@ -407,8 +369,6 @@ const styles = StyleSheet.create({
   textUtilisateur: {
     fontSize: 18,
   },
-
-  // Report Button
   signalez: {
     borderRadius: 30,
     marginHorizontal: 10,
@@ -416,15 +376,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: "#FF7070",
     height: 20,
-    justifyContent: "center", // Centre le contenu verticalement
-    alignItems: "center", // Centre le contenu horizontalement
+    justifyContent: "center",
+    alignItems: "center", 
   },
   textSignalez: {
     color: "#fff",
     textAlign: "center",
   },
-
-  // Colab Button
   changeBar: {
     flexDirection:'row',
     justifyContent: "center",

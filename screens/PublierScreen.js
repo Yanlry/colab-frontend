@@ -31,7 +31,7 @@ export default function PublierScreen({ navigation }) {
   const [errorMessage, setErrorMessage] = useState('');
   const scrollViewRef = useRef(null);
   const [programme, setProgramme] = useState('');
-  const [inputHeight, setInputHeight] = useState(40); // Valeur initiale de la hauteur
+  const [inputHeight, setInputHeight] = useState(40);
 
   useEffect(() => {
     fetch(`https://colab-backend-iota.vercel.app/profiles/activites`)
@@ -80,7 +80,6 @@ const envoyerDonnee = () => {
     return;
   }
 
-  // Effacez le message d'erreur si tout est correct
   setErrorMessage('');
 
   const annonceData = {
@@ -134,7 +133,7 @@ const confirmResetForm = () => {
       },
       {
         text: "Oui",
-        onPress: resetForm // Appelle resetForm si l'utilisateur confirme
+        onPress: resetForm
       }
     ],
     { cancelable: true }
@@ -211,7 +210,6 @@ const renderSecteurModal = () => (
 );
 
 const toggleDisponibilite = (value) => {
-  // Si l'élément est déjà sélectionné, on le retire. Sinon, on l'ajoute.
   if (disponibilite.includes(value)) {
     setDisponibilite(disponibilite.filter(item => item !== value));
   } else {
@@ -235,7 +233,7 @@ const renderDispoModal = () => (
               onPress={() => toggleDisponibilite(item.value)}
               style={[
                 styles.modalItem,
-                { backgroundColor: disponibilite.includes(item.value) ? '#93DCDC' : 'white' } // Change la couleur si sélectionné
+                { backgroundColor: disponibilite.includes(item.value) ? '#93DCDC' : 'white' } 
               ]}
             >
               <Text>{item.label}</Text>
@@ -359,14 +357,12 @@ const renderTempsModal = () => (
               <View style={styles.descriptionContainer}>
               <Text style={styles.titreDescription}>Description</Text>
                 <TextInput
-                    style={[styles.saisieDescription, { height: inputHeight }]} // Ajuste la hauteur
+                    style={[styles.saisieDescription, { height: inputHeight }]} 
                     placeholder="Votre objectif, vos attentes, votre expérience, etc..."
                     value={description}
                     onChangeText={(text) => setDescription(text)}
                     multiline
-                    onContentSizeChange={(event) =>
-                        setInputHeight(event.nativeEvent.contentSize.height)
-                    } // Ajuste la hauteur dynamiquement
+                    onContentSizeChange={(event) => setInputHeight(event.nativeEvent.contentSize.height)} 
                     scrollEnabled={false}
                 />
 
@@ -593,7 +589,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   placeholderText: {
-    color: '#8E8E93', // Gris clair
+    color: '#8E8E93',
   },
   errorText: {
     color: 'red',
@@ -602,7 +598,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   boutonVider: {
-    backgroundColor: '#FF6347', // Couleur rouge/orange pour différencier du bouton "Publier"
+    backgroundColor: '#FF6347', 
     padding: 15,
     borderRadius: 30,
     alignItems: 'center',
@@ -624,9 +620,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderRadius: 30,
     padding: 20,
-    width: '80%', // Réduit la largeur du modal
-    maxHeight: '50%', // Réduit la hauteur maximale du modal
-    alignSelf: 'center', // Centre le modal sur l'écran,
+    width: '80%',
+    maxHeight: '50%', 
+    alignSelf: 'center', 
   },
   modalItem: {
     padding: 15,
@@ -644,14 +640,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   map: {
-    height: 200, // Hauteur de la carte
+    height: 200, 
     width: '100%',
     marginBottom: 20,
     borderRadius:30
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fond semi-transparent
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -692,17 +688,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     backgroundColor: 'white',
-    borderRadius: 30, // Bord arrondi
+    borderRadius: 30, 
   },
   supprimerContainer: {
-    backgroundColor: '#FF6347', // Couleur de fond du bouton "Supprimer"
-    borderRadius: 15,           // Bord arrondi pour le bouton
-    paddingVertical: 5,         // Ajustez le padding selon la taille souhaitée
+    backgroundColor: '#FF6347', 
+    borderRadius: 15, 
+    paddingVertical: 5,
     paddingHorizontal: 10,
   },
   supprimerVille: {
-    color: 'white', // Couleur du texte
-    fontWeight: 'bold', // Rendre le texte plus visible
+    color: 'white',
+    fontWeight: 'bold',
     textAlign: 'center',
   },
   selectedCity: {

@@ -18,7 +18,6 @@ export default function ProfilScreen({ navigation }) {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    // Récupérer toutes les activités disponibles
     fetch(`https://colab-backend-iota.vercel.app/profiles/activites`)
       .then((response) => response.json())
       .then((data) => {
@@ -27,12 +26,10 @@ export default function ProfilScreen({ navigation }) {
         }
       });
 
-    // Récupérer les informations de profil de l'utilisateur
     fetch(`https://colab-backend-iota.vercel.app/users/profile/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          // Mettre à jour l'état avec les données récupérées
           setBio(data.profile.bio || "");
           setPhone(data.profile.phone || "");
           setUsername(data.profile.username || "");
@@ -50,15 +47,14 @@ export default function ProfilScreen({ navigation }) {
         );
       });
 
-    // Récupérer les activités sélectionnées par l'utilisateur
     fetch(`https://colab-backend-iota.vercel.app/profiles/activites/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          setTeach(data.teach); // Activités que l'utilisateur enseigne
-          setLearn(data.learn); // Activités que l'utilisateur apprend
+          setTeach(data.teach); 
+          setLearn(data.learn); 
         }
-        setIsLoading(false); // Arrêter le chargement une fois les données récupérées
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error(
@@ -70,7 +66,6 @@ export default function ProfilScreen({ navigation }) {
   }, []);
 
   const renderLearnModal = () => {
-    // Ajuster la hauteur pour que toutes les catégories actuelles soient visibles
     const currentCategoriesHeight = learn.length * 50;
     const availableCategoriesHeight = Math.min(
       (activitesDisponibles.length - learn.length) * 50,
@@ -105,7 +100,7 @@ export default function ProfilScreen({ navigation }) {
                       backgroundColor: learn.includes(item)
                         ? "#287777"
                         : "white",
-                      marginBottom: index === learn.length - 1 ? 10 : 0, // Ajoute une marginBottom de 10 uniquement au dernier élément
+                      marginBottom: index === learn.length - 1 ? 10 : 0, 
                     },
                   ]}
                 >
@@ -144,7 +139,7 @@ export default function ProfilScreen({ navigation }) {
                         ).length -
                           1
                           ? 10
-                          : 0, // Ajoute une marginBottom de 10 uniquement au dernier élément
+                          : 0, 
                     },
                   ]}
                 >
@@ -174,7 +169,6 @@ export default function ProfilScreen({ navigation }) {
   };
 
   const renderTeachModal = () => {
-    // Ajuster la hauteur pour que toutes les catégories actuelles soient visibles
     const currentCategoriesHeight = teach.length * 50;
     const availableCategoriesHeight = Math.min(
       (activitesDisponibles.length - teach.length) * 50,
@@ -209,7 +203,7 @@ export default function ProfilScreen({ navigation }) {
                       backgroundColor: teach.includes(item)
                         ? "#287777"
                         : "white",
-                      marginBottom: index === teach.length - 1 ? 10 : 0, // Ajoute une marginBottom de 10 uniquement au dernier élément
+                      marginBottom: index === teach.length - 1 ? 10 : 0,
                     },
                   ]}
                 >
@@ -248,7 +242,7 @@ export default function ProfilScreen({ navigation }) {
                         ).length -
                           1
                           ? 10
-                          : 0, // Ajoute une marginBottom de 10 uniquement au dernier élément
+                          : 0, 
                     },
                   ]}
                 >
@@ -279,17 +273,17 @@ export default function ProfilScreen({ navigation }) {
 
   const toggleLearnSelection = (activity) => {
     if (learn.includes(activity)) {
-      setLearn(learn.filter((item) => item !== activity)); // Retirer si déjà sélectionné
+      setLearn(learn.filter((item) => item !== activity)); 
     } else {
-      setLearn([...learn, activity]); // Ajouter si pas encore sélectionné
+      setLearn([...learn, activity]); 
     }
   };
 
   const toggleTeachSelection = (activity) => {
     if (teach.includes(activity)) {
-      setTeach(teach.filter((item) => item !== activity)); // Retirer si déjà sélectionné
+      setTeach(teach.filter((item) => item !== activity)); 
     } else {
-      setTeach([...teach, activity]); // Ajouter si pas encore sélectionné
+      setTeach([...teach, activity]); 
     }
   };
 
@@ -301,8 +295,7 @@ export default function ProfilScreen({ navigation }) {
       return;
     }
 
-    // Si l'utilisateur a sélectionné une catégorie, on continue le processus
-    setErrorMessage(""); // Réinitialiser le message d'erreur si tout est correct
+    setErrorMessage(""); 
 
     fetch(`https://colab-backend-iota.vercel.app/profiles/learn`, {
       method: "PUT",
@@ -313,7 +306,7 @@ export default function ProfilScreen({ navigation }) {
       .then((data) => {
         if (data.result) {
           console.log('Activités "learn" mises à jour avec succès');
-          setIsLearnModalVisible(false); // Fermer le modal après validation
+          setIsLearnModalVisible(false); 
         } else {
           console.error(
             'Erreur lors de la mise à jour des activités "learn":',
@@ -337,8 +330,7 @@ export default function ProfilScreen({ navigation }) {
       return;
     }
 
-    // Si l'utilisateur a sélectionné une catégorie, on continue le processus
-    setErrorMessage(""); // Réinitialiser le message d'erreur si tout est correct
+    setErrorMessage(""); 
 
     fetch(`https://colab-backend-iota.vercel.app/profiles/teach`, {
       method: "PUT",
@@ -349,7 +341,7 @@ export default function ProfilScreen({ navigation }) {
       .then((data) => {
         if (data.result) {
           console.log('Activités "teach" mises à jour avec succès');
-          setIsTeachModalVisible(false); // Fermer le modal après validation
+          setIsTeachModalVisible(false); 
         } else {
           console.error(
             'Erreur lors de la mise à jour des activités "teach":',
@@ -596,15 +588,15 @@ const styles = StyleSheet.create({
     height: 120,
   },
   inputTextarea: {
-    width: '100%', // Utilise toute la largeur du conteneur parent
+    width: '100%',
     marginBottom: 20,
     height: 120,
     backgroundColor:'white',
     padding: 20,
     fontSize: 16,
-    lineHeight: 22, // Espacement entre les lignes pour une meilleure lisibilité
+    lineHeight: 22, 
     borderRadius: 30,
-    textAlignVertical: 'top', // Aligne le texte en haut
+    textAlignVertical: 'top', 
   },
   buttonContainer: {
     flexDirection: "row",
