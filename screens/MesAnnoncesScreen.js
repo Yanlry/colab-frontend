@@ -7,8 +7,6 @@ import { ajouteFavoris, suprimeFavoris } from '../reducers/utilisateur';
 
 export default function MesAnnoncesScreen({ navigation }) {
 
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
-
   const utilisateur = useSelector(state => state.utilisateur.value);
   const favoris = useSelector(state => state.utilisateur.favoris);
   const dispatch = useDispatch();
@@ -35,7 +33,7 @@ export default function MesAnnoncesScreen({ navigation }) {
   };
 
   const fetchData = () => {
-    fetch(`${apiUrl}/annonces/mesAnnonces/${utilisateur.token}`)
+    fetch(`http://192.168.1.109:3000/annonces/mesAnnonces/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -69,10 +67,16 @@ export default function MesAnnoncesScreen({ navigation }) {
       dispatch(ajouteFavoris(annonce));
     }
   };
+  
+  const formatDate = (dateString) => {
+    const options = { day: '2-digit', month: 'long', year: 'numeric' };
+    const dateObject = new Date(dateString);
+    return dateObject.toLocaleDateString('fr-FR', options);
+  };
 
   const renderAnnonce = (annonce) => (
     <TouchableOpacity key={annonce.token} style={styles.annonce} onPress={() => navigation.navigate('MonAnnonce', { annonce })}>
-      <View style={styles.imageContainer}>
+       <View style={styles.imageContainer}>
         <Text style={styles.textImageContainer}>Catégorie :</Text>
         <Image source={logos[annonce.secteurActivite]} style={styles.logoImage} />
         <Text style={styles.textImageContainer}>{annonce.secteurActivite}</Text>
@@ -94,6 +98,15 @@ export default function MesAnnoncesScreen({ navigation }) {
           <Text style={styles.apercuAnnonceDescription}>
             {annonce.description.length > 105 ? `${annonce.description.substring(0, 104)}...` : annonce.description}
           </Text>
+          {annonce.programme && annonce.programme.trim() !== '' && (
+            <Text style={styles.apercuAnnonceProgramme}>
+              <Text style={styles.critereTextTitre}>Programme : </Text> 
+              <Text style={styles.critereText}>
+                {annonce.programme.length > 60 ? `${annonce.programme.substring(0, 59)}...` : annonce.programme}
+              </Text>
+            </Text>
+          )}
+
           <View style={styles.containerCritere}>
             <Text style={styles.critereTextTitre}>Expérience : </Text>
             <Text style={styles.critereText}>{annonce.experience}</Text>
@@ -102,7 +115,13 @@ export default function MesAnnoncesScreen({ navigation }) {
             <Text style={styles.critereTextTitre}>Fréquence : </Text>
             <Text style={styles.critereText}>{annonce.tempsMax}</Text>
           </View>
-          <Text style={styles.apercuAnnonceDate}>Mise en ligne le : {new Date(annonce.date).toLocaleDateString('fr-FR')}</Text>
+          <View style={styles.containerCritere}>
+            <Text style={styles.critereTextTitre}>Disponibilité : </Text>
+            <Text style={styles.critereText}>
+              {Array.isArray(annonce.disponibilite) ? annonce.disponibilite.join(', ') : annonce.disponibilite}
+            </Text>
+          </View>
+          <Text style={styles.apercuAnnonceDate}>Mise en ligne le : {formatDate(annonce.date)}</Text>
         </View>
       </View>
     </TouchableOpacity>

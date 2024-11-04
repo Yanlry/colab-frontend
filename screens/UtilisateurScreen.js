@@ -7,7 +7,7 @@ import { logout } from '../reducers/utilisateur';
 export default function UtilisateurScreen({ navigation }) {
     
   const dispatch = useDispatch();
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+  
   const utilisateur = useSelector((state) => state.utilisateur.value);
 
   const [confirmerDeconnexion, setConfirmerDeconnexion] = useState(false);
@@ -39,7 +39,7 @@ export default function UtilisateurScreen({ navigation }) {
 
 // Fonction pour supprimer le profil
 const supprimerProfil = () => {
-  fetch(`${apiUrl}/users/deleteProfile/${utilisateur.token}`, {
+  fetch(`http://192.168.1.109:3000/users/deleteProfile/${utilisateur.token}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',

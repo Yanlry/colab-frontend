@@ -3,8 +3,6 @@ import { StyleSheet, SafeAreaView, Modal, Text, View, FlatList, TouchableOpacity
 import MapView, { Marker } from 'react-native-maps';
 
 export default function MapScreen({ navigation }) {
-    
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
 
   const [annonces, setAnnonces] = useState([]);
   const [selectedAnnonces, setSelectedAnnonces] = useState([]);
@@ -14,7 +12,7 @@ export default function MapScreen({ navigation }) {
   useEffect(() => {
     const fetchAnnonces = async () => {
       try {
-        const response = await fetch('http://192.168.1.4:3000/annonces/annonces-localisation');
+        const response = await fetch('http://192.168.1.109:3000/annonces/annonces-localisation');
         const data = await response.json();
         setAnnonces(data.annonces || []);
       } catch (error) {

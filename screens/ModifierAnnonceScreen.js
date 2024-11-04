@@ -7,7 +7,7 @@ import MapView, { Marker } from 'react-native-maps';
 
 export default function ModifierAnnonceScreen({ route, navigation }) {
   const { annonce } = route.params;
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+  
   const utilisateur = useSelector(state => state.utilisateur.value);
 
   // États pour chaque champ de l'annonce avec valeurs initiales basées sur l'annonce actuelle
@@ -36,7 +36,7 @@ export default function ModifierAnnonceScreen({ route, navigation }) {
   const [inputHeight, setInputHeight] = useState(40);
 
   useEffect(() => {
-    fetch(`${apiUrl}/profiles/activites`)
+    fetch(`http://192.168.1.109:3000/profiles/activites`)
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -109,7 +109,7 @@ export default function ModifierAnnonceScreen({ route, navigation }) {
       longitude,
     };
 
-    fetch(`${apiUrl}/annonces/modifier/${utilisateur.token}`, {
+    fetch(`http://192.168.1.109:3000/annonces/modifier/${utilisateur.token}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
 import { FontAwesome } from "react-native-vector-icons";
-import { useSelector } from "react-redux";
 
 export default function UserProfile({ route, navigation }) {
 
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
   const username = route.params.username 
-  const user = useSelector((state) => state.utilisateur.value);
-  
   const [userAds, setUserAds] = useState([]);
   const [bio, setBio] = useState("");
   const [learn, setLearn] = useState([]);
@@ -40,7 +36,7 @@ export default function UserProfile({ route, navigation }) {
 
   useEffect(() => {
     // Récupérer les informations de profil de l'utilisateur via le username
-    fetch(`${apiUrl}/profiles/users/${username}`)
+    fetch(`http://192.168.1.109:3000/profiles/users/${username}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -65,7 +61,7 @@ export default function UserProfile({ route, navigation }) {
   }, []);
 
   const fetchUserAds = () => {
-    fetch(`${apiUrl}/profiles/users/${username}`)
+    fetch(`http://192.168.1.109:3000/profiles/users/${username}`)
       .then(response => response.json())
       .then(data => {
         if (data.result) {

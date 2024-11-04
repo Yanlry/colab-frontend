@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, RefreshControl, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, TextInput, RefreshControl, SafeAreaView, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback, Image, Modal } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
@@ -7,18 +7,20 @@ import { ajouteFavoris, suprimeFavoris } from '../reducers/utilisateur';
 
 export default function AccueilScreen({ navigation }) {
 
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
-
   const utilisateur = useSelector(state => state.utilisateur.value);
   const favoris = useSelector(state => state.utilisateur.favoris);
   const dispatch = useDispatch();
-  
+
   const [afficherEnseigner, setAfficherEnseigner] = useState(true);
   const [recherche, setRecherche] = useState('');
   const [enseignerDate, setEnseignerDate] = useState([]);
   const [apprendreDate, setApprendreDate] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [filtreDisponibilite, setFiltreDisponibilite] = useState(null);
+  const [filtreExperience, setFiltreExperience] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
+ 
   const logos = {
     Informatique: require('../assets/Informatique.png'),
     Arts: require('../assets/Arts.png'),
@@ -38,14 +40,14 @@ export default function AccueilScreen({ navigation }) {
   };
 
   const fetchData = () => {
-    fetch(`${apiUrl}/annonces/apprendre/${utilisateur.token}`)
+    fetch(`http://192.168.1.109:3000/annonces/apprendre/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
         setEnseignerDate(trierDateAnnonce);
       });
 
-    fetch(`${apiUrl}/annonces/enseigner/${utilisateur.token}`)
+    fetch(`http://192.168.1.109:3000/annonces/enseigner/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -71,17 +73,15 @@ export default function AccueilScreen({ navigation }) {
 
   const rechercherAnnonce = (annonce) => {
     const rechercheMinuscules = recherche.toLowerCase();
-    return (
+    const correspondRecherche = 
       annonce.title.toLowerCase().includes(rechercheMinuscules) ||
-      annonce.description.toLowerCase().includes(rechercheMinuscules)||
-      annonce.programme.toLowerCase().includes(rechercheMinuscules)
-    );
-  };
+      annonce.description.toLowerCase().includes(rechercheMinuscules) ||
+      (annonce.programme && annonce.programme.toLowerCase().includes(rechercheMinuscules));
 
-  const formatDate = (dateString) => {
-    const options = { day: '2-digit', month: 'long', year: 'numeric' };
-    const dateObject = new Date(dateString);
-    return dateObject.toLocaleDateString('fr-FR', options);
+    const correspondDisponibilite = !filtreDisponibilite || (annonce.disponibilite && annonce.disponibilite.includes(filtreDisponibilite));
+    const correspondExperience = !filtreExperience || annonce.experience === filtreExperience;
+
+    return correspondRecherche && correspondDisponibilite && correspondExperience;
   };
 
   const toggleFavori = (annonce) => {
@@ -92,61 +92,122 @@ export default function AccueilScreen({ navigation }) {
     }
   };
 
+
+  const formatDate = (dateString) => {
+    const options = { day: '2-digit', month: 'long', year: 'numeric' };
+    const dateObject = new Date(dateString);
+    return dateObject.toLocaleDateString('fr-FR', options);
+  };
+
   const renderAnnonce = (annonce) => (
-    <TouchableOpacity key={annonce.token} style={styles.annonce} onPress={() => navigation.navigate('Annonce', { annonce })}>
-      <View style={styles.imageContainer}>
-        <Text style={styles.textImageContainer}>Catégorie :</Text>
-        <Image source={logos[annonce.secteurActivite]} style={styles.logoImage} />
-        <Text style={styles.textImageContainer}>{annonce.secteurActivite}</Text>
-      </View>
-
-      <TouchableOpacity style={styles.favorisIconContainer} onPress={() => toggleFavori(annonce)}>
-        <FontAwesome
-          name="heart"
-          size={25}
-          color={favoris.some(fav => fav.token === annonce.token) ? '#FF6347' : '#ddd'}
-        />
-      </TouchableOpacity>
-
-      <View style={styles.mesCritere}>
-        <View style={styles.apercuAnnonce}>
-          <Text style={styles.apercuAnnonceTitre}>
-            {annonce.title.length > 46 ? `${annonce.title.substring(0, 45)}...` : annonce.title}
-          </Text>
-          <Text style={styles.apercuAnnonceDescription}>
-            {annonce.description.length > 105 ? `${annonce.description.substring(0, 104)}...` : annonce.description}
-          </Text>
-          {annonce.programme && annonce.programme.trim() !== '' && (
-            <Text style={styles.apercuAnnonceProgramme}>
-              <Text style={styles.critereTextTitre}>Programme : </Text> 
-              <Text style={styles.critereText}>
-                {annonce.programme.length > 60 ? `${annonce.programme.substring(0, 59)}...` : annonce.programme}
-              </Text>
-            </Text>
-          )}
-
-          <View style={styles.containerCritere}>
-            <Text style={styles.critereTextTitre}>Expérience : </Text>
-            <Text style={styles.critereText}>{annonce.experience}</Text>
-          </View>
-          <View style={styles.containerCritere}>
-            <Text style={styles.critereTextTitre}>Fréquence : </Text>
-            <Text style={styles.critereText}>{annonce.tempsMax}</Text>
-          </View>
-          <View style={styles.containerCritere}>
-            <Text style={styles.critereTextTitre}>Disponibilité : </Text>
-            <Text style={styles.critereText}>
-              {Array.isArray(annonce.disponibilite) ? annonce.disponibilite.join(', ') : annonce.disponibilite}
-            </Text>
-          </View>
-          <Text style={styles.apercuAnnonceDate}>Mise en ligne le : {formatDate(annonce.date)}</Text>
-        </View>
-      </View>
+    <TouchableOpacity
+    key={annonce.token}
+    style={styles.annonce}
+    onPress={() => navigation.navigate('Annonce', { annonce })}
+  >
+    <View style={styles.imageContainer}>
+      <Text style={styles.textImageContainer}>Catégorie :</Text>
+      <Image source={logos[annonce.secteurActivite]} style={styles.logoImage} />
+      <Text style={styles.textImageContainer}>{annonce.secteurActivite}</Text>
+    </View>
+    
+    {/* Icône de favoris en haut à droite */}
+    <TouchableOpacity style={styles.favorisIconContainer} onPress={() => toggleFavori(annonce)}>
+      <FontAwesome
+        name="heart"
+        size={25}
+        color={favoris.some(fav => fav.token === annonce.token) ? '#FF6347' : '#ccc'} // Rouge si favori, gris sinon
+      />
     </TouchableOpacity>
+
+    <View style={styles.mesCritere}>
+      <View style={styles.apercuAnnonce}>
+        <Text style={styles.apercuAnnonceTitre}>
+          {annonce.title.length > 46 ? annonce.title.substring(0, 45) + "..." : annonce.title}
+        </Text>
+        <Text style={styles.apercuAnnonceDescription}>
+          {annonce.description.length > 105 ? annonce.description.substring(0, 104) + "..." : annonce.description}
+        </Text>
+        {annonce.programme && annonce.programme.trim() !== '' && (
+        <Text style={styles.apercuAnnonceProgramme}>
+          <Text style={styles.critereTextTitre}>Programme : </Text> 
+          <Text style={styles.critereText}>
+            {annonce.programme.length > 60 ? `${annonce.programme.substring(0, 59)}...` : annonce.programme}
+          </Text>
+        </Text>
+      )}
+        <View style={styles.containerCritere}>
+          <Text style={styles.apercuAnnonceExperience}>Expérience :</Text>
+          <Text style={styles.critereText}> {annonce.experience}</Text>
+        </View>
+        <View style={styles.containerCritere}>
+          <Text style={styles.apercuAnnonceTempsMax}>Fréquence :</Text>
+          <Text style={styles.critereText}> {annonce.tempsMax}</Text>
+        </View>
+        <View style={styles.containerCritere}>
+        <Text style={styles.apercuAnnonceTempsMax}>Disponibilité :</Text>
+        <Text style={styles.critereText}>
+          {Array.isArray(annonce.disponibilite) ? annonce.disponibilite.join(', ') : annonce.disponibilite}
+        </Text>
+      </View>
+        <Text style={styles.apercuAnnonceDate}>Mise en ligne le : {formatDate(annonce.date)}</Text>
+      </View>
+    </View>
+  </TouchableOpacity>
   );
 
-  const learn = enseignerDate.filter(rechercherAnnonce).map(renderAnnonce);
-  const teach = apprendreDate.filter(rechercherAnnonce).map(renderAnnonce);
+  const learn = Array.isArray(enseignerDate) ? enseignerDate.filter(rechercherAnnonce).map(renderAnnonce) : [];
+  const teach = Array.isArray(apprendreDate) ? apprendreDate.filter(rechercherAnnonce).map(renderAnnonce) : [];
+
+  const RenderFiltreModal = () => (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => setModalVisible(false)}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          
+          {/* Titre de la section Disponibilité */}
+          <Text style={styles.modalTitle}>Disponibilité</Text>
+          <TouchableOpacity onPress={() => { setFiltreDisponibilite("Soir"); setModalVisible(false); }}>
+            <Text style={[styles.modalOption, filtreDisponibilite === "Soir" && styles.selectedOption]}>Soir</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => { setFiltreDisponibilite("Semaine"); setModalVisible(false); }}>
+            <Text style={[styles.modalOption, filtreDisponibilite === "Semaine" && styles.selectedOption]}>Semaine</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => { setFiltreDisponibilite("Week-end"); setModalVisible(false); }}>
+            <Text style={[styles.modalOption, filtreDisponibilite === "Week-end" && styles.selectedOption]}>Week-end</Text>
+          </TouchableOpacity>
+          
+          <View style={styles.divider} />
+  
+          {/* Titre de la section Expérience */}
+          <Text style={styles.modalTitle}>Expérience</Text>
+          <TouchableOpacity onPress={() => { setFiltreExperience("Débutant"); setModalVisible(false); }}>
+            <Text style={[styles.modalOption, filtreExperience === "Débutant" && styles.selectedOption]}>Débutant</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => { setFiltreExperience("Intermédiaire"); setModalVisible(false); }}>
+            <Text style={[styles.modalOption, filtreExperience === "Intermédiaire" && styles.selectedOption]}>Intermédiaire</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => { setFiltreExperience("Confirmé"); setModalVisible(false); }}>
+            <Text style={[styles.modalOption, filtreExperience === "Confirmé" && styles.selectedOption]}>Confirmé</Text>
+          </TouchableOpacity>
+  
+          <TouchableOpacity onPress={() => { setFiltreDisponibilite(null); setFiltreExperience(null); setModalVisible(false); }}>
+            <Text style={styles.clearFilters}>Réinitialiser les filtres</Text>
+          </TouchableOpacity>
+  
+          <TouchableOpacity style={styles.closeModalButton} onPress={() => setModalVisible(false)}>
+            <Text style={styles.closeModalButtonText}>Appliquer les filtres</Text>
+          </TouchableOpacity>
+          
+        </View>
+      </View>
+    </Modal>
+  );
+  
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -168,27 +229,29 @@ export default function AccueilScreen({ navigation }) {
                 onChangeText={setRecherche}
                 placeholder="Rechercher une annonce..."
               />
-              <TouchableOpacity style={styles.filtreAnnonce}>
+              <TouchableOpacity style={styles.filtreAnnonce} onPress={() => setModalVisible(true)}>
                 <FontAwesome name="filter" size={25} style={styles.filtreIcone} />
               </TouchableOpacity>
             </View>
+            <RenderFiltreModal />
             <ScrollView
               style={styles.scroll}
               contentContainerStyle={{ paddingBottom: 90 }}
-              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-            }
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
             >
-              {afficherEnseigner ? learn : teach}
-              {afficherEnseigner && learn.length === 0 && (
-                <Text style={styles.messageAucuneOffre}>
-                  Désolé, actuellement personne n'est disponible pour enseigner les catégories que vous demandez.
-                </Text>
-              )}
-              {!afficherEnseigner && teach.length === 0 && (
-                <Text style={styles.messageAucuneOffre}>
-                  Désolé, actuellement personne n'est disponible pour apprendre les catégories que vous proposez.
-                </Text>
-              )}
+              {afficherEnseigner ? (
+              learn.length > 0 ? (
+                learn
+              ) : (
+                <Text style={styles.messageAucuneOffre}>Aucune annonce disponible selon vos critères.</Text>
+              )
+            ) : (
+              teach.length > 0 ? (
+                teach
+              ) : (
+                <Text style={styles.messageAucuneOffre}>Aucune annonce disponible selon vos critères.</Text>
+              )
+            )}
             </ScrollView>
           </View>
         </TouchableWithoutFeedback>
@@ -205,67 +268,134 @@ const styles = StyleSheet.create({
  
  //-----------------------  BOUTON OFFRE ET DEMANDE  ---------------------------------
 
- offreEtDemande: {
-  flexDirection: 'row',
-  justifyContent: 'space-around',
-  marginTop:20,
-  paddingHorizontal:10,
+  offreEtDemande: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop:20,
+    paddingHorizontal:10,
 
-},
-categorieBtn: {
-  height: 50,
-  width: '47%',
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: '#fff',
-  borderRadius: 30,
-},
-categorieText: {
-  fontSize: 15,
-  fontWeight: 'bold',
-  color: '#287777',
-},
-categorieActive: {
-  backgroundColor: '#287777'
-},
-textActive: {
-  fontWeight: 'bold',
-  color: '#fff',
-},
+  },
+  categorieBtn: {
+    height: 50,
+    width: '47%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 30,
+  },
+  categorieText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#287777',
+  },
+  categorieActive: {
+    backgroundColor: '#287777'
+  },
+  textActive: {
+    fontWeight: 'bold',
+    color: '#fff',
+  },
 
-//-----------------------  BARRE DE RECHERCHE  ---------------------------------
+  //-----------------------  BARRE DE RECHERCHE  ---------------------------------
 
-rechercher: {
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexDirection: 'row',
-  marginVertical: 10,
-},
-rechercheText: {
-  height: 45,
-  width: '80%',
-  fontSize: 16,
-  paddingLeft: 20,
-  borderRadius: 30,
-  backgroundColor:'white'
-},
+  rechercher: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    marginVertical: 10,
+  },
+  rechercheText: {
+    height: 45,
+    width: '80%',
+    fontSize: 16,
+    paddingLeft: 20,
+    borderRadius: 30,
+    backgroundColor:'white'
+  },
 
-//-----------------------  ICONE FILTRE  ---------------------------------
+  //-----------------------  ICONE FILTRE  ---------------------------------
 
-filtreAnnonce: {
-  padding: 10,
-},
-filtreIcone: {
-  color: '#194D4D',
-},
+  filtreAnnonce: {
+    padding: 10,
+  },
+  filtreIcone: {
+    color: '#194D4D',
+  },
 
-//-----------------------   SCROLLVIEW  ---------------------------------
+  //-----------------------  MODAL FILTRE  ---------------------------------
 
-scroll:{
-  height: '80%',
-  paddingBottom: 20,
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '90%',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 10,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalOption: {
+    fontSize: 16,
+    color: '#555',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 10,
+    textAlign: 'center',
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  selectedOption: {
+    backgroundColor: '#3CB371',
+    color: '#fff',
+    borderColor: '#3CB371',
+  },
+  clearFilters: {
+    fontSize: 16,
+    color: '#FF6347',
+    textAlign: 'center',
+    marginTop: 15,
+  },
+  closeModalButton: {
+    marginTop: 20,
+    backgroundColor: '#287777',
+    borderRadius: 15,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  closeModalButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#ddd',
+    marginVertical: 15,
+  },
 
-},
+  //-----------------------   SCROLLVIEW  ---------------------------------
+
+  scroll:{
+    height: '80%',
+    paddingBottom: 20,
+
+  },
   //-----------------------  VIGNETTE D'ANNONCE  ---------------------------------
   
   annonce: {
@@ -289,6 +419,11 @@ scroll:{
     fontWeight: 'bold',
     color: '#1F5C5C',
   },
+  critereTextTitre: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#1F5C5C',
+  },
   mesCritere: {
     paddingLeft: 15,
     flex: 1, // Permet d'occuper tout l’espace vertical disponible
@@ -297,6 +432,7 @@ scroll:{
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    marginVertical: 15,
     borderRightWidth: 1,
     borderColor: '#ccc',
     paddingRight: 10,
@@ -304,8 +440,7 @@ scroll:{
   logoImage: {
     width: 100,
     height: 100,
-    marginVertical: 15,
-
+    marginBottom: 15,
     resizeMode: 'contain',
   },
   apercuAnnonce: {
@@ -320,35 +455,40 @@ scroll:{
     fontSize: 18,
     color: '#1F5C5C',
   },
-  apercuAnnonceDescription: {
-    fontSize: 13,
-    marginVertical:10
-  },
   apercuAnnonceProgramme: {
     fontSize: 13,
     fontWeight:'bold',
     color:'#14A3A1',
     marginVertical:10
   },
-
+  apercuAnnonceDescription: {
+    fontSize: 13,
+    marginVertical:10
+  },
+  apercuAnnonceExperience: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#1F5C5C',
+  },
+  apercuAnnonceTempsMax: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#1F5C5C',
+  },
   apercuAnnonceDate: {
-    fontSize: 11,
+    fontSize: 10,
     marginTop: 15,
+    color:'#555',
     alignSelf: 'flex-start', // Aligne la date en bas de la vignette
   },
   containerCritere: {
     flexDirection: 'row',
     paddingVertical:3,
-  },
-  critereTextTitre: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#1F5C5C',
+
   },
   critereText: {
     fontSize: 12,
   },
-  
   separator: {
     marginBottom: 70,
   },
@@ -359,6 +499,7 @@ scroll:{
     right: 10,
     zIndex: 1,
   },
+  
   //-----------------------  AUTRE  ---------------------------------
   
   messageAucuneOffre: {
@@ -368,6 +509,8 @@ scroll:{
     marginHorizontal:15,
     color: 'gray',
   },
+
+
 });
 
 

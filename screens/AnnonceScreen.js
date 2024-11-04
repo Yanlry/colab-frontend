@@ -6,8 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { ajouteFavoris, suprimeFavoris } from "../reducers/utilisateur";
 
 export default function AnnonceScreen({ route, navigation }) {
-    
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
 
   const { annonce } = route.params;
   const dispatch = useDispatch();
@@ -56,7 +54,7 @@ export default function AnnonceScreen({ route, navigation }) {
   const envoyerDemandeColab = () => {
     console.log("Envoyer Colab - Token:", annonce.token, "Cible:", annonce.username, "Initiateur:", utilisateur.username);
 
-    fetch(`${apiUrl}/propositionCollabs/propositions`, {
+    fetch(`http://192.168.1.109:3000/propositionCollabs/propositions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

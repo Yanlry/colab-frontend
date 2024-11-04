@@ -6,8 +6,6 @@ import { useSelector } from 'react-redux';
 
 export default function AnnonceMapScreen({ route, navigation }) {
     
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
-
   const { annonce } = route.params;
 
   const [enFavori, setEnFavori] = useState(false);
@@ -38,7 +36,7 @@ export default function AnnonceMapScreen({ route, navigation }) {
 
   const envoyerDemandeColab = () => {
     console.log("Envoyer Colab - Token:", annonce.token, "Cible:", annonce.username, "Initiateur:", utilisateur.username);
-    fetch(`${apiUrl}/propositionCollabs/propositions`, {
+    fetch(`http://192.168.1.109:3000/propositionCollabs/propositions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

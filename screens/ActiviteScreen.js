@@ -6,7 +6,6 @@ import { learn } from '../reducers/utilisateur';
 
 export default function ActiviteScreen({ navigation }) {
     
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.utilisateur.value);

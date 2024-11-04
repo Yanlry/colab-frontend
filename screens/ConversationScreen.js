@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setDestinataireToken } from '../reducers/utilisateur';
 
 export default function ConversationScreen({ navigation, route }) {
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+  
   const dispatch = useDispatch();
   const utilisateurDestinataireToken = useSelector(state => state.utilisateur.destinataireToken);
   const senderToken = useSelector(state => state.utilisateur.value.token);
@@ -16,9 +16,8 @@ export default function ConversationScreen({ navigation, route }) {
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   const fetchMessages = () => {
-    const url = `${apiUrl}/messages/${utilisateurDestinataireToken}/${senderToken}`;
     
-    fetch(url)
+    fetch(`http://192.168.1.109:3000/messages/${utilisateurDestinataireToken}/${senderToken}`)
       .then(response => response.json())
       .then(data => {
         const messagesWithUserFlag = data.messages.map(message => {
@@ -33,7 +32,7 @@ export default function ConversationScreen({ navigation, route }) {
   };
 
   const markMessagesAsRead = () => {
-    fetch(`${apiUrl}/messages/read/${utilisateurDestinataireToken}/${senderToken}`, {
+    fetch(`http://192.168.1.109:3000/messages/read/${utilisateurDestinataireToken}/${senderToken}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -76,7 +75,7 @@ export default function ConversationScreen({ navigation, route }) {
         conversationId: `${senderToken}${utilisateurDestinataireToken}`, // Génération d'un ID unique pour chaque conversation
       };
 
-      fetch(`${apiUrl}/messages`, {
+      fetch(`http://192.168.1.109:3000/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +104,7 @@ export default function ConversationScreen({ navigation, route }) {
       <View style={styles.container}>
         <View style={styles.headerMessage}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.icon}>
-            <FontAwesome name='chevron-left' size={28} color={'#287777'} />
+            <FontAwesome name='reply-all' size={28} color={'#287777'} />
           </TouchableOpacity>
           <View style={styles.nomContact}>
             <Text style={styles.headerText}>{contactUsername}</Text>

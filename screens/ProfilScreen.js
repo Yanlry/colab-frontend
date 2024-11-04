@@ -4,8 +4,6 @@ import { useSelector } from "react-redux";
 
 export default function ProfilScreen({ navigation }) {
     
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
-
   const user = useSelector((state) => state.utilisateur.value);
 
   const [isLearnModalVisible, setIsLearnModalVisible] = useState(false);
@@ -21,7 +19,7 @@ export default function ProfilScreen({ navigation }) {
 
   useEffect(() => {
     // Récupérer toutes les activités disponibles
-    fetch(`${apiUrl}/profiles/activites`)
+    fetch(`http://192.168.1.109:3000/profiles/activites`)
       .then((response) => response.json())
       .then((data) => {
         if (data && data.activites) {
@@ -30,7 +28,7 @@ export default function ProfilScreen({ navigation }) {
       });
 
     // Récupérer les informations de profil de l'utilisateur
-    fetch(`${apiUrl}/users/profile/${user.token}`)
+    fetch(`http://192.168.1.109:3000/users/profile/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -53,7 +51,7 @@ export default function ProfilScreen({ navigation }) {
       });
 
     // Récupérer les activités sélectionnées par l'utilisateur
-    fetch(`${apiUrl}/profiles/activites/${user.token}`)
+    fetch(`http://192.168.1.109:3000/profiles/activites/${user.token}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -306,7 +304,7 @@ export default function ProfilScreen({ navigation }) {
     // Si l'utilisateur a sélectionné une catégorie, on continue le processus
     setErrorMessage(""); // Réinitialiser le message d'erreur si tout est correct
 
-    fetch(`${apiUrl}/profiles/learn`, {
+    fetch(`http://192.168.1.109:3000/profiles/learn`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: user.token, activites: learn }),
@@ -342,7 +340,7 @@ export default function ProfilScreen({ navigation }) {
     // Si l'utilisateur a sélectionné une catégorie, on continue le processus
     setErrorMessage(""); // Réinitialiser le message d'erreur si tout est correct
 
-    fetch(`${apiUrl}/profiles/teach`, {
+    fetch(`http://192.168.1.109:3000/profiles/teach`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: user.token, activites: teach }),
@@ -384,7 +382,7 @@ export default function ProfilScreen({ navigation }) {
       bio: bio,
     };
 
-    fetch(`${apiUrl}/users/updateProfile`, {
+    fetch(`http://192.168.1.109:3000/users/updateProfile`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestBody),

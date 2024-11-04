@@ -6,7 +6,7 @@ import { setDestinataireToken } from '../reducers/utilisateur';
 import { useFocusEffect } from '@react-navigation/native';
 
 export default function ContactScreen({ navigation }) {
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
+  
   const dispatch = useDispatch();
   const user = useSelector(state => state.utilisateur.value);
   const [contacts, setContacts] = useState([]);
@@ -16,7 +16,7 @@ export default function ContactScreen({ navigation }) {
   const [unreadConversations, setUnreadConversations] = useState([]);
 
   const checkUnreadConversations = () => {
-    fetch(`${apiUrl}/messages/conversations/unread/${user.token}`, {
+    fetch(`http://192.168.1.109:3000/messages/conversations/unread/${user.token}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export default function ContactScreen({ navigation }) {
 
   const fetchContacts = () => {
     const requestBody = { token: user.token };
-    fetch(`${apiUrl}/propositionCollabs/collaboration/contact`, {
+    fetch(`http://192.168.1.109:3000/propositionCollabs/collaboration/contact`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody),

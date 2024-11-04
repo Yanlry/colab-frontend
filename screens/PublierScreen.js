@@ -6,9 +6,6 @@ import GeoAPIGouvAutocomplete from './GeoAPIGouvAutocomplete';
 import MapView, { Marker } from 'react-native-maps';
 
 export default function PublierScreen({ navigation }) {
-    
-  const apiUrl = `${process.env.REACT_APP_MY_ADDRESS}`;
-
 
   const utilisateur = useSelector(state => state.utilisateur.value);
 
@@ -37,7 +34,7 @@ export default function PublierScreen({ navigation }) {
   const [inputHeight, setInputHeight] = useState(40); // Valeur initiale de la hauteur
 
   useEffect(() => {
-    fetch(`${apiUrl}/profiles/activites`)
+    fetch(`http://192.168.1.109:3000/profiles/activites`)
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -102,7 +99,7 @@ const envoyerDonnee = () => {
     date: new Date(),
   };
 
-  fetch(`${apiUrl}/annonces/publier/${utilisateur.token}`, {
+  fetch(`http://192.168.1.109:3000/annonces/publier/${utilisateur.token}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
