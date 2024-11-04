@@ -34,7 +34,7 @@ export default function PublierScreen({ navigation }) {
   const [inputHeight, setInputHeight] = useState(40); // Valeur initiale de la hauteur
 
   useEffect(() => {
-    fetch(`http://192.168.1.109:3000/profiles/activites`)
+    fetch(`http://colab-backend-iota.vercel.app/profiles/activites`)
       .then(response => response.json())
       .then(data => {
         if (data && data.activites) {
@@ -99,7 +99,7 @@ const envoyerDonnee = () => {
     date: new Date(),
   };
 
-  fetch(`http://192.168.1.109:3000/annonces/publier/${utilisateur.token}`, {
+  fetch(`http://colab-backend-iota.vercel.app/annonces/publier/${utilisateur.token}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

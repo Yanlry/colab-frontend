@@ -22,7 +22,7 @@ export default function InscriptionScreen({ navigation }) {
   };
 
   const handleEnregistrer = () => {
-    fetch(`http://192.168.1.109:3000/users/signup`, {
+    fetch(`http://colab-backend-iota.vercel.app/users/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, username, phone: phoneNumber }),

@@ -40,14 +40,14 @@ export default function AccueilScreen({ navigation }) {
   };
 
   const fetchData = () => {
-    fetch(`http://192.168.1.109:3000/annonces/apprendre/${utilisateur.token}`)
+    fetch(`http://colab-backend-iota.vercel.app/annonces/apprendre/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));
         setEnseignerDate(trierDateAnnonce);
       });
 
-    fetch(`http://192.168.1.109:3000/annonces/enseigner/${utilisateur.token}`)
+    fetch(`http://colab-backend-iota.vercel.app/annonces/enseigner/${utilisateur.token}`)
       .then(response => response.json())
       .then(data => {
         const trierDateAnnonce = data.annonces.sort((a, b) => new Date(b.date) - new Date(a.date));

@@ -12,7 +12,7 @@ export default function MapScreen({ navigation }) {
   useEffect(() => {
     const fetchAnnonces = async () => {
       try {
-        const response = await fetch('http://192.168.1.109:3000/annonces/annonces-localisation');
+        const response = await fetch('http://colab-backend-iota.vercel.app/annonces/annonces-localisation');
         const data = await response.json();
         setAnnonces(data.annonces || []);
       } catch (error) {

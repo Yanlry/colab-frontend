@@ -18,8 +18,8 @@ const NotificationScreen = ({ navigation }) => {
     setIsLoading(true);
     const url =
       activeTab === "demandes"
-        ? `http://192.168.1.109:3000/propositionCollabs/propositions/initiateur`
-        : `http://192.168.1.109:3000/propositionCollabs/propositions/cible`;
+        ? `http://colab-backend-iota.vercel.app/propositionCollabs/propositions/initiateur`
+        : `http://colab-backend-iota.vercel.app/propositionCollabs/propositions/cible`;
 
     fetch(url, {
       method: "POST",
@@ -37,7 +37,7 @@ const NotificationScreen = ({ navigation }) => {
   };
 
   const handleAction = (messageId, action) => {
-    const actionUrl = `http://192.168.1.109:3000/propositionCollabs/propositions/${action}`;
+    const actionUrl = `http://colab-backend-iota.vercel.app/propositionCollabs/propositions/${action}`;
     fetch(actionUrl, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -64,7 +64,7 @@ const NotificationScreen = ({ navigation }) => {
   };
 
   const handleDelete = (itemId) => {
-    const deleteUrl = `http://192.168.1.109:3000/propositionCollabs/collaboration/delete`;
+    const deleteUrl = `http://colab-backend-iota.vercel.app/propositionCollabs/collaboration/delete`;
     fetch(deleteUrl, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },

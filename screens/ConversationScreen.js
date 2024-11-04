@@ -17,7 +17,7 @@ export default function ConversationScreen({ navigation, route }) {
 
   const fetchMessages = () => {
     
-    fetch(`http://192.168.1.109:3000/messages/${utilisateurDestinataireToken}/${senderToken}`)
+    fetch(`http://colab-backend-iota.vercel.app/messages/${utilisateurDestinataireToken}/${senderToken}`)
       .then(response => response.json())
       .then(data => {
         const messagesWithUserFlag = data.messages.map(message => {
@@ -32,7 +32,7 @@ export default function ConversationScreen({ navigation, route }) {
   };
 
   const markMessagesAsRead = () => {
-    fetch(`http://192.168.1.109:3000/messages/read/${utilisateurDestinataireToken}/${senderToken}`, {
+    fetch(`http://colab-backend-iota.vercel.app/messages/read/${utilisateurDestinataireToken}/${senderToken}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ export default function ConversationScreen({ navigation, route }) {
         conversationId: `${senderToken}${utilisateurDestinataireToken}`, // Génération d'un ID unique pour chaque conversation
       };
 
-      fetch(`http://192.168.1.109:3000/messages`, {
+      fetch(`http://colab-backend-iota.vercel.app/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

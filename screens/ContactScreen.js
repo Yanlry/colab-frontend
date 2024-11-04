@@ -16,7 +16,7 @@ export default function ContactScreen({ navigation }) {
   const [unreadConversations, setUnreadConversations] = useState([]);
 
   const checkUnreadConversations = () => {
-    fetch(`http://192.168.1.109:3000/messages/conversations/unread/${user.token}`, {
+    fetch(`http://colab-backend-iota.vercel.app/messages/conversations/unread/${user.token}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export default function ContactScreen({ navigation }) {
 
   const fetchContacts = () => {
     const requestBody = { token: user.token };
-    fetch(`http://192.168.1.109:3000/propositionCollabs/collaboration/contact`, {
+    fetch(`http://colab-backend-iota.vercel.app/propositionCollabs/collaboration/contact`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody),
