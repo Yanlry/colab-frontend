@@ -153,11 +153,11 @@ const styles = StyleSheet.create({
   tabBar: {
     position: 'absolute',
     backgroundColor: '#287777',
-    paddingTop: 20,
-    paddingRight: 30,
-    paddingLeft: 10,
+    paddingVertical: 20, // Ajusté pour un espacement vertical uniforme
+    paddingHorizontal:10, // Centrage horizontal
     height: 90,
-    width: 400,
+    width: '100%',
+    justifyContent: 'center', // Centre les icônes dans la barre de navigation
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.25,
@@ -165,11 +165,11 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   tabIconContainer: {
-    width: 70,
-    height: 70,
+    width: 60,  // Ajusté pour être proportionnel
+    height: 60, // Ajusté pour être proportionnel
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 35,
+    borderRadius: 30, // Pour maintenir la forme circulaire
     backgroundColor: 'transparent',
   },
   activeTabContainer: {

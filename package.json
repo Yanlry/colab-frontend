@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "npx expo start",
-    "android": "npx expo run:android",
-    "ios": "npx expo run:ios",
-    "web": "npx expo start --web"
-  },
+  "start": "node --no-deprecation ./node_modules/.bin/expo start",
+  "android": "node --no-deprecation ./node_modules/.bin/expo run:android",
+  "ios": "node --no-deprecation ./node_modules/.bin/expo run:ios",
+  "web": "node --no-deprecation ./node_modules/.bin/expo start --web"
+},
   "dependencies": {
     "@expo/metro-runtime": "~3.2.3",
     "@fortawesome/fontawesome-svg-core": "6.6.0",
